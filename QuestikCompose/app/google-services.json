@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "482418890092",
+    "firebase_url": "https://questik-f7358.firebaseio.com",
+    "project_id": "questik-f7358",
+    "storage_bucket": "questik-f7358.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482418890092:android:c679ba790a60a774670f49",
+        "android_client_info": {
+          "package_name": "xyz.gmfatoom.questik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482418890092-rb516o09bnvijr6c01kacp98nrbpedt2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.gmfatoom.questik",
+            "certificate_hash": "bbb5d847c05eac9df3b0e4ac8ec30738bf04c5e8"
+          }
+        },
+        {
+          "client_id": "482418890092-surecc9odjm9gk060kt7tt12okojiqbg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7zeCThsbq7JRs0wVTcMDCviNB0n628Ok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482418890092-surecc9odjm9gk060kt7tt12okojiqbg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
