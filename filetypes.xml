@@ -1,0 +1,11 @@
+<application>
+  <component name="FileTypeManager" version="17">
+    <extensionMap>
+      <removed_mapping ext="rar" approved="true" type="7ZIP" />
+      <mapping ext="keystore" type="PLAIN_TEXT" />
+      <mapping ext="ser" type="PLAIN_TEXT" />
+      <mapping ext="rar" type="PLAIN_TEXT" />
+      <removed_mapping ext="rar" approved="true" type="7ZIP" />
+    </extensionMap>
+  </component>
+</application>
