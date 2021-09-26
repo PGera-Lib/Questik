@@ -1,4 +1,4 @@
-package ru.rinet.questik.ui.projects
+package ru.rinet.questik.ui.chern
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -7,32 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.rinet.questik.R
-import ru.rinet.questik.databinding.ProjectsFragmentBinding
 
-class ProjectsFragment : Fragment() {
+class ChernFragment : Fragment() {
 
     companion object {
-        fun newInstance() = ProjectsFragment()
+        fun newInstance() = ChernFragment()
     }
 
-    private lateinit var viewModel: ProjectsViewModel
-
-    private lateinit var mBinding: ProjectsFragmentBinding
+    private lateinit var viewModel: ChernViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-mBinding = ProjectsFragmentBinding.inflate(layoutInflater)
-        return mBinding.root
+        return inflater.inflate(R.layout.chern_fragment, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProjectsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ChernViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryLight"
-    tools:context=".ui.projects.ProjectsFragment">
+    tools:context=".ui.chat.ChatFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textColor="@color/material_drawer_primary_text"
-        android:text="Project Fragment" />
+        android:text="Hello Chat"
+        android:textColor="@color/material_drawer_primary_text"/>
 
 </FrameLayout>
