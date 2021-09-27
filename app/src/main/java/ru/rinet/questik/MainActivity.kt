@@ -90,7 +90,8 @@ class MainActivity : AppCompatActivity() {
                     .withIconTintingEnabled(true)
                     .withName("Настройки")
                     .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_settings)
+                    .withIcon(R.drawable.questik_icon_settings),
+                DividerDrawerItem(),
             ).withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
                 override fun onItemClick(
                     view: View?,
@@ -104,11 +105,11 @@ class MainActivity : AppCompatActivity() {
                             .replace(R.id.data_container, CatalogFragment()).commit()
                         3 -> supportFragmentManager.beginTransaction()
                             .replace(R.id.data_container, ChernFragment()).commit()
-                        4 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ChatFragment()).commit()
                         5 -> supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, ChatFragment()).commit()
+                        7 -> supportFragmentManager.beginTransaction()
                             .replace(R.id.data_container, HelpFragment()).commit()
-                        6 -> supportFragmentManager.beginTransaction()
+                        9 -> supportFragmentManager.beginTransaction()
                             .replace(R.id.data_container, SettingsFragment()).commit()
                     }
 
