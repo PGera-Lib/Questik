@@ -1,11 +1,26 @@
 package ru.rinet.questik.ui.base
 
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.mikepenz.materialdrawer.AccountHeader
+import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import ru.rinet.questik.R
+import ru.rinet.questik.ui.catalog.CatalogFragment
+import ru.rinet.questik.ui.chat.ChatFragment
+import ru.rinet.questik.ui.chern.ChernFragment
+import ru.rinet.questik.ui.help.HelpFragment
+import ru.rinet.questik.ui.projects.ProjectsFragment
+import ru.rinet.questik.ui.settings.SettingsFragment
 
-class AppDrawer {
+class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
     private lateinit var mDrawer: Drawer
     private lateinit var mHeader: AccountHeader
     private lateinit var mDrawerLayout: DrawerLayout
@@ -40,74 +55,85 @@ class AppDrawer {
     }
 
     private fun createDrawer() {
-        /* Создание дравера */
-    /*    mDrawer = DrawerBuilder()
-            .withActivity(APP_ACTIVITY)
-            .withToolbar( APP_ACTIVITY.mToolbar)
+        mDrawer = DrawerBuilder()
+            .withActivity(mainActivity)
+            .withToolbar(toolbar)
             .withActionBarDrawerToggle(true)
             .withSelectedItem(-1)
             .withAccountHeader(mHeader)
             .addDrawerItems(
                 PrimaryDrawerItem().withIdentifier(100)
                     .withIconTintingEnabled(true)
-                    .withName("Создать группу")
+                    .withName("Проекты")
                     .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_create_groups),
+                    .withIcon(R.drawable.questik_icon_project),
                 PrimaryDrawerItem().withIdentifier(101)
                     .withIconTintingEnabled(true)
-                    .withName("Создать секретный чат")
+                    .withName("Каталог")
                     .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_secret_chat),
+                    .withIcon(R.drawable.questik_icon_catalog),
                 PrimaryDrawerItem().withIdentifier(102)
                     .withIconTintingEnabled(true)
-                    .withName("Создать канал")
+                    .withName("Черновик")
                     .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_create_channel),
+                    .withIcon(R.drawable.questik_icon_chernovik),
+                DividerDrawerItem(),
                 PrimaryDrawerItem().withIdentifier(103)
                     .withIconTintingEnabled(true)
-                    .withName("Контакты")
+                    .withName("Чат")
                     .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_contacts),
+                    .withIcon(R.drawable.questik_icon_chat),
+                DividerDrawerItem(),
                 PrimaryDrawerItem().withIdentifier(104)
                     .withIconTintingEnabled(true)
-                    .withName("Звонки")
+                    .withName("Библиотека знаний")
                     .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_phone),
+                    .withIcon(R.drawable.questik_icon_helper),
+                DividerDrawerItem(),
                 PrimaryDrawerItem().withIdentifier(105)
-                    .withIconTintingEnabled(true)
-                    .withName("Избранное")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_favorites),
-                PrimaryDrawerItem().withIdentifier(106)
                     .withIconTintingEnabled(true)
                     .withName("Настройки")
                     .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_settings),
+                    .withIcon(R.drawable.questik_icon_settings),
                 DividerDrawerItem(),
-                PrimaryDrawerItem().withIdentifier(108)
-                    .withIconTintingEnabled(true)
-                    .withName("Пригласить друзей")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_invate),
-                PrimaryDrawerItem().withIdentifier(109)
-                    .withIconTintingEnabled(true)
-                    .withName("Вопросы о телеграм")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.ic_menu_help)
             ).withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
                 override fun onItemClick(
                     view: View?,
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    clickToItem(position)
+                    when (position) {
+                        1 -> mainActivity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, ProjectsFragment()).commit()
+                        2 -> mainActivity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, CatalogFragment()).commit()
+                        3 -> mainActivity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, ChernFragment()).commit()
+                        5 -> mainActivity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, ChatFragment()).commit()
+                        7 -> mainActivity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, HelpFragment()).commit()
+                        9 -> mainActivity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.data_container, SettingsFragment()).commit()
+                    }
+
                     return false
                 }
-            }).build()*/
-
+            })
+            .build()
     }
 
-    private fun clickToItem(position:Int){
+    private fun createHeader() {
+        mHeader = AccountHeaderBuilder()
+            .withActivity(mainActivity)
+            .withHeaderBackground(R.drawable.toolbar_header)
+            .addProfiles(
+                ProfileDrawerItem().withName(R.string.drawer_header_user)
+                    .withEmail(R.string.drawer_header_phone)
+            ).build()
+    }
+
+    private fun clickToItem(position: Int) {
 /*        when (position) {
             1 -> replaceFragment(AddContactsFragment())
             7 -> replaceFragment(SettingsFragment())
@@ -115,22 +141,8 @@ class AppDrawer {
         }*/
     }
 
-    private fun createHeader() {
-        /* Создание хедера*/
-      /*  mCurrentProfile = ProfileDrawerItem()
-            .withName(USER.fullname)
-            .withEmail(USER.phone)
-            .withIcon(USER.photoUrl)
-            .withIdentifier(200)
-        mHeader = AccountHeaderBuilder()
-            .withActivity(APP_ACTIVITY)
-            .withHeaderBackground(R.drawable.header)
-            .addProfiles(
-                mCurrentProfile
-            ).build()*/
-    }
 
-    fun updateHeader(){
+    fun updateHeader() {
         /* Обновления хедера */
 /*
         mCurrentProfile
@@ -143,7 +155,7 @@ class AppDrawer {
 
     }
 
-    private fun initLoader(){
+    private fun initLoader() {
         /* Инициализация лоадера для загрузки картинок в хедер */
 /*        DrawerImageLoader.init(object :AbstractDrawerImageLoader(){
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable) {

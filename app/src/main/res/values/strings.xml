@@ -15,4 +15,10 @@
     <string name="action_settings">Настройки</string>
     <string name="drawer_header_user">Подован</string>
     <string name="drawer_header_phone">Тут должен быть номер телефона</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings_defualt_user">Имя Подован</string>
+    <string name="settings_user_status">В работе</string>
+    <string name="settings_text_account">Аккаунт</string>
+    <string name="settings_defualt_user_phone_number">+7----------</string>
 </resources>

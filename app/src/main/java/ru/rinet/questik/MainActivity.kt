@@ -13,6 +13,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import ru.rinet.questik.databinding.ActivityMainBinding
+import ru.rinet.questik.ui.base.AppDrawer
 import ru.rinet.questik.ui.catalog.CatalogFragment
 import ru.rinet.questik.ui.chat.ChatFragment
 import ru.rinet.questik.ui.chern.ChernFragment
@@ -23,9 +24,8 @@ import ru.rinet.questik.ui.settings.SettingsFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
-    private lateinit var mDrawer: Drawer
-    private lateinit var mHeader: AccountHeader
     private lateinit var mToolbar: Toolbar
+    private lateinit var mAppDrawer: AppDrawer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,93 +43,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFunc() {
         setSupportActionBar(mToolbar)
-        createHeader()
-        createDrawer()
+        mAppDrawer.create()
         supportFragmentManager.beginTransaction().replace(R.id.data_container, ProjectsFragment())
             .commit()
     }
 
 
-    private fun createDrawer() {
-        mDrawer = DrawerBuilder()
-            .withActivity(this)
-            .withToolbar(mToolbar)
-            .withActionBarDrawerToggle(true)
-            .withSelectedItem(-1)
-            .withAccountHeader(mHeader)
-            .addDrawerItems(
-                PrimaryDrawerItem().withIdentifier(100)
-                    .withIconTintingEnabled(true)
-                    .withName("Проекты")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_project),
-                PrimaryDrawerItem().withIdentifier(101)
-                    .withIconTintingEnabled(true)
-                    .withName("Каталог")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_catalog),
-                PrimaryDrawerItem().withIdentifier(102)
-                    .withIconTintingEnabled(true)
-                    .withName("Черновик")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_chernovik),
-                DividerDrawerItem(),
-                PrimaryDrawerItem().withIdentifier(103)
-                    .withIconTintingEnabled(true)
-                    .withName("Чат")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_chat),
-                DividerDrawerItem(),
-                PrimaryDrawerItem().withIdentifier(104)
-                    .withIconTintingEnabled(true)
-                    .withName("Библиотека знаний")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_helper),
-                DividerDrawerItem(),
-                PrimaryDrawerItem().withIdentifier(105)
-                    .withIconTintingEnabled(true)
-                    .withName("Настройки")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.questik_icon_settings),
-                DividerDrawerItem(),
-            ).withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
-                override fun onItemClick(
-                    view: View?,
-                    position: Int,
-                    drawerItem: IDrawerItem<*>
-                ): Boolean {
-                    when (position) {
-                        1 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ProjectsFragment()).commit()
-                        2 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, CatalogFragment()).commit()
-                        3 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ChernFragment()).commit()
-                        5 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ChatFragment()).commit()
-                        7 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, HelpFragment()).commit()
-                        9 -> supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, SettingsFragment()).commit()
-                    }
-
-                    return false
-                }
-            })
-            .build()
-    }
-
-    private fun createHeader() {
-        mHeader = AccountHeaderBuilder()
-            .withActivity(this)
-            .withHeaderBackground(R.drawable.toolbar_header)
-            .addProfiles(
-                ProfileDrawerItem().withName(getString(R.string.drawer_header_user))
-                    .withEmail(getString(R.string.drawer_header_phone))
-            ).build()
-    }
-
     private fun initFields() {
         mToolbar = mBinding.mainToolbar
+        mAppDrawer = AppDrawer(this, mToolbar)
     }
 }

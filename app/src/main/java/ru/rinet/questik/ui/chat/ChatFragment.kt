@@ -7,26 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.rinet.questik.R
+import ru.rinet.questik.ui.base.BaseFragment
 
-class ChatFragment : Fragment() {
+class ChatFragment : BaseFragment(R.layout.chat_fragment) {
 
-    companion object {
-        fun newInstance() = ChatFragment()
+    override fun onResume() {
+        super.onResume()
+
     }
 
-    private lateinit var viewModel: ChatViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.chat_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ChatViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }

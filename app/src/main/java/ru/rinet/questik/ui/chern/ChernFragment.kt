@@ -7,26 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ru.rinet.questik.R
+import ru.rinet.questik.ui.base.BaseFragment
 
-class ChernFragment : Fragment() {
+class ChernFragment : BaseFragment(R.layout.chern_fragment) {
 
-    companion object {
-        fun newInstance() = ChernFragment()
+    override fun onResume() {
+        super.onResume()
+
     }
 
-    private lateinit var viewModel: ChernViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.chern_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ChernViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
 
 }
