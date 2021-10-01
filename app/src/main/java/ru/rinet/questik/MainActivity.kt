@@ -29,10 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-
     }
 
     override fun onStart() {
@@ -47,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.data_container, ProjectsFragment())
             .commit()
     }
-
 
     private fun initFields() {
         mToolbar = mBinding.mainToolbar

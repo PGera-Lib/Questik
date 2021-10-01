@@ -19,4 +19,5 @@
     <dimen name="settings_user_fullname_width">0dp</dimen>
     <dimen name="settings_user_status_width">0dp</dimen>
     <dimen name="settings_text_account_marginTop">16dp</dimen>
+    <dimen name="button_ripple_effect_radius">4dp</dimen>
 </resources>

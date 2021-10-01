@@ -21,4 +21,11 @@
     <string name="settings_user_status">В работе</string>
     <string name="settings_text_account">Аккаунт</string>
     <string name="settings_defualt_user_phone_number">+7----------</string>
+    <string name="settings_defualt_bio">О себе</string>
+    <string name="settings_lable_bio">Нажмите чтобы изменить ваш данные о себе</string>
+    <string name="settings_lable_login">Нажмите чтобы изменить ваш логин</string>
+    <string name="settings_lable_phone_number">Нажмите чтобы изменить номер телефона</string>
+    <string name="settings_menu_changname">Изменить имя</string>
+    <string name="settings_menu_exit">Выход</string>
+    <string name="settings_login">Подован</string>
 </resources>
