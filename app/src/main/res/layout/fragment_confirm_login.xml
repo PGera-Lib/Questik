@@ -7,79 +7,69 @@
     tools:context=".ui.login.LoginFragment">
 
     <TextView
-        android:id="@+id/login_text_auth"
+        android:id="@+id/login_text_auth_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/defualt_margin"
-        android:layout_marginTop="@dimen/defualt_margin"
-        android:text="Авторизация"
+        android:text="@string/auth_confirm"
         android:textColor="@color/colorTextBlack"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:layout_marginTop="@dimen/defualt_margin"
+        android:layout_marginStart="@dimen/defualt_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <View
-        android:id="@+id/login_separator"
+        android:id="@+id/confirm_separator"
         style="@style/separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_text_auth" />
+        app:layout_constraintTop_toBottomOf="@id/login_text_auth_confirm" />
+
 
     <EditText
-        android:id="@+id/login_text_rus7"
+        android:id="@+id/login_enter_confirm_code"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/defualt_margin"
+        android:layout_height="46dp"
         android:layout_marginTop="@dimen/defualt_margin"
-        android:editable="false"
+        android:hint="- -  - -  - -"
         android:padding="5dp"
-        android:text="+7"
-        android:textColor="@color/colorTextBlack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_separator"
-        tools:ignore="Deprecated" />
-
-    <EditText
-        android:id="@+id/login_enter_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/defualt_margin"
-        android:backgroundTint="@color/colorPrimary"
-        android:hint="- - -  - - -  - -  - -"
-        android:inputType="phone"
         android:maxLength="10"
-        android:padding="5dp"
+        android:maxLines="1"
+        android:inputType="phone"
         android:textColor="@color/colorTextBlack"
         android:textColorHint="@color/colorTextGray"
-        app:layout_constraintStart_toEndOf="@+id/login_text_rus7"
-        app:layout_constraintTop_toBottomOf="@+id/login_separator" />
+        android:backgroundTint="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirm_separator" />
 
     <TextView
-        android:id="@+id/login_lable_phone_number"
+        android:id="@+id/confirm_lable_phone_number"
         style="@style/lable_text"
-        android:text="@string/login_lable_phone_number"
+        android:text="@string/confirm_lable_phone_number"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_enter_phone" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/defualt_margin"
+        android:layout_marginStart="@dimen/defualt_margin"
+        app:layout_constraintTop_toBottomOf="@id/login_enter_confirm_code" />
 
     <View
         style="@style/separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_lable_phone_number" />
+        app:layout_constraintTop_toBottomOf="@id/confirm_lable_phone_number" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/login_fab_next"
+        android:id="@+id/confirm_fab_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/defualt_margin"
         android:layout_marginBottom="@dimen/defualt_margin"
         android:backgroundTint="@color/colorPrimary"
-        android:clickable="true"
         android:src="@drawable/questik_login_fab_next"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/next" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

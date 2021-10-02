@@ -28,4 +28,8 @@
     <string name="settings_menu_changname">Изменить имя</string>
     <string name="settings_menu_exit">Выход</string>
     <string name="settings_login">Подован</string>
+    <string name="login_lable_phone_number">Введите Ваш номер телефона, начиная с цифр после +7</string>
+    <string name="auth_confirm">Подтверждение</string>
+    <string name="confirm_lable_phone_number">Введите код, который вам пришел по СМС, либо код который был предоставлен разработчиком. В случае чего вы в курсе у кого спрашивать, иначе оно тебе не надо.</string>
+    <string name="next">next</string>
 </resources>

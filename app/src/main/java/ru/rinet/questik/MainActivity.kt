@@ -18,6 +18,8 @@ import ru.rinet.questik.ui.catalog.CatalogFragment
 import ru.rinet.questik.ui.chat.ChatFragment
 import ru.rinet.questik.ui.chern.ChernFragment
 import ru.rinet.questik.ui.help.HelpFragment
+import ru.rinet.questik.ui.login.ConfirmLoginFragment
+import ru.rinet.questik.ui.login.LoginFragment
 import ru.rinet.questik.ui.projects.ProjectsFragment
 import ru.rinet.questik.ui.settings.SettingsFragment
 
@@ -40,10 +42,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
-        setSupportActionBar(mToolbar)
-        mAppDrawer.create()
-        supportFragmentManager.beginTransaction().replace(R.id.data_container, ProjectsFragment())
-            .commit()
+        if (false) {
+            setSupportActionBar(mToolbar)
+            mAppDrawer.create()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.data_container, ProjectsFragment())
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction().replace(R.id.data_container, LoginFragment())
+                .commit()
+        }
+
     }
 
     private fun initFields() {
