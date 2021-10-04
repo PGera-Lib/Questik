@@ -6,17 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-open class BaseFragment(val layout: Int) : Fragment(layout) {
+
+
+
+open class BaseFragment(layout:Int) : Fragment(layout) {
 
     lateinit var mRootView: View
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        mRootView = inflater.inflate(layout, container, false)
-        return mRootView
-    }
 
     override fun onStart() {
         super.onStart()

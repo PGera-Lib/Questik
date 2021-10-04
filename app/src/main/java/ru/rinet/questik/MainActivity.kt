@@ -22,6 +22,8 @@ import ru.rinet.questik.ui.login.ConfirmLoginFragment
 import ru.rinet.questik.ui.login.LoginFragment
 import ru.rinet.questik.ui.projects.ProjectsFragment
 import ru.rinet.questik.ui.settings.SettingsFragment
+import ru.rinet.questik.utils.APP_ACTIVITY
+import ru.rinet.questik.utils.replaceFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        APP_ACTIVITY = this
     }
 
     override fun onStart() {
@@ -42,17 +45,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
+
         if (false) {
-            setSupportActionBar(mToolbar)
-            mAppDrawer.create()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.data_container, ProjectsFragment())
-                .commit()
+            initDrawer()
+            replaceFragment(ProjectsFragment())
         } else {
-            supportFragmentManager.beginTransaction().replace(R.id.data_container, LoginFragment())
-                .commit()
+            replaceFragment(LoginFragment())
         }
 
+    }
+
+    fun initDrawer() {
+        setSupportActionBar(mToolbar)
+        mAppDrawer.create()
     }
 
     private fun initFields() {

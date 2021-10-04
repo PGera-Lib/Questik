@@ -19,6 +19,7 @@ import ru.rinet.questik.ui.chern.ChernFragment
 import ru.rinet.questik.ui.help.HelpFragment
 import ru.rinet.questik.ui.projects.ProjectsFragment
 import ru.rinet.questik.ui.settings.SettingsFragment
+import ru.rinet.questik.utils.replaceFragment
 
 class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
     private lateinit var mDrawer: Drawer
@@ -102,21 +103,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    when (position) {
-                        1 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ProjectsFragment()).commit()
-                        2 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, CatalogFragment()).commit()
-                        3 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ChernFragment()).commit()
-                        5 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, ChatFragment()).commit()
-                        7 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, HelpFragment()).commit()
-                        9 -> mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.data_container, SettingsFragment()).commit()
-                    }
-
+                    clickToItem(position)
                     return false
                 }
             })
@@ -134,11 +121,14 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
     }
 
     private fun clickToItem(position: Int) {
-/*        when (position) {
-            1 -> replaceFragment(AddContactsFragment())
-            7 -> replaceFragment(SettingsFragment())
-            4 -> replaceFragment(ContactsFragment())
-        }*/
+        when (position) {
+            1 -> replaceFragment(ProjectsFragment())
+            2 -> replaceFragment(CatalogFragment())
+            3 -> replaceFragment(ChernFragment())
+            5 -> replaceFragment(ChatFragment())
+            7 -> replaceFragment(HelpFragment())
+            9 -> replaceFragment(SettingsFragment())
+        }
     }
 
 

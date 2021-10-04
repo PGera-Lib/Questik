@@ -2,21 +2,9 @@
     <string name="app_name">Questik</string>
     <string name="title_activity_main">Questik</string>
 
-    <string name="drawable_menu_item_project">Проекты</string>
-    <string name="drawable_menu_item_catalog">Каталог</string>
-    <string name="chern_item">Черновик</string>
-    <string name="communicate_item">Общение</string>
-    <string name="chat_item">Чат</string>
-    <string name="help_item">Помощь</string>
-    <string name="doc_item">Библиотека знаний</string>
-    <string name="system">Приложение</string>
-    <string name="nav_settings">Настройки</string>
-
-    <string name="action_settings">Настройки</string>
     <string name="drawer_header_user">Подован</string>
     <string name="drawer_header_phone">Тут должен быть номер телефона</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings_defualt_user">Имя Подован</string>
     <string name="settings_user_status">В работе</string>
     <string name="settings_text_account">Аккаунт</string>
