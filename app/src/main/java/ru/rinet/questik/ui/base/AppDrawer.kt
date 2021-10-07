@@ -19,6 +19,7 @@ import ru.rinet.questik.ui.chern.ChernFragment
 import ru.rinet.questik.ui.help.HelpFragment
 import ru.rinet.questik.ui.projects.ProjectsFragment
 import ru.rinet.questik.ui.settings.SettingsFragment
+import ru.rinet.questik.utils.APP_ACTIVITY
 import ru.rinet.questik.utils.replaceFragment
 
 class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
@@ -37,22 +38,22 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar) {
 
     fun disableDrawer() {
         /* Отключение выдвигающего меню */
-/*        mDrawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
+        mDrawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
         APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         APP_ACTIVITY.mToolbar.setNavigationOnClickListener {
             APP_ACTIVITY.supportFragmentManager.popBackStack()
-        }*/
+        }
     }
 
     fun enableDrawer() {
         /* Включение выдвигающего меню */
-/*        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+       APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         mDrawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         APP_ACTIVITY.mToolbar.setNavigationOnClickListener {
             mDrawer.openDrawer()
-        }*/
+        }
     }
 
     private fun createDrawer() {

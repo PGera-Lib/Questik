@@ -20,4 +20,6 @@
     <string name="auth_confirm">Подтверждение</string>
     <string name="confirm_lable_phone_number">Введите код, который вам пришел по СМС, либо код который был предоставлен разработчиком. В случае чего вы в курсе у кого спрашивать, иначе оно тебе не надо.</string>
     <string name="next">next</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -43,18 +43,10 @@
 
     <EditText
         android:id="@+id/login_enter_phone_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/defualt_margin"
-        android:backgroundTint="@color/colorPrimary"
         android:hint="- - -  - - -  - -  - -"
-        android:inputType="phone"
-        android:maxLength="10"
-        android:padding="5dp"
-        android:textColor="@color/colorTextBlack"
-        android:textColorHint="@color/colorTextGray"
         app:layout_constraintStart_toEndOf="@+id/login_text_rus7"
-        app:layout_constraintTop_toBottomOf="@+id/login_separator" />
+        app:layout_constraintTop_toBottomOf="@+id/login_separator"
+        style="@style/editTextStyle" />
 
     <TextView
         android:id="@+id/login_lable_phone_number"
