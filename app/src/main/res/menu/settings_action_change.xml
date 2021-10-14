@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/settings_menu_changname_aplay"
+        android:id="@+id/settings_menu_change_aplay"
         android:icon="@drawable/questik_check_yes"
         android:title="@string/settings_menu_changname"
         app:showAsAction="ifRoom" />

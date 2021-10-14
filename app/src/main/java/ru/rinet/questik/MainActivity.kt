@@ -1,15 +1,21 @@
 package ru.rinet.questik
 
-import android.content.Context
-import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.getSystemService
-import com.theartofdev.edmodo.cropper.CropImage
+import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.mikepenz.materialdrawer.widget.MaterialDrawerSliderView
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.settings_fragment.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.rinet.questik.databinding.ActivityMainBinding
-import ru.rinet.questik.models.User
 import ru.rinet.questik.ui.base.AppDrawer
 import ru.rinet.questik.ui.login.LoginFragment
 import ru.rinet.questik.ui.projects.ProjectsFragment
@@ -20,20 +26,59 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityMainBinding
    lateinit var mToolbar: Toolbar
    lateinit var mAppDrawer: AppDrawer
-
+   lateinit var mDrawable: MaterialDrawerSliderView
+   lateinit var mDrawerLayout: DrawerLayout
+   lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        mBinding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
+        mDrawerLayout = root
+        mDrawable = mBinding.slider
         APP_ACTIVITY = this
+
+
+        initFirebase()
+        initUser{
+           mAppDrawer.updateHeader()
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            initContacts()
+        }
+        initFileSystem()
         initFields()
         initFunc()
+
+    }
+
+
+
+    override fun onStart() {
+        super.onStart()
+        if (AUTH.currentUser!=null) {
+            AppStatus.updateStatus(AppStatus.ONLINE)
+        }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (AUTH.currentUser!=null) {
+            AppStatus.updateStatus(AppStatus.OFFLINE)
+        }
+
     }
 
 
     private fun initFunc() {
         setSupportActionBar(mToolbar)
+/* *//*       supportActionBar?.setDisplayHomeAsUpEnabled(true)*//*
+        supportActionBar?.setHomeButtonEnabled(true)*/
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, mBinding.root, mToolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
+/*       supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(false)*/
         mAppDrawer.create()
         if (AUTH.currentUser!=null) {
             replaceFragment(ProjectsFragment(), false)
@@ -43,19 +88,64 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
+    fun updateUserPhoto(url: String){
+        mAppDrawer.updateHeader()
+        settings_user_photo.downloadAndSetImage(url)
+    }
     private fun initFields() {
         mToolbar = mBinding.mainToolbar
-        mAppDrawer = AppDrawer(this, mToolbar)
-        initFirebase()
-        initUser()
+        mAppDrawer = AppDrawer(mDrawable, mToolbar)
+
     }
 
-    private fun initUser() {
-        REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID)
-            .addListenerForSingleValueEvent(AppValueEventListener{
-                USER = it.getValue(User::class.java) ?: User()
-            })
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        actionBarDrawerToggle.onConfigurationChanged(newConfig)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        actionBarDrawerToggle.syncState()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    override fun onBackPressed() {
+        //handle the back press :D close the drawer first and if the drawer is closed close the activity
+        if (mBinding.root.isDrawerOpen(mBinding.slider)) {
+            mBinding.root.closeDrawer(mBinding.slider)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(ContextCompat.checkSelfPermission(APP_ACTIVITY, READ_CONTACTS)==PackageManager.PERMISSION_GRANTED){
+            initContacts()
+        }
+        if(ContextCompat.checkSelfPermission(APP_ACTIVITY, READ_FILES)==PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(APP_ACTIVITY, WRITE_FILES)==PackageManager.PERMISSION_GRANTED ){
+            initFileSystem()
+        }
+    }
+
+    override fun onSaveInstanceState(_outState: Bundle) {
+        var outState = _outState
+        //add the values which need to be saved from the drawer to the bundle
+        outState = mBinding.slider.saveInstanceState(outState)
+
+        //add the values which need to be saved from the accountHeader to the bundle
+       // outState = mHeader.saveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
 }

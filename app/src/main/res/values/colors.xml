@@ -5,6 +5,9 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorTextBlack">#000000</color>
     <color name="colorTextGray">#949191</color>
+    <color name="colorChatOutputBackgroundColor">#84EA84</color>
+    <color name="colorBlueLight">#74CBF3</color>
+
 
     <!-- OVERWRITE THESE COLORS FOR A LIGHT THEME -->
     <!-- MaterialDrawer DEFAULT colors -->

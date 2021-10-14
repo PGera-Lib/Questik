@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:icon="@drawable/questik_option_menu"
+        app:showAsAction="ifRoom"
+        android:title="">
+        <menu>
+            <item android:id="@+id/settings_chat_contacts"
+                android:title="@string/settings_chat_menu_contacts"
+                android:icon="@drawable/questik_icon_helper"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+</menu>

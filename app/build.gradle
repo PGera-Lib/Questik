@@ -45,6 +45,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.google.firebase:firebase-database:20.0.2'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
+    implementation 'com.firebaseui:firebase-ui-database:8.0.0'
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     implementation 'androidx.preference:preference-ktx:1.1.1'
@@ -54,7 +56,9 @@ dependencies {
 
 
     //сторонние наборы библиотек
-    implementation "com.mikepenz:materialdrawer-nav:7.0.0"
+    implementation "com.mikepenz:materialdrawer:8.4.4"
+    implementation "com.mikepenz:materialdrawer-nav:8.4.4"
+    implementation "com.mikepenz:materialdrawer-iconics:8.4.4"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.annotation:annotation:1.2.0"
 
