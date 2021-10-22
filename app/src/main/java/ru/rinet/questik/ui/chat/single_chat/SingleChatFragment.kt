@@ -1,7 +1,9 @@
 package ru.rinet.questik.ui.chat.single_chat
 
 import android.view.View
+import android.widget.AbsListView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DatabaseReference
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_single_chat.*
@@ -23,8 +25,13 @@ class SingleChatFragment(private val contact: CommonModel) :
     private lateinit var mRefMessages: DatabaseReference
     private lateinit var mAdapter: SingleChatAdapter
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mMessagesListener: AppValueEventListener
-    private var mListMessages = emptyList<CommonModel>()
+    private lateinit var mMessagesListener: AppChildEventListener
+    private var mCountMessages = 10
+    private var mIsScrooling = false
+    private var mSmoothScrollToPosition = true
+
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+//    private var mListListeners = mutableListOf<AppChildEventListener>()
 
 
     override fun onResume() {
@@ -38,34 +45,69 @@ class SingleChatFragment(private val contact: CommonModel) :
 
     private fun initRecyclerView() {
         println("------------------------------------initRecyclerView--------------------------------------------")
+        mSwipeRefreshLayout = chat_swipe_layout
         mRecyclerView = chat_recycler_view
         mAdapter = SingleChatAdapter()
         mRecyclerView.adapter = mAdapter
         mRefMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES).child(CURRENT_UID).child(contact.id)
-        mMessagesListener = AppValueEventListener { dataSnapshot ->
+        chat_input_message.setOnClickListener { mRecyclerView.smoothScrollToPosition(mAdapter.itemCount) }
+        mMessagesListener = AppChildEventListener {
             println("------------------------------------mMessagesListener--------------------------------------------")
-            mListMessages = dataSnapshot.children.map {
-                it.getCommonModel()
+            mAdapter.addItem(it.getCommonModel(), mSmoothScrollToPosition) {
+                if (mSmoothScrollToPosition) {
+                    mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
+                }
+                mSwipeRefreshLayout.isRefreshing = false
             }
-            mAdapter.setList(mListMessages)
-            mAdapter.notifyDataSetChanged()
-            mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
-        }
-        mRefMessages.addValueEventListener(mMessagesListener)
 
+        }
+        mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
+//        mListListeners.add(mMessagesListener)
+
+        mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    mIsScrooling = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (mIsScrooling && dy < 0) {
+                    updateData()
+                }
+            }
+        })
+
+        mSwipeRefreshLayout.setOnRefreshListener {
+            updateData()
+        }
+    }
+
+    private fun updateData() {
+        mSmoothScrollToPosition = false
+        mIsScrooling = false
+        mCountMessages += 10
+        mRefMessages.removeEventListener(mMessagesListener)
+        mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
+//                mListListeners.add(mMessagesListener)
     }
 
     private fun initViewFields() {
         println("------------------------------------initViewFields--------------------------------------------")
         btn_send_message.setOnClickListener {
+            mSmoothScrollToPosition = true
             val message = chat_input_message.text.toString()
             if (message.isEmpty()) {
                 showToast("Сообщение не может быть пустым!")
             } else {
                 sendMessage(message, contact.id, TYPE_TEXT) {
+                    println("------------------------------------sendMessage--------------------------------------------")
+                    chat_input_message.setText("")
                 }
-                mAdapter.notifyDataSetChanged()
-                chat_input_message.setText("")
+                // mAdapter.notifyDataSetChanged()
             }
         }
     }
@@ -99,6 +141,11 @@ class SingleChatFragment(private val contact: CommonModel) :
         mToolbarInfo.visibility = View.GONE
         mRefUser.removeEventListener(mListenerInfoToolbar)
         mRefMessages.removeEventListener(mMessagesListener)
+/*        mListListeners.forEach {
+            mRefMessages.removeEventListener(it)
+        }*/
+
+        println()
     }
 
 }

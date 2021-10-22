@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.message_item.view.*
 import ru.rinet.questik.R
@@ -14,7 +15,8 @@ import ru.rinet.questik.utils.asTime
 
 class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolder>() {
 
-    private var mListMessagesCash = emptyList<CommonModel>()
+    private var mListMessagesCash = mutableListOf<CommonModel>()
+    private lateinit var mDiffResult: DiffUtil.DiffResult
 
 
     class SingleChatHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -52,8 +54,33 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
 
     override fun getItemCount(): Int = mListMessagesCash.size
 
-    fun setList(list: List<CommonModel>) {
-        mListMessagesCash = list
+
+    fun addItem(item: CommonModel, toBottom: Boolean, isSuccess: () -> Unit) {
+
+        if (toBottom) {
+            if (!mListMessagesCash.contains(item)) {
+                mListMessagesCash.add(item)
+                notifyItemInserted(mListMessagesCash.size)
+            }
+        } else {
+            if (!mListMessagesCash.contains(item)) {
+                mListMessagesCash.add(item)
+                mListMessagesCash.sortBy { it.timestamp.toString() }
+                notifyItemInserted(0)
+            }
+        }
+        isSuccess()
+/*        val newList = mutableListOf<CommonModel>()
+        newList.addAll(mListMessagesCash)
+        if (!newList.contains(item)) {
+            newList.add(item)
+        }
+        newList.sortBy {
+            it.timestamp.toString()
+        }
+        mDiffResult = DiffUtil.calculateDiff(DiffUtilCallback(mListMessagesCash, newList))
+        mDiffResult.dispatchUpdatesTo(this)
+        mListMessagesCash = newList*/
     }
 
 

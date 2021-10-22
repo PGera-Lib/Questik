@@ -1,7 +1,6 @@
 package ru.rinet.questik.utils
 
 import android.net.Uri
-import android.provider.ContactsContract
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
@@ -44,42 +43,7 @@ const val CHILD_FROM = "from"
 const val CHILD_TIMESTAMP = "timestamp"
 
 
-fun initFileSystem() {
-    if (checkPermissions(READ_FILES) && checkPermissions(WRITE_FILES)) {
-        showToast("Получен разрешение на сохранение в файловой системе")
 
-    }
-}
-
-fun initContacts() {
-    if (checkPermissions(READ_CONTACTS)) {
-        val arrayContacts = arrayListOf<CommonModel>()
-        val cursor = APP_ACTIVITY.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-        cursor?.let {
-            while (it.moveToNext()) {
-                val fullName =
-                    it.getString(it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val phone =
-                    it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                val newModel = CommonModel()
-                newModel.fullname = fullName
-                newModel.phone = phone.replace(
-                    Regex("[\\s,()-]"),
-                    ""
-                )
-                arrayContacts.add(newModel)
-            }
-        }
-        cursor?.close()
-        updatePhonesToDatabase(arrayContacts)
-    }
-}
 
 fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
     if (AUTH.currentUser != null) {
@@ -92,12 +56,12 @@ fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
                                 REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
                                     .child(snapshot.value.toString()).child(CHILD_ID)
                                     .setValue(snapshot.value.toString())
-                                    .addOnFailureListener { showToast(it.message.toString()) }
+                                    .addOnFailureListener { exception -> showToast(exception.message.toString()) }
 
                                 REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
                                     .child(snapshot.value.toString()).child(CHILD_FULLNAME)
                                     .setValue(contact.fullname)
-                                    .addOnFailureListener { showToast(it.message.toString()) }
+                                    .addOnFailureListener { exception -> showToast(exception.message.toString()) }
                             }
                         }
                     }
@@ -168,7 +132,6 @@ fun DataSnapshot.getCommonModel(): CommonModel =
 fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
 
 fun sendMessage(message: String, receivingUserId: String, typeText: String, function: () -> Unit) {
-    println("------------------------------------sendMessage--------------------------------------------")
     val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
     val refDialogReceivningUser = "$NODE_MESSAGES/$receivingUserId/$CURRENT_UID"
     val messageKey = REF_DATABASE_ROOT.child(refDialogUser).push().key
@@ -184,7 +147,92 @@ fun sendMessage(message: String, receivingUserId: String, typeText: String, func
 
     REF_DATABASE_ROOT
         .updateChildren(mapDialog)
-        .addOnFailureListener { function() }
+        .addOnCompleteListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
 
+}
+
+fun changeUsername(mNewUserName:String) {
+    if (mNewUserName.isEmpty()) {
+        showToast("Ваш логин не может быть пустым!!!")
+    } else {
+        REF_DATABASE_ROOT.child(NODE_USERNAMES)
+            .addListenerForSingleValueEvent(AppValueEventListener {
+                if (it.hasChild(mNewUserName)) {
+                    showToast("Такой пользователь уже есть")
+                } else {
+                    REF_DATABASE_ROOT.child(NODE_USERNAMES).child(mNewUserName).setValue(CURRENT_UID)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                updateCurentUsername(mNewUserName)
+                            }
+                        }
+                        .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+                }
+            })
+
+    }
+
+}
+
+fun updateCurentUsername(mNewUserName: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_USERNAME).setValue(mNewUserName)
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
+                deleteOldUsername(mNewUserName)
+                showToast("Данные обновлены")
+            } else {
+                showToast(it.exception?.message.toString())
+            }
+        }
+        .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+}
+
+fun deleteOldUsername(mNewUserName:String) {
+    REF_DATABASE_ROOT.child(NODE_USERNAMES).child(USER.username).removeValue()
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
+                showToast("Данные обновлены")
+                APP_ACTIVITY.fragmentManager?.popBackStack()
+                USER.username = mNewUserName
+            } else {
+                showToast(it.exception?.message.toString())
+            }
+
+        }
+        .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+}
+
+fun changeBio(newBio: String) {
+    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_BIO).setValue(newBio)
+        .addOnCompleteListener {
+            if (it.isSuccessful){
+                showToast("Данные обновлены")
+                USER.bio = newBio
+                APP_ACTIVITY.fragmentManager?.popBackStack()
+            }
+        }
+        .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+}
+
+fun changeFullname(name: String, surename: String) {
+    if (name.isEmpty()) {
+        showToast("Имя не может быть пустым")
+    } else {
+        val mFullName = "$name $surename"
+        REF_DATABASE_ROOT
+            .child(NODE_USERS)
+            .child(CURRENT_UID)
+            .child(CHILD_FULLNAME)
+            .setValue(mFullName)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    showToast("Ваши данные были обновлены")
+                    USER.fullname = mFullName
+                    APP_ACTIVITY.fragmentManager?.popBackStack()
+                }
+            }
+            .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+
+    }
 }

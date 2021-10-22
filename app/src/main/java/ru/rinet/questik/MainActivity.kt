@@ -74,11 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFunc() {
         setSupportActionBar(mToolbar)
-/* *//*       supportActionBar?.setDisplayHomeAsUpEnabled(true)*//*
-        supportActionBar?.setHomeButtonEnabled(true)*/
         actionBarDrawerToggle = ActionBarDrawerToggle(this, mBinding.root, mToolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
-/*       supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(false)*/
         mAppDrawer.create()
         if (AUTH.currentUser!=null) {
             replaceFragment(ProjectsFragment(), false)

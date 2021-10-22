@@ -19,7 +19,6 @@ open class BaseChangeFragment(layout:Int) : Fragment(layout) {
         setHasOptionsMenu(true)
         APP_ACTIVITY.mAppDrawer.disableDrawer()
     }
-
     override fun onPause() {
         super.onPause()
         hideKeyBoard()
