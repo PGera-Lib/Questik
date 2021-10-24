@@ -2,6 +2,7 @@ package ru.rinet.questik.ui.chat.single_chat
 
 import android.view.View
 import android.widget.AbsListView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.database.DatabaseReference
@@ -26,11 +27,12 @@ class SingleChatFragment(private val contact: CommonModel) :
     private lateinit var mAdapter: SingleChatAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mMessagesListener: AppChildEventListener
-    private var mCountMessages = 10
+    private var mCountMessages = 15
     private var mIsScrooling = false
     private var mSmoothScrollToPosition = true
 
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var mLayoutManager: LinearLayoutManager
 //    private var mListListeners = mutableListOf<AppChildEventListener>()
 
 
@@ -46,20 +48,33 @@ class SingleChatFragment(private val contact: CommonModel) :
     private fun initRecyclerView() {
         println("------------------------------------initRecyclerView--------------------------------------------")
         mSwipeRefreshLayout = chat_swipe_layout
+        mLayoutManager = LinearLayoutManager(this.context)
         mRecyclerView = chat_recycler_view
         mAdapter = SingleChatAdapter()
+
         mRecyclerView.adapter = mAdapter
+        mRecyclerView.setHasFixedSize(true)
+        mRecyclerView.isNestedScrollingEnabled = false
+
+        mRecyclerView.layoutManager = mLayoutManager
+
         mRefMessages = REF_DATABASE_ROOT.child(NODE_MESSAGES).child(CURRENT_UID).child(contact.id)
+
         chat_input_message.setOnClickListener { mRecyclerView.smoothScrollToPosition(mAdapter.itemCount) }
+
         mMessagesListener = AppChildEventListener {
             println("------------------------------------mMessagesListener--------------------------------------------")
-            mAdapter.addItem(it.getCommonModel(), mSmoothScrollToPosition) {
-                if (mSmoothScrollToPosition) {
+            val message = it.getCommonModel()
+            if (mSmoothScrollToPosition) {
+                mAdapter.addItemToBottom(message) {
                     mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
                 }
-                mSwipeRefreshLayout.isRefreshing = false
-            }
 
+            } else {
+                mAdapter.addItemToTop(message) {
+                    mSwipeRefreshLayout.isRefreshing = false
+                }
+            }
         }
         mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
 //        mListListeners.add(mMessagesListener)
@@ -75,7 +90,7 @@ class SingleChatFragment(private val contact: CommonModel) :
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (mIsScrooling && dy < 0) {
+                if (mIsScrooling && dy < 0 && mLayoutManager.findFirstVisibleItemPosition() <= 3) {
                     updateData()
                 }
             }

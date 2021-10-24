@@ -42,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         initFirebase()
         initUser{
+            initJobsHashMap {
+                println("______________________________________FINISH_______________________________________"
+                )
+            }
            mAppDrawer.updateHeader()
         }
         CoroutineScope(Dispatchers.IO).launch {

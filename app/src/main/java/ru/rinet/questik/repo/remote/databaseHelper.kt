@@ -8,14 +8,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import ru.rinet.questik.models.CommonModel
-import ru.rinet.questik.models.UserModel
+import ru.rinet.questik.models.*
 
 lateinit var AUTH: FirebaseAuth
 lateinit var CURRENT_UID: String
 lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var REF_STORAGE_ROOT: StorageReference
 lateinit var USER: UserModel
+lateinit var JOBS_HASHMAP: HashMap<CategoryModel, List<JobsModel>>
 
 const val TYPE_TEXT = "text"
 
@@ -24,6 +24,11 @@ const val NODE_USERNAMES = "usernames"
 const val NODE_PHONES = "phones"
 const val NODE_PHONE_CONTACTS = "phone_contacts"
 const val NODE_MESSAGES = "messages"
+
+const val NODE_JOBS = "jobs"
+const val NODE_MATERIALS = "materials"
+const val NODE_CATEGORY = "category"
+const val NODE_METRICS = "metrics"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
 
@@ -42,8 +47,22 @@ const val CHILD_TYPE = "type"
 const val CHILD_FROM = "from"
 const val CHILD_TIMESTAMP = "timestamp"
 
+/**
+ * NODE_JOBS
+ */
+const val CHILD_NAME = "name"
+const val CHILD_CATEGORY_ID = "category_id"
+const val CHILD_METRICS_ID = "metrics_id"
+const val CHILD_PRICE = "price"
+const val CHILD_PRICE_INZH = "price_inzh"
+const val CHILD_PRICE_NALOG_ZP = "price_nalog_zp"
+const val CHILD_PRICE_ZP = "price_zp"
 
+/**
+ * NODE_MATERIALS
+ */
 
+const val CHILD_PLU = "plu"
 
 fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
     if (AUTH.currentUser != null) {
@@ -126,10 +145,44 @@ inline fun initUser(crossinline function: () -> Unit) {
     }
 }
 
+inline fun initJobsHashMap(crossinline function: () -> Unit) {
+    var mCategory = CategoryModel()
+    var mJob = JobsModel()
+    var mJoblist = mutableListOf<JobsModel>()
+    var mCategoryList = mutableListOf<CategoryModel>()
+
+   REF_DATABASE_ROOT.child(NODE_CATEGORY).addListenerForSingleValueEvent(AppValueEventListener{
+       mCategory = it.getCategoryModel()
+       mCategoryList.add(mCategory)
+   })
+    REF_DATABASE_ROOT.child(NODE_JOBS).addListenerForSingleValueEvent(AppValueEventListener{
+        mJob = it.getJobsModel()
+        mJoblist.add(mJob)
+    })
+    JOBS_HASHMAP = hashMapOf<CategoryModel, List<JobsModel>>()
+    mJoblist.forEach { it1 ->
+        mCategoryList.forEach { it2 ->
+            if (it1.category_id.equals(it2.id)){
+                var newJobList = mutableListOf<JobsModel>()
+                newJobList.add(it1)
+                JOBS_HASHMAP.put(it2, newJobList)
+            }
+        }
+    }
+   println(JOBS_HASHMAP)
+    function()
+}
+
+
 fun DataSnapshot.getCommonModel(): CommonModel =
     this.getValue(CommonModel::class.java) ?: CommonModel()
 
 fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
+fun DataSnapshot.getCategoryModel(): CategoryModel = this.getValue(CategoryModel::class.java) ?: CategoryModel()
+fun DataSnapshot.getJobsModel(): JobsModel = this.getValue(JobsModel::class.java) ?: JobsModel()
+fun DataSnapshot.getMetricsModel(): MetricsModel = this.getValue(MetricsModel::class.java) ?: MetricsModel()
+
+
 
 fun sendMessage(message: String, receivingUserId: String, typeText: String, function: () -> Unit) {
     val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
@@ -139,6 +192,7 @@ fun sendMessage(message: String, receivingUserId: String, typeText: String, func
     mapMessages[CHILD_FROM] = CURRENT_UID
     mapMessages[CHILD_TYPE] = typeText
     mapMessages[CHILD_TEXT] = message
+    mapMessages[CHILD_ID] = messageKey.toString()
     mapMessages[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
 
     val mapDialog = hashMapOf<String, Any>()

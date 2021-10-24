@@ -54,33 +54,20 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
 
     override fun getItemCount(): Int = mListMessagesCash.size
 
-
-    fun addItem(item: CommonModel, toBottom: Boolean, isSuccess: () -> Unit) {
-
-        if (toBottom) {
-            if (!mListMessagesCash.contains(item)) {
-                mListMessagesCash.add(item)
-                notifyItemInserted(mListMessagesCash.size)
-            }
-        } else {
-            if (!mListMessagesCash.contains(item)) {
-                mListMessagesCash.add(item)
-                mListMessagesCash.sortBy { it.timestamp.toString() }
-                notifyItemInserted(0)
-            }
+    fun addItemToBottom(item: CommonModel, isSuccess: () -> Unit) {
+        if (!mListMessagesCash.contains(item)) {
+            mListMessagesCash.add(item)
+            notifyItemInserted(mListMessagesCash.size)
         }
         isSuccess()
-/*        val newList = mutableListOf<CommonModel>()
-        newList.addAll(mListMessagesCash)
-        if (!newList.contains(item)) {
-            newList.add(item)
+    }
+    fun addItemToTop(item: CommonModel, isSuccess: () -> Unit) {
+        if (!mListMessagesCash.contains(item)) {
+            mListMessagesCash.add(item)
+            mListMessagesCash.sortBy { it.timestamp.toString() }
+            notifyItemInserted(0)
         }
-        newList.sortBy {
-            it.timestamp.toString()
-        }
-        mDiffResult = DiffUtil.calculateDiff(DiffUtilCallback(mListMessagesCash, newList))
-        mDiffResult.dispatchUpdatesTo(this)
-        mListMessagesCash = newList*/
+        isSuccess()
     }
 
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/questik_btn_ripple"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/jobs_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:text="Наименование"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/jobs_item_price_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/defualt_margin"
+        android:layout_marginTop="@dimen/defualt_margin"
+        android:layout_marginBottom="@dimen/defualt_margin"
+        android:text="Цена: "
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jobs_item_name" />
+
+    <TextView
+        android:id="@+id/jobs_item_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/defualt_margin"
+        android:layout_marginTop="@dimen/defualt_margin"
+        android:layout_marginBottom="@dimen/defualt_margin"
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintStart_toEndOf="@id/jobs_item_price_hint"
+        app:layout_constraintTop_toBottomOf="@id/jobs_item_name"
+        tools:text="2000,00 руб" />
+
+    <TextView
+        android:id="@+id/catalog_item_sap_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/defualt_margin"
+        android:layout_marginTop="@dimen/defualt_margin"
+        android:layout_marginBottom="@dimen/defualt_margin"
+        android:text="SAP: "
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jobs_item_price_hint" />
+
+    <TextView
+        android:id="@+id/jobs_item_sap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/defualt_margin"
+        android:layout_marginTop="@dimen/defualt_margin"
+        android:layout_marginBottom="@dimen/defualt_margin"
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintStart_toEndOf="@id/catalog_item_sap_hint"
+        app:layout_constraintTop_toBottomOf="@id/jobs_item_price_hint"
+        tools:text="MAT234556" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
