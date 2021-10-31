@@ -10,12 +10,18 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import ru.rinet.questik.models.*
 
+lateinit var JOBS_LIST: List<JobsModel>
+lateinit var CATEGORY_LIST: List<CategoryModel>
 lateinit var AUTH: FirebaseAuth
 lateinit var CURRENT_UID: String
 lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var REF_STORAGE_ROOT: StorageReference
 lateinit var USER: UserModel
-lateinit var JOBS_HASHMAP: HashMap<CategoryModel, List<JobsModel>>
+
+
+
+lateinit var CATALOG_HASHMAP: HashMap<CategoryModel, List<JobsModel>>
+
 
 const val TYPE_TEXT = "text"
 
@@ -26,11 +32,12 @@ const val NODE_PHONE_CONTACTS = "phone_contacts"
 const val NODE_MESSAGES = "messages"
 
 const val NODE_JOBS = "jobs"
-const val NODE_MATERIALS = "materials"
+const val NODE_MATERIALS = "material"
 const val NODE_CATEGORY = "category"
 const val NODE_METRICS = "metrics"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
+
 
 
 const val CHILD_ID = "id"
@@ -50,6 +57,7 @@ const val CHILD_TIMESTAMP = "timestamp"
 /**
  * NODE_JOBS
  */
+
 const val CHILD_NAME = "name"
 const val CHILD_CATEGORY_ID = "category_id"
 const val CHILD_METRICS_ID = "metrics_id"
@@ -66,26 +74,24 @@ const val CHILD_PLU = "plu"
 
 fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
     if (AUTH.currentUser != null) {
-        if (AUTH.currentUser != null) {
-            REF_DATABASE_ROOT.child(NODE_PHONES)
-                .addListenerForSingleValueEvent(AppValueEventListener {
-                    it.children.forEach { snapshot ->
-                        arrayContacts.forEach { contact ->
-                            if (snapshot.key == contact.phone) {
-                                REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
-                                    .child(snapshot.value.toString()).child(CHILD_ID)
-                                    .setValue(snapshot.value.toString())
-                                    .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+        REF_DATABASE_ROOT.child(NODE_PHONES)
+            .addListenerForSingleValueEvent(AppValueEventListener {
+                it.children.forEach { snapshot ->
+                    arrayContacts.forEach { contact ->
+                        if (snapshot.key == contact.phone) {
+                            REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
+                                .child(snapshot.value.toString()).child(CHILD_ID)
+                                .setValue(snapshot.value.toString())
+                                .addOnFailureListener { exception -> showToast(exception.message.toString()) }
 
-                                REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
-                                    .child(snapshot.value.toString()).child(CHILD_FULLNAME)
-                                    .setValue(contact.fullname)
-                                    .addOnFailureListener { exception -> showToast(exception.message.toString()) }
-                            }
+                            REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
+                                .child(snapshot.value.toString()).child(CHILD_FULLNAME)
+                                .setValue(contact.fullname)
+                                .addOnFailureListener { exception -> showToast(exception.message.toString()) }
                         }
                     }
-                })
-        }
+                }
+            })
     }
 }
 
@@ -144,45 +150,40 @@ inline fun initUser(crossinline function: () -> Unit) {
             })
     }
 }
+fun initCatalogHashMap() {
+    if (AUTH.currentUser != null) {
+        var cat = CategoryModel()
+        val list = mutableListOf<JobsModel>()
+        CATALOG_HASHMAP.apply {
+            REF_DATABASE_ROOT.child(NODE_JOBS)
+                .addChildEventListener(AppChildEventListener { it1 ->
+                    val mJob = it1.getJobsModel()
 
-inline fun initJobsHashMap(crossinline function: () -> Unit) {
-    var mCategory = CategoryModel()
-    var mJob = JobsModel()
-    var mJoblist = mutableListOf<JobsModel>()
-    var mCategoryList = mutableListOf<CategoryModel>()
-
-   REF_DATABASE_ROOT.child(NODE_CATEGORY).addListenerForSingleValueEvent(AppValueEventListener{
-       mCategory = it.getCategoryModel()
-       mCategoryList.add(mCategory)
-   })
-    REF_DATABASE_ROOT.child(NODE_JOBS).addListenerForSingleValueEvent(AppValueEventListener{
-        mJob = it.getJobsModel()
-        mJoblist.add(mJob)
-    })
-    JOBS_HASHMAP = hashMapOf<CategoryModel, List<JobsModel>>()
-    mJoblist.forEach { it1 ->
-        mCategoryList.forEach { it2 ->
-            if (it1.category_id.equals(it2.id)){
-                var newJobList = mutableListOf<JobsModel>()
-                newJobList.add(it1)
-                JOBS_HASHMAP.put(it2, newJobList)
-            }
+                    REF_DATABASE_ROOT.child(NODE_CATEGORY)
+                        .addChildEventListener(AppChildEventListener { it2 ->
+                            val mCategory = it2.getCategoryModel()
+                           if (mJob.category_id == mCategory.id) {
+                               cat = mCategory
+                               list.add(mJob)
+                           }
+                        })
+                })
+            put(cat, list)
         }
     }
-   println(JOBS_HASHMAP)
-    function()
+
+
+
+
 }
-
-
 fun DataSnapshot.getCommonModel(): CommonModel =
     this.getValue(CommonModel::class.java) ?: CommonModel()
 
 fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
 fun DataSnapshot.getCategoryModel(): CategoryModel = this.getValue(CategoryModel::class.java) ?: CategoryModel()
 fun DataSnapshot.getJobsModel(): JobsModel = this.getValue(JobsModel::class.java) ?: JobsModel()
-fun DataSnapshot.getMetricsModel(): MetricsModel = this.getValue(MetricsModel::class.java) ?: MetricsModel()
-
-
+fun DataSnapshot.getMetricsModel(): MetricsModel =
+    this.getValue(MetricsModel::class.java) ?: MetricsModel()
 
 fun sendMessage(message: String, receivingUserId: String, typeText: String, function: () -> Unit) {
     val refDialogUser = "$NODE_MESSAGES/$CURRENT_UID/$receivingUserId"
@@ -206,7 +207,7 @@ fun sendMessage(message: String, receivingUserId: String, typeText: String, func
 
 }
 
-fun changeUsername(mNewUserName:String) {
+fun changeUsername(mNewUserName: String) {
     if (mNewUserName.isEmpty()) {
         showToast("Ваш логин не может быть пустым!!!")
     } else {
@@ -215,7 +216,8 @@ fun changeUsername(mNewUserName:String) {
                 if (it.hasChild(mNewUserName)) {
                     showToast("Такой пользователь уже есть")
                 } else {
-                    REF_DATABASE_ROOT.child(NODE_USERNAMES).child(mNewUserName).setValue(CURRENT_UID)
+                    REF_DATABASE_ROOT.child(NODE_USERNAMES).child(mNewUserName)
+                        .setValue(CURRENT_UID)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 updateCurentUsername(mNewUserName)
@@ -230,7 +232,8 @@ fun changeUsername(mNewUserName:String) {
 }
 
 fun updateCurentUsername(mNewUserName: String) {
-    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_USERNAME).setValue(mNewUserName)
+    REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_USERNAME)
+        .setValue(mNewUserName)
         .addOnCompleteListener {
             if (it.isSuccessful) {
                 deleteOldUsername(mNewUserName)
@@ -242,7 +245,7 @@ fun updateCurentUsername(mNewUserName: String) {
         .addOnFailureListener { exception -> showToast(exception.message.toString()) }
 }
 
-fun deleteOldUsername(mNewUserName:String) {
+fun deleteOldUsername(mNewUserName: String) {
     REF_DATABASE_ROOT.child(NODE_USERNAMES).child(USER.username).removeValue()
         .addOnCompleteListener {
             if (it.isSuccessful) {
@@ -260,7 +263,7 @@ fun deleteOldUsername(mNewUserName:String) {
 fun changeBio(newBio: String) {
     REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_BIO).setValue(newBio)
         .addOnCompleteListener {
-            if (it.isSuccessful){
+            if (it.isSuccessful) {
                 showToast("Данные обновлены")
                 USER.bio = newBio
                 APP_ACTIVITY.fragmentManager?.popBackStack()

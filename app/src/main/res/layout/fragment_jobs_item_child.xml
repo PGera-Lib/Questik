@@ -46,28 +46,5 @@
         app:layout_constraintTop_toBottomOf="@id/jobs_item_name"
         tools:text="2000,00 руб" />
 
-    <TextView
-        android:id="@+id/catalog_item_sap_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/defualt_margin"
-        android:layout_marginTop="@dimen/defualt_margin"
-        android:layout_marginBottom="@dimen/defualt_margin"
-        android:text="SAP: "
-        android:textSize="@dimen/normal_text_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/jobs_item_price_hint" />
-
-    <TextView
-        android:id="@+id/jobs_item_sap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/defualt_margin"
-        android:layout_marginTop="@dimen/defualt_margin"
-        android:layout_marginBottom="@dimen/defualt_margin"
-        android:textSize="@dimen/normal_text_size"
-        app:layout_constraintStart_toEndOf="@id/catalog_item_sap_hint"
-        app:layout_constraintTop_toBottomOf="@id/jobs_item_price_hint"
-        tools:text="MAT234556" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

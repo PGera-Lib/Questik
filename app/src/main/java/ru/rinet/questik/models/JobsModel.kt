@@ -1,7 +1,7 @@
 package ru.rinet.questik.models
 
 data class JobsModel(
-    var id: String = "",
+    val id: String = "",
     var name: String = "",
     var price: String = "",
     var metrics_id: String = "",

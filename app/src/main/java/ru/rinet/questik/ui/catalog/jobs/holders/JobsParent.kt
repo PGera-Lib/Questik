@@ -4,16 +4,19 @@ import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.ExpandableItem
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
-import kotlinx.android.synthetic.main.fragment_jobs_item_parent.*
+import kotlinx.android.synthetic.main.fragment_jobs_item_parent.view.*
 import ru.rinet.questik.R
+import ru.rinet.questik.models.CategoryModel
 
-class JobsParent(val title: String) : Item(), ExpandableItem {
+class JobsParent(val category: CategoryModel) : Item(), ExpandableItem {
     private lateinit var expandableGroup: ExpandableGroup
-
     override fun bind(p0: GroupieViewHolder, p1: Int) {
-        p0.jobs_catalog_name.text = title
-        p0.itemView.setOnClickListener {
-            expandableGroup.onToggleExpanded()
+        p0.root.jobs_catalog_name.text = category.name
+        p0.root.parent_icon_arrow.setImageResource(
+            R.drawable.questik_expand_down
+        )
+        p0.root.parent_icon_arrow.setOnClickListener {
+           expandableGroup.onToggleExpanded()
             changeStuff(p0)
         }
     }
@@ -23,10 +26,10 @@ class JobsParent(val title: String) : Item(), ExpandableItem {
     }
 
     private fun changeStuff(viewHolder: GroupieViewHolder) {
-        viewHolder.parent_icon_arrow.apply {
+        viewHolder.root.parent_icon_arrow.apply {
             setImageResource(
-                if (expandableGroup.isExpanded) R.drawable.questik_expand_down
-                else R.drawable.questik_expand_up
+                if (expandableGroup.isExpanded) R.drawable.questik_expand_up
+                else R.drawable.questik_expand_down
             )
         }
     }

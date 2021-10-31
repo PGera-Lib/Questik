@@ -23,7 +23,6 @@ class AppChildEventListener(val onSuccess:(DataSnapshot) -> Unit): ChildEventLis
     }
 
     override fun onCancelled(error: DatabaseError) {
-        println("------------------------------------mMessagesListenerError--------------------------------------------")
         Log.i("------------------------------------mMessagesListenerError--------------------------------------------", error.message.toString())
     }
 
