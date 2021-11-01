@@ -4,24 +4,22 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+
 import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import ru.rinet.questik.models.*
 
-lateinit var JOBS_LIST: List<JobsModel>
-lateinit var CATEGORY_LIST: List<CategoryModel>
 lateinit var AUTH: FirebaseAuth
 lateinit var CURRENT_UID: String
 lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var REF_STORAGE_ROOT: StorageReference
 lateinit var USER: UserModel
-
-
-
-lateinit var CATALOG_HASHMAP: HashMap<CategoryModel, List<JobsModel>>
-
+lateinit var JOBS_HASHMAP: MutableMap<CategoryModel, List<JobsModel>>
+lateinit var CATALOG_LIST_CATEGORY: MutableList<CategoryModel>
+lateinit var CATALOG_LIST_JOB: MutableList<JobsModel>
 
 const val TYPE_TEXT = "text"
 
@@ -32,12 +30,11 @@ const val NODE_PHONE_CONTACTS = "phone_contacts"
 const val NODE_MESSAGES = "messages"
 
 const val NODE_JOBS = "jobs"
-const val NODE_MATERIALS = "material"
+const val NODE_MATERIALS = "materials"
 const val NODE_CATEGORY = "category"
 const val NODE_METRICS = "metrics"
 
 const val FOLDER_PROFILE_IMAGE = "profile_image"
-
 
 
 const val CHILD_ID = "id"
@@ -57,7 +54,6 @@ const val CHILD_TIMESTAMP = "timestamp"
 /**
  * NODE_JOBS
  */
-
 const val CHILD_NAME = "name"
 const val CHILD_CATEGORY_ID = "category_id"
 const val CHILD_METRICS_ID = "metrics_id"
@@ -74,33 +70,38 @@ const val CHILD_PLU = "plu"
 
 fun updatePhonesToDatabase(arrayContacts: ArrayList<CommonModel>) {
     if (AUTH.currentUser != null) {
-        REF_DATABASE_ROOT.child(NODE_PHONES)
-            .addListenerForSingleValueEvent(AppValueEventListener {
-                it.children.forEach { snapshot ->
-                    arrayContacts.forEach { contact ->
-                        if (snapshot.key == contact.phone) {
-                            REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
-                                .child(snapshot.value.toString()).child(CHILD_ID)
-                                .setValue(snapshot.value.toString())
-                                .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+        if (AUTH.currentUser != null) {
+            REF_DATABASE_ROOT.child(NODE_PHONES)
+                .addListenerForSingleValueEvent(AppValueEventListener {
+                    it.children.forEach { snapshot ->
+                        arrayContacts.forEach { contact ->
+                            if (snapshot.key == contact.phone) {
+                                REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
+                                    .child(snapshot.value.toString()).child(CHILD_ID)
+                                    .setValue(snapshot.value.toString())
+                                    .addOnFailureListener { exception -> showToast(exception.message.toString()) }
 
-                            REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
-                                .child(snapshot.value.toString()).child(CHILD_FULLNAME)
-                                .setValue(contact.fullname)
-                                .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+                                REF_DATABASE_ROOT.child(NODE_PHONE_CONTACTS).child(CURRENT_UID)
+                                    .child(snapshot.value.toString()).child(CHILD_FULLNAME)
+                                    .setValue(contact.fullname)
+                                    .addOnFailureListener { exception -> showToast(exception.message.toString()) }
+                            }
                         }
                     }
-                }
-            })
+                })
+        }
     }
 }
 
 fun initFirebase() {
     AUTH = FirebaseAuth.getInstance()
-    REF_DATABASE_ROOT = FirebaseDatabase.getInstance().reference
+    REF_DATABASE_ROOT = Firebase.database.reference
     REF_STORAGE_ROOT = FirebaseStorage.getInstance().reference
     USER = UserModel()
+    JOBS_HASHMAP = mutableMapOf()
     CURRENT_UID = AUTH.currentUser?.uid.toString()
+/*    Firebase.database.setPersistenceEnabled(true)*/
+
 
 }
 
@@ -150,38 +151,110 @@ inline fun initUser(crossinline function: () -> Unit) {
             })
     }
 }
-fun initCatalogHashMap() {
-    if (AUTH.currentUser != null) {
-        var cat = CategoryModel()
-        val list = mutableListOf<JobsModel>()
-        CATALOG_HASHMAP.apply {
+
+/*
+inline fun initJobsHashMap() {
+
+    CATALOG_LIST_JOB = mutableListOf()
+    CATALOG_LIST_CATEGORY = mutableListOf()
+    JOBS_HASHMAP = hashMapOf()
+    var mCategoryModel: CategoryModel
+    var mJobsModel: JobsModel
+
+    REF_DATABASE_ROOT.child(NODE_CATEGORY)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot2 ->
+            CATALOG_LIST_CATEGORY.clear()
+            snapshot2.children.forEach { cat1 ->
+                mCategoryModel = cat1.getCatModel()
+                val hasJobList = mutableListOf<JobsModel>()
+                CATALOG_LIST_CATEGORY.add(mCategoryModel)
+                println("Категории " + mCategoryModel.name)
+            }
             REF_DATABASE_ROOT.child(NODE_JOBS)
-                .addChildEventListener(AppChildEventListener { it1 ->
-                    val mJob = it1.getJobsModel()
+                .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                    CATALOG_LIST_JOB.clear()
+                    snapshot1.children.forEach { job1 ->
+                        */
+/*val id = it.getJobsModel().id
+                        val name= it.getJobsModel().name
+                        val price= it.getJobsModel().price
+                        val metrics_id= it.getJobsModel().metrics_id
+                        val category_id= it.getJobsModel().category_id
+                        val price_inzh= it.getJobsModel().price_inzh
+                        val price_nalog_zp= it.getJobsModel().price_nalog_zp
+                        val price_zp: String= it.getJobsModel().price_zp*//*
 
-                    REF_DATABASE_ROOT.child(NODE_CATEGORY)
-                        .addChildEventListener(AppChildEventListener { it2 ->
-                            val mCategory = it2.getCategoryModel()
-                           if (mJob.category_id == mCategory.id) {
-                               cat = mCategory
-                               list.add(mJob)
-                           }
-                        })
+                        mJobsModel = job1.getJobsModel()
+                        CATALOG_LIST_JOB.add(mJobsModel)
+                        println("работы: " + mJobsModel.name)
+                    }
                 })
-            put(cat, list)
-        }
-    }
-
-
-
-
+            for (cat in CATALOG_LIST_CATEGORY) {
+                val list = mutableListOf<JobsModel>()
+                for (job in CATALOG_LIST_JOB) {
+                    if (cat.id == job.category_id) {
+                        list.add(job)
+                    }
+                }
+                JOBS_HASHMAP.put(cat, list)
+            }
+            println("hasmap"+ JOBS_HASHMAP.toString())
+        })
 }
+*/
+
+
+inline fun initHashMap(crossinline function: () -> Unit) {
+    CATALOG_LIST_JOB = mutableListOf()
+    CATALOG_LIST_CATEGORY = mutableListOf()
+
+    CATALOG_LIST_CATEGORY.clear()
+    JOBS_HASHMAP.apply {
+        REF_DATABASE_ROOT.child(NODE_CATEGORY)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot2 ->
+                CATALOG_LIST_CATEGORY.apply {
+                    var mCategoryModel: CategoryModel
+                    mCategoryModel = CategoryModel()
+                    snapshot2.children.forEach { cat1 ->
+                        mCategoryModel = cat1.getCatModel()
+                        add(mCategoryModel)
+                        println("Категории " + mCategoryModel.name)
+                    }
+                }
+                    REF_DATABASE_ROOT.child(NODE_JOBS)
+                        .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                            CATALOG_LIST_JOB.clear()
+                            for (cat in CATALOG_LIST_CATEGORY) {
+                                val hasJobList = mutableListOf<JobsModel>()
+                                for (snap in snapshot1.children) {
+                                    var mJobsModel: JobsModel
+                                    mJobsModel = snap.getJobsModel()
+                                    CATALOG_LIST_JOB.add(mJobsModel)
+                                    if (cat.id == mJobsModel.category_id) {
+
+                                        hasJobList.add(mJobsModel)
+                                    }
+                                }
+                                println("Категория : " + cat.name + "Работы : "+ hasJobList.toString())
+                                put(cat, hasJobList)
+                            }
+                        })
+
+            })
+    }
+    println("JOBS HASHMAP in Helper: ---- " + JOBS_HASHMAP.toString())
+    function()
+}
+
+
+fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
+fun DataSnapshot.getCatModel(): CategoryModel =
+    this.getValue(CategoryModel::class.java) ?: CategoryModel()
+
+fun DataSnapshot.getJobsModel(): JobsModel = this.getValue(JobsModel::class.java) ?: JobsModel()
 fun DataSnapshot.getCommonModel(): CommonModel =
     this.getValue(CommonModel::class.java) ?: CommonModel()
 
-fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
-fun DataSnapshot.getCategoryModel(): CategoryModel = this.getValue(CategoryModel::class.java) ?: CategoryModel()
-fun DataSnapshot.getJobsModel(): JobsModel = this.getValue(JobsModel::class.java) ?: JobsModel()
 fun DataSnapshot.getMetricsModel(): MetricsModel =
     this.getValue(MetricsModel::class.java) ?: MetricsModel()
 

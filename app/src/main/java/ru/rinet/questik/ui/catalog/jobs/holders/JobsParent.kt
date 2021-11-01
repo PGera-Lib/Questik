@@ -16,7 +16,7 @@ class JobsParent(val category: CategoryModel) : Item(), ExpandableItem {
             R.drawable.questik_expand_down
         )
         p0.root.parent_icon_arrow.setOnClickListener {
-           expandableGroup.onToggleExpanded()
+            expandableGroup.onToggleExpanded()
             changeStuff(p0)
         }
     }

@@ -1,6 +1,6 @@
 package ru.rinet.questik.ui.catalog.jobs
 
-import android.util.Log
+
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.appcompat.widget.SearchView
@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
+import kotlinx.android.synthetic.main.fragment_jobs.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.rinet.questik.R
 import ru.rinet.questik.ui.base.BaseFragment
-import ru.rinet.questik.ui.catalog.jobs.holders.JobsChild
-import ru.rinet.questik.ui.catalog.jobs.holders.JobsParent
-import ru.rinet.questik.utils.CATALOG_HASHMAP
+import ru.rinet.questik.utils.APP_ACTIVITY
+import ru.rinet.questik.utils.JOBS_HASHMAP
 
 class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
 
@@ -31,8 +31,16 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     private lateinit var groupLayoutManager: LinearLayoutManager
     override fun onStart() {
         super.onStart()
-
-/*        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
+            for ((k,v) in JOBS_HASHMAP){
+                println("‐-------------------"+k.name+"‐-------------------")
+                for (job in v){
+                    println("Работы: -------"+job.name)
+                }
+        }
+           // println(JOBS_HASHMAP.toString())
+        }
+/*
             initCatalog {
                 initHashMapCatalog {
                     groupLayoutManager = LinearLayoutManager(APP_ACTIVITY)
@@ -49,6 +57,11 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(true)
+        groupLayoutManager = LinearLayoutManager(APP_ACTIVITY)
+        fragment_jobs_recyclerview.apply {
+            this.layoutManager = groupLayoutManager
+            adapter = groupAdapter
+        }
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 initGroupie {
@@ -63,7 +76,6 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
 
 /*        MainScope().launch {
             withContext(Dispatchers.Default) {
-
             }
         }*/
 
@@ -153,7 +165,7 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
 
     private fun initGroupie(function: () -> Unit) {
 
-        CATALOG_HASHMAP.forEach { cat, list ->
+/*        CATALOG_HASHMAP.forEach { cat, list ->
             val expandableGroup = ExpandableGroup(JobsParent(cat)).apply {
                 for (job in list) {
                     Log.i("INIT GROUPIE    ----   ", cat.name + " :  " + job.name)
@@ -162,7 +174,7 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
             }
             exGrList.add(expandableGroup)
         }
-/*        groupAdapter.apply {
+*//*        groupAdapter.apply {
             for (i in mCategoryList) {
                 parentList.add(JobsParent(i))
                 this += ExpandableGroup(JobsParent(i)).apply {
@@ -174,8 +186,9 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
                     exGrList.add(this)
                 }
             }
-        }*/
+        }*//*
         function()
         println("  ---- ")
+        */
     }
 }

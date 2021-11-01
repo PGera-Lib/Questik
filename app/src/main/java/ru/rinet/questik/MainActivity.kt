@@ -24,47 +24,46 @@ import ru.rinet.questik.utils.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
-    lateinit var mToolbar: Toolbar
-    lateinit var mAppDrawer: AppDrawer
-    lateinit var mDrawable: MaterialDrawerSliderView
-    lateinit var mDrawerLayout: DrawerLayout
-    lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+   lateinit var mToolbar: Toolbar
+   lateinit var mAppDrawer: AppDrawer
+   lateinit var mDrawable: MaterialDrawerSliderView
+   lateinit var mDrawerLayout: DrawerLayout
+   lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-        mBinding.slider
         mDrawerLayout = root
         mDrawable = mBinding.slider
         APP_ACTIVITY = this
+
+
         initFirebase()
-        initUser {
-            mAppDrawer.updateHeader()
+        initUser{
+           mAppDrawer.updateHeader()
+
         }
         CoroutineScope(Dispatchers.IO).launch {
-            initCatalogHashMap()
-
-/*            for (h in CATALOG_HASHMAP){
-                val key = h.key.name
-                val list = h.value.forEach {
-                    val name = it.name
-                    Log.i("HASHMAP:---------- ", key+" -------  "+name)
-                }
-            }
-            Log.i("HASHMAP:---------- ", CATALOG_HASHMAP.toString())
-            println("HASHMAP:---------- "+CATALOG_HASHMAP.toString())*/
             initContacts()
-            initFileSystem()
+           // initJobsHashMap()
+            initHashMap{
+                println("JOBS HASHMAP in MainActivity: " + JOBS_HASHMAP.toString())
+            }
+
         }
+        initFileSystem()
         initFields()
         initFunc()
+
     }
+
+
 
     override fun onStart() {
         super.onStart()
-        if (AUTH.currentUser != null) {
+        if (AUTH.currentUser!=null) {
             AppStatus.updateStatus(AppStatus.ONLINE)
         }
 
@@ -72,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        if (AUTH.currentUser != null) {
+        if (AUTH.currentUser!=null) {
             AppStatus.updateStatus(AppStatus.OFFLINE)
         }
 
@@ -81,15 +80,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFunc() {
         setSupportActionBar(mToolbar)
-        actionBarDrawerToggle = ActionBarDrawerToggle(
-            this,
-            mBinding.root,
-            mToolbar,
-            com.mikepenz.materialdrawer.R.string.material_drawer_open,
-            com.mikepenz.materialdrawer.R.string.material_drawer_close
-        )
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, mBinding.root, mToolbar, com.mikepenz.materialdrawer.R.string.material_drawer_open, com.mikepenz.materialdrawer.R.string.material_drawer_close)
         mAppDrawer.create()
-        if (AUTH.currentUser != null) {
+        if (AUTH.currentUser!=null) {
             replaceFragment(ProjectsFragment(), false)
         } else {
             replaceFragment(LoginFragment(), false)
@@ -97,11 +90,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun updateUserPhoto(url: String) {
+    fun updateUserPhoto(url: String){
         mAppDrawer.updateHeader()
         settings_user_photo.downloadAndSetImage(url)
     }
-
     private fun initFields() {
         mToolbar = mBinding.mainToolbar
         mAppDrawer = AppDrawer(mDrawable, mToolbar)
@@ -124,7 +116,6 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
     override fun onBackPressed() {
         //handle the back press :D close the drawer first and if the drawer is closed close the activity
         if (mBinding.root.isDrawerOpen(mBinding.slider)) {
@@ -141,21 +132,10 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (ContextCompat.checkSelfPermission(
-                APP_ACTIVITY,
-                READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if(ContextCompat.checkSelfPermission(APP_ACTIVITY, READ_CONTACTS)==PackageManager.PERMISSION_GRANTED){
             initContacts()
         }
-        if (ContextCompat.checkSelfPermission(
-                APP_ACTIVITY,
-                READ_FILES
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                APP_ACTIVITY,
-                WRITE_FILES
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if(ContextCompat.checkSelfPermission(APP_ACTIVITY, READ_FILES)==PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(APP_ACTIVITY, WRITE_FILES)==PackageManager.PERMISSION_GRANTED ){
             initFileSystem()
         }
     }
@@ -166,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         outState = mBinding.slider.saveInstanceState(outState)
 
         //add the values which need to be saved from the accountHeader to the bundle
-        // outState = mHeader.saveInstanceState(outState)
+       // outState = mHeader.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 
