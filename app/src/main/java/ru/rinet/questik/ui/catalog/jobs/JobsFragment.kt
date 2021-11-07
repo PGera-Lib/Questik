@@ -4,6 +4,9 @@ package ru.rinet.questik.ui.catalog.jobs
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.GroupAdapter
@@ -14,6 +17,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.rinet.questik.R
 import ru.rinet.questik.ui.base.BaseFragment
+import ru.rinet.questik.ui.catalog.jobs.holders.JobsParent
+import ru.rinet.questik.ui.catalog.jobs.paged.JobPagedListGroup
+import ru.rinet.questik.ui.catalog.jobs.paged.JobsDataSourceFactory
 import ru.rinet.questik.utils.APP_ACTIVITY
 import ru.rinet.questik.utils.JOBS_HASHMAP
 
@@ -24,7 +30,9 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
 //    lateinit var jobChildItem: JobsChild
 //    private var childList = mutableListOf<JobsChild>()
 //    private var parentList = mutableListOf<JobsParent>()
-    private var exGrList = mutableListOf<ExpandableGroup>()
+    private lateinit var exGrList: MutableList<ExpandableGroup>
+   // private lateinit var jobsPagedListGroup : JobPagedListGroup
+   private lateinit var jobsExpandableGroup: ExpandableGroup
 
     //    private var newExGrList = mutableListOf<ExpandableGroup>()
     private val groupAdapter = GroupAdapter<GroupieViewHolder>()
@@ -32,26 +40,13 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     override fun onStart() {
         super.onStart()
         CoroutineScope(Dispatchers.IO).launch {
-            for ((k,v) in JOBS_HASHMAP){
-                println("‐-------------------"+k.name+"‐-------------------")
-                for (job in v){
-                    println("Работы: -------"+job.name)
-                }
-        }
-           // println(JOBS_HASHMAP.toString())
-        }
-/*
-            initCatalog {
-                initHashMapCatalog {
-                    groupLayoutManager = LinearLayoutManager(APP_ACTIVITY)
-                    fragment_jobs_recyclerview.apply {
-                        this.layoutManager = groupLayoutManager
-                        adapter = groupAdapter
-                    }
+            for ((k, v) in JOBS_HASHMAP) {
+                println("‐-------------------" + k.name + "‐-------------------")
+                for (job in v) {
+                    println("Работы: -------" + job.name)
                 }
             }
-        }*/
-
+        }
     }
 
     override fun onResume() {
@@ -62,12 +57,15 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
             this.layoutManager = groupLayoutManager
             adapter = groupAdapter
         }
+
         try {
-            CoroutineScope(Dispatchers.IO).launch {
-                initGroupie {
-                    groupAdapter.apply { addAll(exGrList) }
-                }
+            initGroupie {
+                println("------------------------------------------------------------------------------------------------------")
+/*                    groupAdapter.apply { add(jobsPagedListGroup)}*/
             }
+/*            CoroutineScope(Dispatchers.IO).launch {
+
+            }*/
 
         } catch (e: Exception) {
             println(e.message.toString())
@@ -164,6 +162,31 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     }
 
     private fun initGroupie(function: () -> Unit) {
+        //val jobsPagedListGroup = JobPagedListGroup()
+        JOBS_HASHMAP.forEach { (cat, list) ->
+            val jobsPagedListGroup = JobPagedListGroup()
+            jobsExpandableGroup = ExpandableGroup(JobsParent(cat)).apply {
+             //   addAll(list.map { JobsChild(it) })
+                add(jobsPagedListGroup)
+            }
+            val lastJobsItem = list.lastOrNull()
+            groupAdapter.add(jobsExpandableGroup)
+            val factory = JobsDataSourceFactory(cat, lastJobsItem?.id?.toLong() ?: 0)
+            val config = PagedList.Config.Builder()
+                .setInitialLoadSizeHint(15)
+                .setPageSize(15)
+                .build()
+            LivePagedListBuilder(factory, config).build().observe(this, Observer {
+                jobsPagedListGroup.submitList(it)
+            })
+            }
+/*            jobsPagedListGroup = JobPagedListGroup(JobsParent(cat)).apply {
+                addAll(list.map { JobsChild(it) })
+            }*/
+            //groupAdapter.addAll(list.map { JobsChild(it) })
+
+
+        }
 
 /*        CATALOG_HASHMAP.forEach { cat, list ->
             val expandableGroup = ExpandableGroup(JobsParent(cat)).apply {
@@ -190,5 +213,4 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
         function()
         println("  ---- ")
         */
-    }
 }

@@ -2,13 +2,13 @@ package ru.rinet.questik.ui.catalog.jobs.holders
 
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.ExpandableItem
-import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
-import com.xwray.groupie.kotlinandroidextensions.Item
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_jobs_item_parent.view.*
 import ru.rinet.questik.R
 import ru.rinet.questik.models.CategoryModel
 
-class JobsParent(val category: CategoryModel) : Item(), ExpandableItem {
+class JobsParent(val category: CategoryModel) : Item<GroupieViewHolder>(), ExpandableItem {
     private lateinit var expandableGroup: ExpandableGroup
     override fun bind(p0: GroupieViewHolder, p1: Int) {
         p0.root.jobs_catalog_name.text = category.name
@@ -37,6 +37,7 @@ class JobsParent(val category: CategoryModel) : Item(), ExpandableItem {
     override fun setExpandableGroup(onToggleListener: ExpandableGroup) {
         this.expandableGroup = onToggleListener
     }
+
 
 
 }

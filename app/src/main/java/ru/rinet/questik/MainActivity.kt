@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
             initHashMap{
                 println("JOBS HASHMAP in MainActivity: " + JOBS_HASHMAP.toString())
             }
-
         }
         initFileSystem()
         initFields()

@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/android_projects/Questik/app/src/main/res/drawable/questik_icon_search.xml" value="0.201" />
+        <entry key="..\:/android_projects/Questik/app/src/main/res/layout/fragment_jobs.xml" value="0.25181159420289856" />
+        <entry key="..\:/android_projects/Questik/app/src/main/res/layout/fragment_single_chat.xml" value="0.25181159420289856" />
         <entry key="..\:/android_projects/Questik/app/src/main/res/menu/catalog_action_menu.xml" value="0.19322916666666667" />
       </map>
     </option>

@@ -218,7 +218,6 @@ inline fun initHashMap(crossinline function: () -> Unit) {
                     snapshot2.children.forEach { cat1 ->
                         mCategoryModel = cat1.getCatModel()
                         add(mCategoryModel)
-                        println("Категории " + mCategoryModel.name)
                     }
                 }
                     REF_DATABASE_ROOT.child(NODE_JOBS)
@@ -235,14 +234,12 @@ inline fun initHashMap(crossinline function: () -> Unit) {
                                         hasJobList.add(mJobsModel)
                                     }
                                 }
-                                println("Категория : " + cat.name + "Работы : "+ hasJobList.toString())
                                 put(cat, hasJobList)
                             }
                         })
 
             })
     }
-    println("JOBS HASHMAP in Helper: ---- " + JOBS_HASHMAP.toString())
     function()
 }
 
