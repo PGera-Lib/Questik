@@ -4,13 +4,13 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
-
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import ru.rinet.questik.models.*
+import java.util.*
 
 lateinit var AUTH: FirebaseAuth
 lateinit var CURRENT_UID: String
@@ -18,6 +18,7 @@ lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var REF_STORAGE_ROOT: StorageReference
 lateinit var USER: UserModel
 lateinit var JOBS_HASHMAP: MutableMap<CategoryModel, List<JobsModel>>
+lateinit var JOBS_SEARCHED_MAP: MutableMap<CategoryModel, List<JobsModel>>
 lateinit var CATALOG_LIST_CATEGORY: MutableList<CategoryModel>
 lateinit var CATALOG_LIST_JOB: MutableList<JobsModel>
 
@@ -99,6 +100,7 @@ fun initFirebase() {
     REF_STORAGE_ROOT = FirebaseStorage.getInstance().reference
     USER = UserModel()
     JOBS_HASHMAP = mutableMapOf()
+    JOBS_SEARCHED_MAP = mutableMapOf()
     CURRENT_UID = AUTH.currentUser?.uid.toString()
 /*    Firebase.database.setPersistenceEnabled(true)*/
 
@@ -203,7 +205,26 @@ inline fun initJobsHashMap() {
 }
 */
 
-
+inline fun initSearchedMap(searchWord: String, crossinline function: () -> Unit) {
+    JOBS_SEARCHED_MAP.clear()
+    JOBS_SEARCHED_MAP.apply {
+        for ((k,v) in JOBS_HASHMAP){
+            val newjoblist = mutableListOf<JobsModel>()
+            for (j in v) {
+                val st1 = j.name?.toLowerCase(Locale.getDefault())
+                val st2 = searchWord.toLowerCase(Locale.getDefault())
+                if (st1?.contains(st2) == true) {
+                    newjoblist.add(j)
+                }
+            }
+            if (newjoblist.size != 0){
+                println("размер листа________________________"+v.size.toString())
+                put(k, newjoblist)
+            }
+        }
+    }
+    function()
+}
 inline fun initHashMap(crossinline function: () -> Unit) {
     CATALOG_LIST_JOB = mutableListOf()
     CATALOG_LIST_CATEGORY = mutableListOf()
@@ -242,6 +263,7 @@ inline fun initHashMap(crossinline function: () -> Unit) {
     }
     function()
 }
+
 
 
 fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
