@@ -18,9 +18,10 @@ class CatalogFragment : BaseFragment(R.layout.catalog_fragment) {
         setupViewPager(mViewPager)
 
     }
+
     private fun initFields() {
         mViewPager = viewpager
-        mTabLayout  = tab_layout
+        mTabLayout = tab_layout
     }
 
     private fun setupViewPager(viewpager: ViewPager) {

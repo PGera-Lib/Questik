@@ -8,7 +8,8 @@ import ru.rinet.questik.ui.catalog.jobs.holders.JobsChild
 import ru.rinet.questik.utils.JOBS_HASHMAP
 import ru.rinet.questik.utils.JOBS_SEARCHED_MAP
 
-class JobPageKeyedDataSource (val category: CategoryModel, val startAfter: Long) : PageKeyedDataSource<Long, JobsChild>() {
+class JobPageKeyedDataSource(val category: CategoryModel, val startAfter: Long) :
+    PageKeyedDataSource<Long, JobsChild>() {
 
     companion object {
         private val TAG = JobPageKeyedDataSource::class.java.simpleName
@@ -25,20 +26,26 @@ class JobPageKeyedDataSource (val category: CategoryModel, val startAfter: Long)
         val nextLoadKey = jobs?.lastOrNull()?.id?.toLong()
         callback.onResult(jobs?.map { JobsChild(it) }!!, nextLoadKey)*/
     }
-    override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<Long, JobsChild>) {
+
+    override fun loadInitial(
+        params: LoadInitialParams<Long>,
+        callback: LoadInitialCallback<Long, JobsChild>
+    ) {
         Log.e(TAG, "Load Initial Job After: $startAfter")
         val jobs = getJobsAfter(category, startAfter)
         val nextLoadKey = jobs?.lastOrNull()?.id?.toLong()
         callback.onResult(jobs?.map { JobsChild(it) }!!, null, nextLoadKey)
     }
+
     private fun getJobsAfter(category: CategoryModel, startAfter: Long): List<JobsModel>? {
-if (JOBS_SEARCHED_MAP.isEmpty()){
-    JOBS_SEARCHED_MAP.apply { for ((k, v) in JOBS_HASHMAP) {
-        put(k, v)
-    }
-    }
-}
-            return JOBS_SEARCHED_MAP.get(category)?.toList()
+        if (JOBS_SEARCHED_MAP.isEmpty()) {
+            JOBS_SEARCHED_MAP.apply {
+                for ((k, v) in JOBS_HASHMAP) {
+                    put(k, v)
+                }
+            }
+        }
+        return JOBS_SEARCHED_MAP.get(category)?.toList()
 
     }
 }

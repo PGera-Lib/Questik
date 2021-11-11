@@ -17,10 +17,14 @@ lateinit var CURRENT_UID: String
 lateinit var REF_DATABASE_ROOT: DatabaseReference
 lateinit var REF_STORAGE_ROOT: StorageReference
 lateinit var USER: UserModel
+
 lateinit var JOBS_HASHMAP: MutableMap<CategoryModel, List<JobsModel>>
 lateinit var JOBS_SEARCHED_MAP: MutableMap<CategoryModel, List<JobsModel>>
 lateinit var CATALOG_LIST_CATEGORY: MutableList<CategoryModel>
 lateinit var CATALOG_LIST_JOB: MutableList<JobsModel>
+
+lateinit var CATALOG_LIST_MATERIAL: MutableList<MaterialModel>
+lateinit var CATALOG_SEARCHRD_MATERIALS: MutableList<MaterialModel>
 
 const val TYPE_TEXT = "text"
 
@@ -31,7 +35,7 @@ const val NODE_PHONE_CONTACTS = "phone_contacts"
 const val NODE_MESSAGES = "messages"
 
 const val NODE_JOBS = "jobs"
-const val NODE_MATERIALS = "materials"
+const val NODE_MATERIALS = "material"
 const val NODE_CATEGORY = "category"
 const val NODE_METRICS = "metrics"
 
@@ -102,6 +106,8 @@ fun initFirebase() {
     JOBS_HASHMAP = mutableMapOf()
     JOBS_SEARCHED_MAP = mutableMapOf()
     CURRENT_UID = AUTH.currentUser?.uid.toString()
+    CATALOG_LIST_MATERIAL = mutableListOf()
+    CATALOG_SEARCHRD_MATERIALS = mutableListOf()
 /*    Firebase.database.setPersistenceEnabled(true)*/
 
 
@@ -153,59 +159,7 @@ inline fun initUser(crossinline function: () -> Unit) {
             })
     }
 }
-
-/*
-inline fun initJobsHashMap() {
-
-    CATALOG_LIST_JOB = mutableListOf()
-    CATALOG_LIST_CATEGORY = mutableListOf()
-    JOBS_HASHMAP = hashMapOf()
-    var mCategoryModel: CategoryModel
-    var mJobsModel: JobsModel
-
-    REF_DATABASE_ROOT.child(NODE_CATEGORY)
-        .addListenerForSingleValueEvent(AppValueEventListener { snapshot2 ->
-            CATALOG_LIST_CATEGORY.clear()
-            snapshot2.children.forEach { cat1 ->
-                mCategoryModel = cat1.getCatModel()
-                val hasJobList = mutableListOf<JobsModel>()
-                CATALOG_LIST_CATEGORY.add(mCategoryModel)
-                println("Категории " + mCategoryModel.name)
-            }
-            REF_DATABASE_ROOT.child(NODE_JOBS)
-                .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
-                    CATALOG_LIST_JOB.clear()
-                    snapshot1.children.forEach { job1 ->
-                        */
-/*val id = it.getJobsModel().id
-                        val name= it.getJobsModel().name
-                        val price= it.getJobsModel().price
-                        val metrics_id= it.getJobsModel().metrics_id
-                        val category_id= it.getJobsModel().category_id
-                        val price_inzh= it.getJobsModel().price_inzh
-                        val price_nalog_zp= it.getJobsModel().price_nalog_zp
-                        val price_zp: String= it.getJobsModel().price_zp*//*
-
-                        mJobsModel = job1.getJobsModel()
-                        CATALOG_LIST_JOB.add(mJobsModel)
-                        println("работы: " + mJobsModel.name)
-                    }
-                })
-            for (cat in CATALOG_LIST_CATEGORY) {
-                val list = mutableListOf<JobsModel>()
-                for (job in CATALOG_LIST_JOB) {
-                    if (cat.id == job.category_id) {
-                        list.add(job)
-                    }
-                }
-                JOBS_HASHMAP.put(cat, list)
-            }
-            println("hasmap"+ JOBS_HASHMAP.toString())
-        })
-}
-*/
-
-inline fun initSearchedMap(searchWord: String, crossinline function: () -> Unit) {
+inline fun initSearchedJobsMap(searchWord: String, crossinline function: () -> Unit) {
     JOBS_SEARCHED_MAP.clear()
     JOBS_SEARCHED_MAP.apply {
         for ((k,v) in JOBS_HASHMAP){
@@ -225,7 +179,7 @@ inline fun initSearchedMap(searchWord: String, crossinline function: () -> Unit)
     }
     function()
 }
-inline fun initHashMap(crossinline function: () -> Unit) {
+inline fun initJobHashMap(crossinline function: () -> Unit) {
     CATALOG_LIST_JOB = mutableListOf()
     CATALOG_LIST_CATEGORY = mutableListOf()
 
@@ -255,7 +209,9 @@ inline fun initHashMap(crossinline function: () -> Unit) {
                                         hasJobList.add(mJobsModel)
                                     }
                                 }
-                                put(cat, hasJobList)
+                                if (hasJobList.size != 0){
+                                    put(cat, hasJobList)
+                                }
                             }
                         })
 
@@ -263,12 +219,39 @@ inline fun initHashMap(crossinline function: () -> Unit) {
     }
     function()
 }
-
+fun initMaterialCatalog() {
+        REF_DATABASE_ROOT.child(NODE_MATERIALS)
+            .addChildEventListener(AppChildEventListener{snapshot3 ->
+                CATALOG_LIST_MATERIAL.apply {
+                    var mMaterialModel: MaterialModel
+                    mMaterialModel = MaterialModel()
+                        mMaterialModel = snapshot3.getMatModel()
+                        add(mMaterialModel)
+                        println("--------------Material is: "+mMaterialModel.name.toString())
+                }
+            })
+}
+inline fun initSearchedMaterialList(searchedWords: String, crossinline function: () -> Unit) {
+    CATALOG_SEARCHRD_MATERIALS.clear()
+    CATALOG_SEARCHRD_MATERIALS.apply {
+        for (mat in CATALOG_LIST_MATERIAL){
+            val st1 = mat.name?.toLowerCase(Locale.getDefault())
+            val st2 = searchedWords.toLowerCase(Locale.getDefault())
+            val st3 = mat.plu?.toLowerCase(Locale.getDefault())
+            if (st1?.contains(st2) == true ||st3?.contains(st2) == true) {
+                add(mat)
+            }
+        }
+    }
+    function()
+}
 
 
 fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
 fun DataSnapshot.getCatModel(): CategoryModel =
     this.getValue(CategoryModel::class.java) ?: CategoryModel()
+fun DataSnapshot.getMatModel(): MaterialModel =
+    this.getValue(MaterialModel::class.java) ?: MaterialModel()
 
 fun DataSnapshot.getJobsModel(): JobsModel = this.getValue(JobsModel::class.java) ?: JobsModel()
 fun DataSnapshot.getCommonModel(): CommonModel =

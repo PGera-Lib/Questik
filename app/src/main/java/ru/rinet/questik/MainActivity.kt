@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         mDrawable = mBinding.slider
         APP_ACTIVITY = this
 
-
         initFirebase()
         initUser{
            mAppDrawer.updateHeader()
@@ -48,8 +47,7 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             initContacts()
            // initJobsHashMap()
-            initHashMap{
-                println("JOBS HASHMAP in MainActivity: " + JOBS_HASHMAP.toString())
+            initJobHashMap{
             }
         }
         initFileSystem()

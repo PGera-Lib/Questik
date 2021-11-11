@@ -23,7 +23,7 @@ import ru.rinet.questik.ui.catalog.jobs.paged.JobsDataSourceFactory
 import ru.rinet.questik.utils.APP_ACTIVITY
 import ru.rinet.questik.utils.JOBS_HASHMAP
 import ru.rinet.questik.utils.JOBS_SEARCHED_MAP
-import ru.rinet.questik.utils.initSearchedMap
+import ru.rinet.questik.utils.initSearchedJobsMap
 
 class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
 
@@ -83,7 +83,7 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     private fun filterSearch(newText: String?) {
 
         try {
-                initSearchedMap(newText.toString()) {
+                initSearchedJobsMap(newText.toString()) {
                     updateData()
                     CoroutineScope(Dispatchers.IO).launch {
                         for ((k, v) in JOBS_SEARCHED_MAP) {
