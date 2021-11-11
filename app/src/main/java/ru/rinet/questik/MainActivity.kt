@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
         }
         CoroutineScope(Dispatchers.IO).launch {
             initContacts()
-           // initJobsHashMap()
             initJobHashMap{
+                initMaterialCatalog()
             }
         }
         initFileSystem()

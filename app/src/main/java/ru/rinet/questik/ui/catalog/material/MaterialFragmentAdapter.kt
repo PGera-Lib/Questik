@@ -1,5 +1,6 @@
 package ru.rinet.questik.ui.catalog.material
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,15 @@ class MaterialFragmentAdapter: RecyclerView.Adapter<MaterialFragmentAdapter.Mate
         }
         isSuccess()
     }
-
+    @SuppressLint("NotifyDataSetChanged")
+    fun afterSearch(list: List<MaterialModel>, isSuccess: () -> Unit) {
+       mListMaterialCash.clear()
+        for (m in list){
+            mListMaterialCash.add(m)
+            notifyItemInserted(mListMaterialCash.size)
+        }
+        notifyDataSetChanged()
+        isSuccess()
+    }
 
 }

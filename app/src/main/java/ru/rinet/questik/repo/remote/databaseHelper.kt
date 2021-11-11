@@ -159,10 +159,11 @@ inline fun initUser(crossinline function: () -> Unit) {
             })
     }
 }
+
 inline fun initSearchedJobsMap(searchWord: String, crossinline function: () -> Unit) {
     JOBS_SEARCHED_MAP.clear()
     JOBS_SEARCHED_MAP.apply {
-        for ((k,v) in JOBS_HASHMAP){
+        for ((k, v) in JOBS_HASHMAP) {
             val newjoblist = mutableListOf<JobsModel>()
             for (j in v) {
                 val st1 = j.name?.toLowerCase(Locale.getDefault())
@@ -171,14 +172,15 @@ inline fun initSearchedJobsMap(searchWord: String, crossinline function: () -> U
                     newjoblist.add(j)
                 }
             }
-            if (newjoblist.size != 0){
-                println("размер листа________________________"+v.size.toString())
+            if (newjoblist.size != 0) {
+                println("размер листа________________________" + v.size.toString())
                 put(k, newjoblist)
             }
         }
     }
     function()
 }
+
 inline fun initJobHashMap(crossinline function: () -> Unit) {
     CATALOG_LIST_JOB = mutableListOf()
     CATALOG_LIST_CATEGORY = mutableListOf()
@@ -195,51 +197,56 @@ inline fun initJobHashMap(crossinline function: () -> Unit) {
                         add(mCategoryModel)
                     }
                 }
-                    REF_DATABASE_ROOT.child(NODE_JOBS)
-                        .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
-                            CATALOG_LIST_JOB.clear()
-                            for (cat in CATALOG_LIST_CATEGORY) {
-                                val hasJobList = mutableListOf<JobsModel>()
-                                for (snap in snapshot1.children) {
-                                    var mJobsModel: JobsModel
-                                    mJobsModel = snap.getJobsModel()
-                                    CATALOG_LIST_JOB.add(mJobsModel)
-                                    if (cat.id == mJobsModel.category_id) {
+                REF_DATABASE_ROOT.child(NODE_JOBS)
+                    .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                        CATALOG_LIST_JOB.clear()
+                        for (cat in CATALOG_LIST_CATEGORY) {
+                            val hasJobList = mutableListOf<JobsModel>()
+                            for (snap in snapshot1.children) {
+                                var mJobsModel: JobsModel
+                                mJobsModel = snap.getJobsModel()
+                                CATALOG_LIST_JOB.add(mJobsModel)
+                                if (cat.id == mJobsModel.category_id) {
 
-                                        hasJobList.add(mJobsModel)
-                                    }
-                                }
-                                if (hasJobList.size != 0){
-                                    put(cat, hasJobList)
+                                    hasJobList.add(mJobsModel)
                                 }
                             }
-                        })
+                            if (hasJobList.size != 0) {
+                                put(cat, hasJobList)
+                            }
+                        }
+                    })
 
             })
     }
     function()
 }
+
 fun initMaterialCatalog() {
-        REF_DATABASE_ROOT.child(NODE_MATERIALS)
-            .addChildEventListener(AppChildEventListener{snapshot3 ->
-                CATALOG_LIST_MATERIAL.apply {
+    REF_DATABASE_ROOT.child(NODE_MATERIALS)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot3 ->
+            CATALOG_LIST_MATERIAL.apply {
+                for (child in snapshot3.children) {
                     var mMaterialModel: MaterialModel
                     mMaterialModel = MaterialModel()
-                        mMaterialModel = snapshot3.getMatModel()
-                        add(mMaterialModel)
-                        println("--------------Material is: "+mMaterialModel.name.toString())
+                    mMaterialModel = child.getMatModel()
+                    add(mMaterialModel)
+                    println("--------------Material is: ID:${mMaterialModel.id} NAME:" + mMaterialModel.name.toString())
                 }
-            })
+            }
+        })
 }
+
 inline fun initSearchedMaterialList(searchedWords: String, crossinline function: () -> Unit) {
     CATALOG_SEARCHRD_MATERIALS.clear()
     CATALOG_SEARCHRD_MATERIALS.apply {
-        for (mat in CATALOG_LIST_MATERIAL){
+        for (mat in CATALOG_LIST_MATERIAL) {
             val st1 = mat.name?.toLowerCase(Locale.getDefault())
             val st2 = searchedWords.toLowerCase(Locale.getDefault())
             val st3 = mat.plu?.toLowerCase(Locale.getDefault())
-            if (st1?.contains(st2) == true ||st3?.contains(st2) == true) {
+            if (st1?.contains(st2) == true || st3?.contains(st2) == true) {
                 add(mat)
+                println("--------------Material searched is: ID:${mat.id} NAME:" + mat.name.toString())
             }
         }
     }
@@ -250,6 +257,7 @@ inline fun initSearchedMaterialList(searchedWords: String, crossinline function:
 fun DataSnapshot.getUserModel(): UserModel = this.getValue(UserModel::class.java) ?: UserModel()
 fun DataSnapshot.getCatModel(): CategoryModel =
     this.getValue(CategoryModel::class.java) ?: CategoryModel()
+
 fun DataSnapshot.getMatModel(): MaterialModel =
     this.getValue(MaterialModel::class.java) ?: MaterialModel()
 
