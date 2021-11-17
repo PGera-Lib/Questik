@@ -9,6 +9,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import ru.rinet.questik.models.*
 import java.util.*
 
@@ -22,7 +26,7 @@ lateinit var JOBS_HASHMAP: MutableMap<CategoryModel, List<JobsModel>>
 lateinit var JOBS_SEARCHED_MAP: MutableMap<CategoryModel, List<JobsModel>>
 lateinit var CATALOG_LIST_CATEGORY: MutableList<CategoryModel>
 lateinit var CATALOG_LIST_JOB: MutableList<JobsModel>
-
+lateinit var CATALOG_LIST_METRICS: MutableList<MetricsModel>
 lateinit var CATALOG_LIST_MATERIAL: MutableList<MaterialModel>
 lateinit var CATALOG_SEARCHRD_MATERIALS: MutableList<MaterialModel>
 
@@ -107,6 +111,8 @@ fun initFirebase() {
     JOBS_SEARCHED_MAP = mutableMapOf()
     CURRENT_UID = AUTH.currentUser?.uid.toString()
     CATALOG_LIST_MATERIAL = mutableListOf()
+    CATALOG_LIST_JOB = mutableListOf()
+    CATALOG_LIST_METRICS = mutableListOf()
     CATALOG_SEARCHRD_MATERIALS = mutableListOf()
 /*    Firebase.database.setPersistenceEnabled(true)*/
 
@@ -144,7 +150,6 @@ inline fun initUser(crossinline function: () -> Unit) {
                         ).addOnSuccessListener {
                             USER.username = CURRENT_UID
                         }.addOnFailureListener { showToast(it.message.toString()) }
-
                 }
                 if (USER.photoUrl.isEmpty()) {
                     REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_USER_PHOTO)
@@ -181,7 +186,69 @@ inline fun initSearchedJobsMap(searchWord: String, crossinline function: () -> U
     function()
 }
 
-inline fun initJobHashMap(crossinline function: () -> Unit) {
+inline fun initListJob(crossinline function: () -> Unit) {
+    val scope = CoroutineScope(Job() + Dispatchers.IO)
+    val job = scope.launch {
+        REF_DATABASE_ROOT.child(NODE_JOBS)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                println("initListJob ------------------------1" )
+                    for (snap in snapshot1.children) {
+                        val mJobsModel: JobsModel = snap.getJobsModel()
+                        CATALOG_LIST_JOB.add(mJobsModel)
+                        println("initListJob ------------------------${mJobsModel.name}" )
+                    }
+                    println("initListJob ------------------------2" )
+                    function()
+            })
+
+    }
+    if (job.isCancelled && job.isCompleted){
+        println("initListJob ------------------------3" )
+    }
+}
+inline fun initListMetrics(crossinline function: () -> Unit) {
+    val scope = CoroutineScope(Job() + Dispatchers.IO)
+    val job = scope.launch {
+        REF_DATABASE_ROOT.child(NODE_METRICS)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                println("mMetricsModel ------------------------1" )
+                for (snap in snapshot1.children) {
+                    val mMetricsModel: MetricsModel = snap.getMetricsModel()
+                    CATALOG_LIST_METRICS.add(mMetricsModel)
+                    println("mMetricsModel ------------------------${mMetricsModel.name}" )
+                }
+                println("mMetricsModel ------------------------2" )
+                function()
+            })
+
+    }
+    if (job.isCancelled && job.isCompleted){
+        println("initListJob ------------------------3" )
+    }
+}
+
+inline fun initListCategories(crossinline function: () -> Unit) {
+    val scope = CoroutineScope(Job() + Dispatchers.IO)
+    val job = scope.launch {
+        REF_DATABASE_ROOT.child(NODE_CATEGORY)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                println("mCategoryModel ------------------------1" )
+                for (snap in snapshot1.children) {
+                    val mCategoryModel: CategoryModel = snap.getCatModel()
+                    CATALOG_LIST_CATEGORY.add(mCategoryModel)
+                    println("mCategoryModel ------------------------${mCategoryModel.name}" )
+                }
+                println("mCategoryModel ------------------------2" )
+                function()
+            })
+
+    }
+    if (job.isCancelled && job.isCompleted){
+        println("initListJob ------------------------3" )
+    }
+}
+
+inline fun initJobHashMap(crossinline function: () -> Unit)  {
     CATALOG_LIST_JOB = mutableListOf()
     CATALOG_LIST_CATEGORY = mutableListOf()
 
@@ -207,8 +274,9 @@ inline fun initJobHashMap(crossinline function: () -> Unit) {
                                 mJobsModel = snap.getJobsModel()
                                 CATALOG_LIST_JOB.add(mJobsModel)
                                 if (cat.id == mJobsModel.category_id) {
-
                                     hasJobList.add(mJobsModel)
+
+                                  //  println("--------------category is: ID:${cat.name}  NAME JOB: " + mJobsModel.name.toString())
                                 }
                             }
                             if (hasJobList.size != 0) {
@@ -222,19 +290,27 @@ inline fun initJobHashMap(crossinline function: () -> Unit) {
     function()
 }
 
-fun initMaterialCatalog() {
-    REF_DATABASE_ROOT.child(NODE_MATERIALS)
-        .addListenerForSingleValueEvent(AppValueEventListener { snapshot3 ->
-            CATALOG_LIST_MATERIAL.apply {
+inline fun initMaterialCatalog(crossinline function: () -> Unit) {
+    val scope = CoroutineScope(Job() + Dispatchers.IO)
+    val job = scope.launch {
+        REF_DATABASE_ROOT.child(NODE_MATERIALS)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot3->
+                println("mMaterialModel ------------------------1" )
                 for (child in snapshot3.children) {
                     var mMaterialModel: MaterialModel
                     mMaterialModel = MaterialModel()
                     mMaterialModel = child.getMatModel()
-                    add(mMaterialModel)
-                    println("--------------Material is: ID:${mMaterialModel.id} NAME:" + mMaterialModel.name.toString())
+                    CATALOG_LIST_MATERIAL.add(mMaterialModel)
+                    // println("--------------Material is: ID:${mMaterialModel.id} NAME:" + mMaterialModel.name.toString())
                 }
-            }
-        })
+                println("mCategoryModel ------------------------2" )
+                function()
+            })
+
+    }
+    if (job.isCancelled && job.isCompleted){
+        println("initListJob ------------------------3" )
+    }
 }
 
 inline fun initSearchedMaterialList(searchedWords: String, crossinline function: () -> Unit) {
