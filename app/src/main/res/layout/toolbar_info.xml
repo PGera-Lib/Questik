@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    android:background="@color/colorPrimary">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/single_chat_fragment_user_photo"
+        android:layout_width="@dimen/settings_user_photo_width"
+        android:layout_height="@dimen/settings_user_photo_heght"
+        android:src="@drawable/questik_userphoto"
+        app:civ_border_color="@color/settings_user_photo_border_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/single_chat_fragment_user_fullname"
+        android:layout_width="@dimen/settings_user_fullname_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/defualt_margin"
+        android:layout_marginTop="@dimen/settings_user_fullname_marginTop"
+        android:text="@string/settings_defualt_user"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/normal_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/single_chat_fragment_user_photo"
+        app:layout_constraintTop_toTopOf="@id/single_chat_fragment_user_photo" />
+
+    <TextView
+        android:id="@+id/single_chat_fragment_user_status"
+        android:layout_width="@dimen/settings_user_status_width"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/defualt_margin"
+        android:text="@string/settings_user_status"
+        android:textColor="@color/colorAccentDark"
+        android:textSize="@dimen/small_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/single_chat_fragment_user_photo"
+        app:layout_constraintTop_toBottomOf="@id/single_chat_fragment_user_fullname" />
+</androidx.constraintlayout.widget.ConstraintLayout>

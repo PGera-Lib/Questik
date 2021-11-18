@@ -1,32 +1,34 @@
 package ru.rinet.questik.ui.catalog
 
-import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.catalog_fragment.*
 import ru.rinet.questik.R
+import ru.rinet.questik.ui.base.BaseFragment
+import ru.rinet.questik.ui.catalog.jobs.JobsFragment
+import ru.rinet.questik.ui.catalog.material.MaterialFragment
 
-class CatalogFragment : Fragment() {
+class CatalogFragment : BaseFragment(R.layout.catalog_fragment) {
+    lateinit var mViewPager: ViewPager
+    lateinit var mTabLayout: TabLayout
 
-    companion object {
-        fun newInstance() = CatalogFragment()
+    override fun onResume() {
+        super.onResume()
+        initFields()
+        setupViewPager(mViewPager)
+
     }
 
-    private lateinit var viewModel: CatalogViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.catalog_fragment, container, false)
+    private fun initFields() {
+        mViewPager = viewpager
+        mTabLayout = tab_layout
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CatalogViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun setupViewPager(viewpager: ViewPager) {
+        var adapter: ViewPagerAdapter = ViewPagerAdapter(childFragmentManager)
+        adapter.addFragment(JobsFragment(), "Работы")
+        adapter.addFragment(MaterialFragment(), "Материалы")
+        mViewPager.setAdapter(adapter)
+        mTabLayout.setupWithViewPager(mViewPager)
     }
-
 }
