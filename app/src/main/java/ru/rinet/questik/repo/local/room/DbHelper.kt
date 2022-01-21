@@ -31,6 +31,10 @@ class DbHelper @Inject constructor(
     override fun clearCategories() =
         appDatabase.categoryDao().clearCategories()
 
+    override fun getCategoriesCount(): Int =
+        appDatabase.categoryDao().getCategoriesCount()
+
+
 
     /** **************************************************************************
      * Job
@@ -40,6 +44,7 @@ class DbHelper @Inject constructor(
     override fun deleteJob(job: JobsEntity) = appDatabase.jobsDao().deleteJob(job)
     override fun getJobById(id: Int): List<JobsEntity> = appDatabase.jobsDao().getJobById(id)
     override fun getJobs(): List<JobsEntity> = appDatabase.jobsDao().getJobs()
+    override fun getJobsCount(): Int = appDatabase.jobsDao().getJobsCount()
     override fun getAllJobs(): PagingSource<Int, JobsEntity> = appDatabase.jobsDao().getAllJobs()
     override suspend fun insertAllJobs(items: List<JobsEntity>) = appDatabase.jobsDao().insertAllJobs(items)
     override fun clearJobs() = appDatabase.jobsDao().clearJobs()
@@ -65,7 +70,7 @@ class DbHelper @Inject constructor(
 
     override suspend fun insertAllMaterials(items: List<MaterialEntity>)   = appDatabase.materialDao().insertAllMaterials(items)
     override fun clearMaterials()  = appDatabase.materialDao().clearMaterials()
-
+    override fun getMaterialsCount(): Int = appDatabase.materialDao().getMaterialsCount()
     /** **************************************************************************
      * Metrics
      ****************************************************************************/
@@ -86,6 +91,8 @@ class DbHelper @Inject constructor(
     override fun getAllMetrics(): PagingSource<Int, MetricsEntity>  = appDatabase.metricsDao().getAllMetrics()
     override suspend fun insertAllMetrics(items: List<MetricsEntity>) = appDatabase.metricsDao().insertAllMetrics(items)
     override fun clearMetrics() = appDatabase.metricsDao().clearMetrics()
+    override fun getMetricsCount(): Int = appDatabase.metricsDao().getMetricsCount()
+
     /** **************************************************************************
      * User
      ****************************************************************************/
@@ -95,5 +102,6 @@ class DbHelper @Inject constructor(
     override fun deleteUser(user: UserEntity) = appDatabase.userDao().deleteUser(user)
     override fun getUserById(id: Int): List<UserEntity> = appDatabase.userDao().getUserById(id)
     override fun getUser(): List<UserEntity> = appDatabase.userDao().getUser()
+    override fun geUsersCount(): Int = appDatabase.userDao().getUsersCount()
 
 }

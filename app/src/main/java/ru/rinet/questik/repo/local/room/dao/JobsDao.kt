@@ -6,6 +6,8 @@ import ru.rinet.questik.repo.local.room.entity.JobsEntity
 
 @Dao
 interface JobsDao {
+    @Query("SELECT COUNT(id) FROM jobs")
+    fun getJobsCount(): Int
 
     @Query("SELECT * FROM jobs")
     fun getAllJobs(): PagingSource<Int, JobsEntity>

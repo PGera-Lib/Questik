@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4130d317c164b9cc28c21e9fde1f6557",
+    "identityHash": "497c6850b07272e7de38a36c70633b29",
     "entities": [
       {
         "tableName": "categories",
@@ -136,7 +136,7 @@
       },
       {
         "tableName": "materials",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `plu` TEXT, `name` TEXT, `price` TEXT, `metrics_id` TEXT, `category_id` TEXT, FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`metrics_id`) REFERENCES `metrics`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `plu` TEXT, `name` TEXT, `price` TEXT, `metrics_id` TEXT, `category_id` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -207,30 +207,7 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_materials_category_id` ON `${TABLE_NAME}` (`category_id`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "categories",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "category_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "metrics",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "metrics_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "metrics",
@@ -376,7 +353,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4130d317c164b9cc28c21e9fde1f6557')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '497c6850b07272e7de38a36c70633b29')"
     ]
   }
 }

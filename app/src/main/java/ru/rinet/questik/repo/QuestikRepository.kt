@@ -1,26 +1,16 @@
 package ru.rinet.questik.repo
 
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingSource
 import ru.rinet.questik.repo.local.room.AppDatabase
 import ru.rinet.questik.repo.local.room.DbHelper
 import ru.rinet.questik.repo.local.room.entity.*
-import ru.rinet.questik.repo.remote.ItemRemoteDataSource
 import javax.inject.Inject
 
 class QuestikRepository @Inject constructor(
-    private val itemRemoteDataSource: ItemRemoteDataSource,
     private val dbHelper: DbHelper,
     private val appDatabase: AppDatabase
 
 ):Repository{
-    @OptIn(ExperimentalPagingApi::class)
-    fun getRemoteAndLocalFlow() = itemRemoteDataSource.getRemoteAndLocalFlow()
-
-
-
-
-
     /**
      * Category
      */
@@ -32,6 +22,7 @@ class QuestikRepository @Inject constructor(
     fun getAllCategories(): PagingSource<Int, CategoryEntity> = dbHelper.getAllCategories()
     suspend fun insertAllCategories(items:List<CategoryEntity>) = dbHelper.insertAllCategories(items)
     fun clearCategories() = dbHelper.clearCategories()
+    fun getCategoriesCount(): Int = dbHelper.getCategoriesCount()
 
     /**
      * Jobs
@@ -45,6 +36,7 @@ class QuestikRepository @Inject constructor(
     fun deleteJob(job: JobsEntity)= dbHelper.deleteJob(job)
     fun getJobById(id: Int): List<JobsEntity> = dbHelper.getJobById(id)
     fun getJobs(): List<JobsEntity> = dbHelper.getJobs()
+    fun getJobsCount(): Int = dbHelper.getJobsCount()
 
     /**
      * Material
@@ -57,6 +49,7 @@ class QuestikRepository @Inject constructor(
     fun getAllMaterials(): PagingSource<Int, MaterialEntity> = dbHelper.getAllMaterials()
     suspend  fun insertAllMaterials(items:List<MaterialEntity>) = dbHelper.insertAllMaterials(items)
     fun clearMaterials() = dbHelper.clearMaterials()
+    fun getMaterialsCount(): Int = dbHelper.getMaterialsCount()
 
 
     /**
@@ -70,7 +63,7 @@ class QuestikRepository @Inject constructor(
     fun getAllMetrics(): PagingSource<Int, MetricsEntity> = dbHelper.getAllMetrics()
     suspend  fun insertAllMetrics(items:List<MetricsEntity>) = dbHelper.insertAllMetrics(items)
     fun clearMetrics() = dbHelper.clearMetrics()
-
+    fun getMetricsCount(): Int = dbHelper.getMetricsCount()
     /**
      * Users
      */
@@ -80,5 +73,5 @@ class QuestikRepository @Inject constructor(
     fun deleteUser(user: UserEntity) = dbHelper.deleteUser(user)
     fun getUserById(id: Int): List<UserEntity> = dbHelper.getUserById(id)
     fun getUser(): List<UserEntity> = dbHelper.getUser()
-
+    fun getUsersCount(): Int = dbHelper.geUsersCount()
 }

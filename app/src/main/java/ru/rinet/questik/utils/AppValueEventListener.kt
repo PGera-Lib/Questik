@@ -9,7 +9,6 @@ class AppValueEventListener(val onSuccess:(DataSnapshot) -> Unit):ValueEventList
     override fun onDataChange(snapshot: DataSnapshot) {
     onSuccess(snapshot)
     }
-
     override fun onCancelled(error: DatabaseError) {
 Log.i("AppValueEventListener", error.message.toString())
     }

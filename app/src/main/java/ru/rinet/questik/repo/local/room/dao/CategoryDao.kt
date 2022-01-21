@@ -7,6 +7,9 @@ import ru.rinet.questik.repo.local.room.entity.CategoryEntity
 @Dao
 interface CategoryDao {
 
+    @Query("SELECT COUNT(id) FROM categories")
+    fun getCategoriesCount(): Int
+
     @Query("SELECT * FROM categories")
     fun getAllCategories(): PagingSource<Int, CategoryEntity>
 

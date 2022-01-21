@@ -26,7 +26,6 @@ class MaterialFragment : BaseFragment(R.layout.fragment_material) {
     private var mSmoothScrollToPosition = true
     private lateinit var mRefMaterials: DatabaseReference
     private lateinit var mMaterialsListener: AppChildEventListener
-
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var mLayoutManager: LinearLayoutManager
 
@@ -35,7 +34,7 @@ class MaterialFragment : BaseFragment(R.layout.fragment_material) {
         super.onResume()
         setHasOptionsMenu(true)
         println("------------------------------------onResume--------------------------------------------")
-        initRecyclerView()
+     //   initRecyclerView()
 
     }
 

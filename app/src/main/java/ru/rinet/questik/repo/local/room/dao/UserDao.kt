@@ -5,6 +5,9 @@ import ru.rinet.questik.repo.local.room.entity.UserEntity
 
 @Dao
 interface UserDao {
+    @Query("SELECT COUNT(id) FROM users")
+    fun getUsersCount(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: UserEntity)
 

@@ -17,6 +17,7 @@ interface IDbHelper {
     fun getAllCategories(): PagingSource<Int, CategoryEntity>
     suspend fun insertAllCategories(items:List<CategoryEntity>)
     fun clearCategories()
+    fun getCategoriesCount():Int
 
     /**
      * Jobs
@@ -29,6 +30,7 @@ interface IDbHelper {
     fun deleteJob(job: JobsEntity)
     fun getJobById(id: Int): List<JobsEntity>
     fun getJobs(): List<JobsEntity>
+    fun getJobsCount():Int
 
     /**
      * Material
@@ -41,7 +43,7 @@ interface IDbHelper {
     fun getAllMaterials(): PagingSource<Int, MaterialEntity>
     suspend  fun insertAllMaterials(items:List<MaterialEntity>)
     fun clearMaterials()
-
+    fun getMaterialsCount():Int
 
     /**
      * Metrics
@@ -54,7 +56,7 @@ interface IDbHelper {
     fun getAllMetrics(): PagingSource<Int, MetricsEntity>
     suspend  fun insertAllMetrics(items:List<MetricsEntity>)
     fun clearMetrics()
-
+    fun getMetricsCount():Int
     /**
      * Users
      */
@@ -65,5 +67,5 @@ interface IDbHelper {
     fun deleteUser(user: UserEntity)
     fun getUserById(id: Int): List<UserEntity>
     fun getUser(): List<UserEntity>
-
+    fun geUsersCount():Int
 }

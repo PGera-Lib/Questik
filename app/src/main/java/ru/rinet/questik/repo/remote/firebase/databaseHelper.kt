@@ -30,6 +30,12 @@ lateinit var CATALOG_LIST_METRICS: MutableList<MetricsModel>
 lateinit var CATALOG_LIST_MATERIAL: MutableList<MaterialModel>
 lateinit var CATALOG_SEARCHRD_MATERIALS: MutableList<MaterialModel>
 
+var CATALOG_LIST_CATEGORY_COUNT: Int = 0
+var CATALOG_LIST_JOB_COUNT: Int = 0
+var CATALOG_LIST_METRICS_COUNT: Int = 0
+var CATALOG_LIST_MATERIAL_COUNT: Int = 0
+
+
 const val TYPE_TEXT = "text"
 
 const val NODE_USERS = "users"
@@ -110,10 +116,15 @@ fun initFirebase() {
     JOBS_HASHMAP = mutableMapOf()
     JOBS_SEARCHED_MAP = mutableMapOf()
     CURRENT_UID = AUTH.currentUser?.uid.toString()
+    CATALOG_LIST_CATEGORY = mutableListOf()
     CATALOG_LIST_MATERIAL = mutableListOf()
     CATALOG_LIST_JOB = mutableListOf()
     CATALOG_LIST_METRICS = mutableListOf()
     CATALOG_SEARCHRD_MATERIALS = mutableListOf()
+    initMetricsCount()
+    initJobsCount()
+    initCategoriesCount()
+    initMaterialsCount()
 /*    Firebase.database.setPersistenceEnabled(true)*/
 
 
@@ -186,18 +197,58 @@ inline fun initSearchedJobsMap(searchWord: String, crossinline function: () -> U
     function()
 }
 
+fun initJobsCount() {
+        REF_DATABASE_ROOT.child(NODE_JOBS)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                CATALOG_LIST_JOB_COUNT = snapshot1.childrenCount.toInt()
+                println("initListJobsCount ------------------------${snapshot1.childrenCount.toInt()}")
+            })
+}
+fun initMaterialsCount() {
+    REF_DATABASE_ROOT.child(NODE_MATERIALS)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+            CATALOG_LIST_MATERIAL_COUNT= snapshot1.childrenCount.toInt()
+            println("initListMaterialsCount ------------------------$CATALOG_LIST_MATERIAL_COUNT")
+        })
+
+}
+fun initCategoriesCount(){
+    REF_DATABASE_ROOT.child(NODE_CATEGORY)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+            CATALOG_LIST_CATEGORY_COUNT= snapshot1.childrenCount.toInt()
+            println("initListCategoriesCount ------------------------$CATALOG_LIST_CATEGORY_COUNT" )
+        })
+}
+fun initMetricsCount(){
+    REF_DATABASE_ROOT.child(NODE_METRICS)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+            CATALOG_LIST_METRICS_COUNT= snapshot1.childrenCount.toInt()
+            println("initListMetricsCount ------------------------$CATALOG_LIST_METRICS_COUNT" )
+        })
+}
+fun initUsersCount(): Int {
+    var count: Int = 0
+    REF_DATABASE_ROOT.child(NODE_USERS)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+            count= snapshot1.childrenCount.toInt()
+            println("initListMaterialsCount ------------------------$count" )
+        })
+    return count
+}
+
+
 inline fun initListJob(crossinline function: () -> Unit) {
     val scope = CoroutineScope(Job() + Dispatchers.IO)
     val job = scope.launch {
         REF_DATABASE_ROOT.child(NODE_JOBS)
             .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
-                println("initListJob ------------------------1" )
+           //     println("initListJob ------------------------1" )
                     for (snap in snapshot1.children) {
                         val mJobsModel: JobsModel = snap.getJobsModel()
                         CATALOG_LIST_JOB.add(mJobsModel)
-                        println("initListJob ------------------------${mJobsModel.name}" )
+                   //     println("initListJob ------------------------${mJobsModel.name}" )
                     }
-                    println("initListJob ------------------------2" )
+               //     println("initListJob ------------------------2" )
                     function()
             })
 
@@ -211,13 +262,13 @@ inline fun initListMetrics(crossinline function: () -> Unit) {
     val job = scope.launch {
         REF_DATABASE_ROOT.child(NODE_METRICS)
             .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
-                println("mMetricsModel ------------------------1" )
+             //   println("mMetricsModel ------------------------1" )
                 for (snap in snapshot1.children) {
                     val mMetricsModel: MetricsModel = snap.getMetricsModel()
                     CATALOG_LIST_METRICS.add(mMetricsModel)
-                    println("mMetricsModel ------------------------${mMetricsModel.name}" )
+               //     println("mMetricsModel ------------------------${mMetricsModel.name}" )
                 }
-                println("mMetricsModel ------------------------2" )
+             //   println("mMetricsModel ------------------------2" )
                 function()
             })
 
@@ -232,13 +283,13 @@ inline fun initListCategories(crossinline function: () -> Unit) {
     val job = scope.launch {
         REF_DATABASE_ROOT.child(NODE_CATEGORY)
             .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
-                println("mCategoryModel ------------------------1" )
+             //   println("mCategoryModel ------------------------1" )
                 for (snap in snapshot1.children) {
                     val mCategoryModel: CategoryModel = snap.getCatModel()
                     CATALOG_LIST_CATEGORY.add(mCategoryModel)
-                    println("mCategoryModel ------------------------${mCategoryModel.name}" )
+             //       println("mCategoryModel ------------------------${mCategoryModel.name}" )
                 }
-                println("mCategoryModel ------------------------2" )
+            //    println("mCategoryModel ------------------------2" )
                 function()
             })
 
@@ -253,7 +304,31 @@ inline fun initJobHashMap(crossinline function: () -> Unit)  {
     CATALOG_LIST_CATEGORY = mutableListOf()
 
     CATALOG_LIST_CATEGORY.clear()
-    JOBS_HASHMAP.apply {
+
+    REF_DATABASE_ROOT.child(NODE_CATEGORY)
+        .addListenerForSingleValueEvent(AppValueEventListener { snapshot2 ->
+            CATALOG_LIST_CATEGORY.apply {
+                var mCategoryModel: CategoryModel
+                mCategoryModel = CategoryModel()
+                snapshot2.children.forEach { cat1 ->
+                    mCategoryModel = cat1.getCatModel()
+                    add(mCategoryModel)
+                }
+            }
+            REF_DATABASE_ROOT.child(NODE_JOBS)
+                .addListenerForSingleValueEvent(AppValueEventListener { snapshot1 ->
+                    CATALOG_LIST_JOB.clear()
+                        for (snap in snapshot1.children) {
+                            var mJobsModel: JobsModel
+                            mJobsModel = snap.getJobsModel()
+                            CATALOG_LIST_JOB.add(mJobsModel)
+                        }
+                })
+
+        })
+
+
+/*    JOBS_HASHMAP.apply {
         REF_DATABASE_ROOT.child(NODE_CATEGORY)
             .addListenerForSingleValueEvent(AppValueEventListener { snapshot2 ->
                 CATALOG_LIST_CATEGORY.apply {
@@ -286,7 +361,7 @@ inline fun initJobHashMap(crossinline function: () -> Unit)  {
                     })
 
             })
-    }
+    }*/
     function()
 }
 
@@ -295,21 +370,21 @@ inline fun initMaterialCatalog(crossinline function: () -> Unit) {
     val job = scope.launch {
         REF_DATABASE_ROOT.child(NODE_MATERIALS)
             .addListenerForSingleValueEvent(AppValueEventListener { snapshot3->
-                println("mMaterialModel ------------------------1" )
+        //        println("mMaterialModel ------------------------1" )
                 for (child in snapshot3.children) {
                     var mMaterialModel: MaterialModel
                     mMaterialModel = MaterialModel()
                     mMaterialModel = child.getMatModel()
                     CATALOG_LIST_MATERIAL.add(mMaterialModel)
-                    // println("--------------Material is: ID:${mMaterialModel.id} NAME:" + mMaterialModel.name.toString())
+            //        println("--------------Material is: ID:${mMaterialModel.id} NAME:" + mMaterialModel.name.toString())
                 }
-                println("mCategoryModel ------------------------2" )
+            //    println("mCategoryModel ------------------------2" )
                 function()
             })
 
     }
     if (job.isCancelled && job.isCompleted){
-        println("initListJob ------------------------3" )
+        println("initMaterialCatalog ------------------------3" )
     }
 }
 

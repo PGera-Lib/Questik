@@ -6,6 +6,11 @@ import ru.rinet.questik.repo.local.room.entity.MaterialEntity
 
 @Dao
 interface MaterialDao {
+
+    @Query("SELECT COUNT(id) FROM materials")
+    fun getMaterialsCount(): Int
+
+
     @Query("SELECT * FROM materials")
     fun getAllMaterials(): PagingSource<Int, MaterialEntity>
 

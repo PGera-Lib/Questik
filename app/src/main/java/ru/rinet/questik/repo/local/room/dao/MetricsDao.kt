@@ -7,6 +7,10 @@ import ru.rinet.questik.repo.local.room.entity.MetricsEntity
 @Dao
 interface MetricsDao {
 
+    @Query("SELECT COUNT(id) FROM metrics")
+    fun getMetricsCount(): Int
+
+
     @Query("SELECT * FROM metrics")
     fun getAllMetrics(): PagingSource<Int, MetricsEntity>
 

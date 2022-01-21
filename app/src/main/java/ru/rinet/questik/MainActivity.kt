@@ -52,16 +52,27 @@ class MainActivity : AppCompatActivity() {
         initFirebase()
         initUser {
             mAppDrawer.updateHeader()
-
         }
+        if (AUTH.currentUser != null) {
         CoroutineScope(Dispatchers.IO).launch {
             initContacts()
+            initListCategories {
+                initListMetrics {
+                    initListJob {
+                        initMaterialCatalog {
+                            initDatabaseCatalog()
+                        }
+                    }
+                }
+            }
+        }
+ /*           initContacts()
             initJobHashMap {
                 initMaterialCatalog {
-   initDatabaseCatalog()
+  // initDatabaseCatalog()
                 }
 
-            }
+            }*/
 
         }
         initFileSystem()
@@ -77,9 +88,12 @@ class MainActivity : AppCompatActivity() {
             val jobs = mutableListOf<JobsEntity>()
             val categories = mutableListOf<CategoryEntity>()
             val materials = mutableListOf<MaterialEntity>()
-            if (repository.getMetrics().size != CATALOG_LIST_METRICS.size){
+
+            if (repository.getMetricsCount() != CATALOG_LIST_METRICS_COUNT)
+            {
                 initListMetrics {
                     CoroutineScope(Dispatchers.IO).launch {
+                        println("initListJob:FirebaseCount = $CATALOG_LIST_METRICS_COUNT  ROOM Count = ${repository.getMetricsCount()}")
                         println("initListMetrics ------------------------1")
                         for (m in CATALOG_LIST_METRICS) {
                             val met: MetricsEntity = MetricsEntity()
@@ -91,9 +105,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            if (repository.getCategories().size != CATALOG_LIST_CATEGORY.size){
+            if (repository.getCategoriesCount() != CATALOG_LIST_CATEGORY_COUNT){
                 initListCategories {
                     CoroutineScope(Dispatchers.IO).launch  {
+                        println("initListJob:FirebaseCount = $CATALOG_LIST_CATEGORY_COUNT  ROOM Count = ${repository.getCategoriesCount()}")
                         println("initListCategories ------------------------1")
                         for (c in CATALOG_LIST_CATEGORY) {
                             val cat: CategoryEntity = CategoryEntity()
@@ -105,31 +120,33 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            if (repository.getJobs().size != CATALOG_LIST_JOB.size){
-                initListJob {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        println("initListJob ------------------------1")
-                        for (j in CATALOG_LIST_JOB) {
-                            val job: JobsEntity = JobsEntity()
-                            job.id = j.id?.toInt()!!
-                            job.name = j.name
-                            job.price = j.price
-                            job.metrics_id = j.metrics_id
-                            job.category_id = j.category_id
-                            job.price_inzh = j.price_inzh
-                            job.price_nalog_zp = j.price_nalog_zp
-                            job.price_zp = j.price_zp
-                            jobs.add(job)
+                if (repository.getJobsCount()!= CATALOG_LIST_JOB_COUNT){
+                    initListJob {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            println("initListJob:FirebaseCount = $CATALOG_LIST_JOB_COUNT  ROOM Count = ${repository.getJobsCount()}")
+                            for (j in CATALOG_LIST_JOB) {
+                                val job: JobsEntity = JobsEntity()
+                                job.id = j.id?.toInt()!!
+                                job.name = j.name
+                                job.price = j.price
+                                job.metrics_id = j.metrics_id
+                                job.category_id = j.category_id
+                                job.price_inzh = j.price_inzh
+                                job.price_nalog_zp = j.price_nalog_zp
+                                job.price_zp = j.price_zp
+                                jobs.add(job)
+                            }
+                            repository.installJobData(jobs)
                         }
-                        repository.installJobData(jobs)
                     }
-                }
             }
 
-            if (repository.getMaterials().size != CATALOG_LIST_MATERIAL.size){
+
+            if (repository.getMaterialsCount() != CATALOG_LIST_MATERIAL_COUNT){
                 initMaterialCatalog {
                     CoroutineScope(Dispatchers.IO).launch {
                         println("initListJob ------------------------1")
+                        println("initListJob:FirebaseCount = $CATALOG_LIST_MATERIAL_COUNT  ROOM Count = ${repository.getMaterialsCount()}")
                         for (m in CATALOG_LIST_MATERIAL) {
                             val mat: MaterialEntity = MaterialEntity()
                             mat.id = m.id?.toInt()!!
