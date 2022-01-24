@@ -32,4 +32,8 @@ interface JobsDao {
 
     @Query("SELECT * FROM jobs")
     fun getJobs(): List<JobsEntity>
+
+    @Query("SELECT * FROM jobs WHERE category_id == :id")
+    fun getJobByCategoryId(id: String): List<JobsEntity>
+
 }

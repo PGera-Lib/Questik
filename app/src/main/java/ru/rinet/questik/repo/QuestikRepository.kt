@@ -37,6 +37,7 @@ class QuestikRepository @Inject constructor(
     fun getJobById(id: Int): List<JobsEntity> = dbHelper.getJobById(id)
     fun getJobs(): List<JobsEntity> = dbHelper.getJobs()
     fun getJobsCount(): Int = dbHelper.getJobsCount()
+    fun getJobsByCategoryId(id: String) : List<JobsEntity> = dbHelper.getJobByCategoryId(id)
 
     /**
      * Material

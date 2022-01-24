@@ -1,9 +1,6 @@
 package ru.rinet.questik.repo.local.room.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(tableName = "categories", indices = [Index("name"), Index("id")])
 data class CategoryEntity(
@@ -11,5 +8,7 @@ data class CategoryEntity(
     @ColumnInfo(name = "id")
     var id: Int = 0,
     @ColumnInfo(name = "name")
-    var name: String = ""
+    var name: String = "",
+    @Ignore
+    var isExpand: Boolean = false
 )

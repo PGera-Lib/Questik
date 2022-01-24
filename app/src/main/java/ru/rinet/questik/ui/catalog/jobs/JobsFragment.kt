@@ -4,14 +4,23 @@ package ru.rinet.questik.ui.catalog.jobs
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_jobs.*
 import ru.rinet.questik.R
 import ru.rinet.questik.ui.base.BaseFragment
+import ru.rinet.questik.ui.catalog.jobs.epoxy.JobsController
 import ru.rinet.questik.utils.APP_ACTIVITY
 
+
+@AndroidEntryPoint
 class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     private lateinit var groupLayoutManager: LinearLayoutManager
+    private val viewModel : JobsFragmentViewModel by viewModels()
+    private val jobsListController = JobsController()
+
 
     override fun onResume() {
         super.onResume()
@@ -19,9 +28,12 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
         groupLayoutManager = LinearLayoutManager(APP_ACTIVITY)
         fragment_jobs_recyclerview.apply {
             this.layoutManager = groupLayoutManager
+            adapter = jobsListController.adapter
         }
+        viewModel.jobsLiveData.observe(this, Observer { container ->
+            jobsListController.setData(container)
+        })
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         activity?.menuInflater?.inflate(R.menu.catalog_action_menu, menu)

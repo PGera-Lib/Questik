@@ -31,6 +31,7 @@ interface IDbHelper {
     fun getJobById(id: Int): List<JobsEntity>
     fun getJobs(): List<JobsEntity>
     fun getJobsCount():Int
+    fun getJobByCategoryId(id: String): List<JobsEntity>
 
     /**
      * Material

@@ -45,6 +45,7 @@ class DbHelper @Inject constructor(
     override fun getJobById(id: Int): List<JobsEntity> = appDatabase.jobsDao().getJobById(id)
     override fun getJobs(): List<JobsEntity> = appDatabase.jobsDao().getJobs()
     override fun getJobsCount(): Int = appDatabase.jobsDao().getJobsCount()
+    override fun getJobByCategoryId(id: String): List<JobsEntity> = appDatabase.jobsDao().getJobByCategoryId(id)
     override fun getAllJobs(): PagingSource<Int, JobsEntity> = appDatabase.jobsDao().getAllJobs()
     override suspend fun insertAllJobs(items: List<JobsEntity>) = appDatabase.jobsDao().insertAllJobs(items)
     override fun clearJobs() = appDatabase.jobsDao().clearJobs()
