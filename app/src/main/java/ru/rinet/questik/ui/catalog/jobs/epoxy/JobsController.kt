@@ -22,8 +22,6 @@ class JobsController : TypedEpoxyController<JobsContainer>() {
                         name(jobs.name)
                         onJobsClickListener{
                             it.onJobsItemClickes(jobs)
-                            println("JobsController, ${jobs.name} ----- is clicked")
-
                         }
                     }
 

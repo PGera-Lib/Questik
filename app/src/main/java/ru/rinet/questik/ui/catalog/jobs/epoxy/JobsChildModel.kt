@@ -11,7 +11,7 @@ import ru.rinet.questik.utils.helper.ViewBindingEpoxyModelWithHolder
 abstract class JobsChildModel : ViewBindingEpoxyModelWithHolder<FragmentJobsItemChildBinding>() {
 
     @EpoxyAttribute
-    lateinit var onJobsClickListener: () -> Unit
+    lateinit var onJobsClickListener:() -> Unit
     @EpoxyAttribute
     lateinit var name: String
     @EpoxyAttribute
@@ -21,8 +21,8 @@ abstract class JobsChildModel : ViewBindingEpoxyModelWithHolder<FragmentJobsItem
     override fun FragmentJobsItemChildBinding.bind() {
         jobsItemName.text = this@JobsChildModel.name
         jobsItemPrice.text = this@JobsChildModel.price
-        jobsItemCard.setOnClickListener {onJobsClickListener
-        println("onJobsHolder jobs clicked is ---- ${this@JobsChildModel.name}")}
+        jobsItemCard.setOnClickListener { this@JobsChildModel.onJobsClickListener()
+        /*println("onJobsHolder jobs clicked is ---- ${this@JobsChildModel.name}")*/}
     }
 
     override fun FragmentJobsItemChildBinding.unbind() {

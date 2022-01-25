@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+
 /*,
 foreignKeys = [ForeignKey(entity = CategoryEntity::class,
 parentColumns = ["id"], childColumns = ["category_id"]),ForeignKey(entity = MetricsEntity::class,

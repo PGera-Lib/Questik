@@ -50,8 +50,12 @@ class JobsFragmentViewModel @Inject constructor(
             jobsPerCategory.apply {
                 val categories = initCategoriesList()
                 categories.forEach {
-                    val jobsList = initJobsListByCategory(it.id)
-                    this.add(JobsPerCategory(it, jobsList, onJobsItemClickes = onJobClicked))
+                    var jobsList = mutableListOf<JobsEntity>()
+                    initJobsListByCategory(it.id).forEach { job->
+                        val newjob = JobsEntity(job.id, job.name, job.price, job.metrics_id, job.category_id, job.price_inzh, job.price_nalog_zp, job.price_zp)
+                        jobsList.add(newjob)
+                    }
+                    this.add(JobsPerCategory(it, jobsList, onJobClicked))
                 }
             }
             CoroutineScope(Dispatchers.Main).launch {
