@@ -29,7 +29,7 @@ interface CategoryDao {
     fun deleteCategory(category: CategoryEntity)
 
     @Query("SELECT * FROM categories WHERE id == :id")
-    fun getCategoryById(id: Int): List<CategoryEntity>
+    fun getCategoryById(id: Int): CategoryEntity
 
     @Query("SELECT * FROM categories")
     fun getCategories(): List<CategoryEntity>

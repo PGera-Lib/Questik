@@ -19,7 +19,7 @@ class DbHelper @Inject constructor(
     override fun deleteCategory(category: CategoryEntity) =
         appDatabase.categoryDao().deleteCategory(category)
 
-    override fun getCategoryById(id: Int): List<CategoryEntity> =
+    override fun getCategoryById(id: Int): CategoryEntity =
         appDatabase.categoryDao().getCategoryById(id)
 
     override fun getCategories(): List<CategoryEntity> = appDatabase.categoryDao().getCategories()

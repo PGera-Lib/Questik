@@ -17,7 +17,7 @@ class QuestikRepository @Inject constructor(
     fun insertCategory(category: CategoryEntity) = dbHelper.insertCategory(category)
     fun updateCategory(category: CategoryEntity) = dbHelper.updateCategory(category)
     fun deleteCategory(category: CategoryEntity) = dbHelper.deleteCategory(category)
-    fun getCategoryById(id: Int): List<CategoryEntity> = dbHelper.getCategoryById(id)
+    fun getCategoryById(id: Int): CategoryEntity = dbHelper.getCategoryById(id)
     fun getCategories(): List<CategoryEntity> = dbHelper.getCategories()
     fun getAllCategories(): PagingSource<Int, CategoryEntity> = dbHelper.getAllCategories()
     suspend fun insertAllCategories(items:List<CategoryEntity>) = dbHelper.insertAllCategories(items)

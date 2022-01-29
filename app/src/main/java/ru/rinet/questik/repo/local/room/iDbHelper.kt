@@ -12,7 +12,7 @@ interface IDbHelper {
     fun insertCategory(category: CategoryEntity)
     fun updateCategory(category: CategoryEntity)
     fun deleteCategory(category: CategoryEntity)
-    fun getCategoryById(id: Int): List<CategoryEntity>
+    fun getCategoryById(id: Int): CategoryEntity
     fun getCategories(): List<CategoryEntity>
     fun getAllCategories(): PagingSource<Int, CategoryEntity>
     suspend fun insertAllCategories(items:List<CategoryEntity>)

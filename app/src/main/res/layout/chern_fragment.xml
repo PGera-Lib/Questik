@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.chern.ChernFragment">
+    android:orientation="vertical">
 
-    <TextView
+    <com.airbnb.epoxy.EpoxyViewStub
+        android:id="@+id/epoxy_view_stub"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello Chernovik"
-        android:textColor="@color/material_drawer_primary_text" />
+        android:layout_height="wrap_content"/>
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#80000000"/>
+    <com.airbnb.epoxy.EpoxyRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

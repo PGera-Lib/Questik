@@ -11,4 +11,8 @@ data class CategoryEntity(
     var name: String = "",
     @Ignore
     var isExpand: Boolean = false
-)
+) {
+    override fun toString(): String {
+        return name
+    }
+}
