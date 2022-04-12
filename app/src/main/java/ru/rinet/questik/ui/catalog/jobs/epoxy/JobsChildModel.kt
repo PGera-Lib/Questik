@@ -22,7 +22,7 @@ abstract class JobsChildModel : ViewBindingEpoxyModelWithHolder<FragmentJobsItem
         jobsItemName.text = this@JobsChildModel.name
         jobsItemPrice.text = this@JobsChildModel.price
         jobsItemCard.setOnClickListener { this@JobsChildModel.onJobsClickListener()
-        /*println("onJobsHolder jobs clicked is ---- ${this@JobsChildModel.name}")*/}
+        println("onJobsHolder jobs clicked is ---- ${this@JobsChildModel.name}")}
     }
 
     override fun FragmentJobsItemChildBinding.unbind() {

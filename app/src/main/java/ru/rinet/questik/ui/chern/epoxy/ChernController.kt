@@ -1,14 +1,13 @@
 package ru.rinet.questik.ui.chern.epoxy
 
 import com.airbnb.epoxy.TypedEpoxyController
-import ru.rinet.questik.ui.catalog.jobs.epoxy.jobsHeader
 
 
 class ChernController() : TypedEpoxyController<ChernContainer>() {
     override fun buildModels(data: ChernContainer?) {
         data?.categories?.forEach {
-            jobsHeader {
-                id(it.category.id)
+            chernParent {
+                id( "cat${it.category.id}")
                 title(it.category.name)
                 listener {
                     data.onCategoryExpanded(it.category)
@@ -18,15 +17,19 @@ class ChernController() : TypedEpoxyController<ChernContainer>() {
             if (it.category.isExpand) {
                 it.items.forEach { items ->
                     chernChild {
-                        id(items.rowId)
-                        rowId(items.rowId)
+                        id("${items.id}+${items.name}")
                         commonModel(items)
                         categoryList(it.categoryEntityList)
+                        metricsList(it.metricsEntityList)
+                        onChernChangeCountListener { count ->
+                            it.OnItemChangeCount(count)
+                        }
+                        onChernChangeListener {model ->
+                            it.onItemUpdated(model)
+                        }
                     }
                 }
             }
         }
     }
-
-
 }

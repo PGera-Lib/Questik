@@ -1,5 +1,6 @@
 package ru.rinet.questik.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -134,6 +135,7 @@ fun initFileSystem() {
  *  ----- получение данных контактов
  * ************************************************************************************************
  **/
+@SuppressLint("Range")
 fun initContacts() {
     if (checkPermissions(READ_CONTACTS)) {
         val arrayContacts = arrayListOf<CommonModel>()

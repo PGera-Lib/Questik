@@ -18,7 +18,7 @@ import ru.rinet.questik.utils.APP_ACTIVITY
 @AndroidEntryPoint
 class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
     private lateinit var groupLayoutManager: LinearLayoutManager
-    private val viewModel : JobsFragmentViewModel by viewModels()
+    private val viewModel: JobsFragmentViewModel by viewModels()
     private val jobsListController = JobsController()
 
 
@@ -54,6 +54,11 @@ class JobsFragment : BaseFragment(R.layout.fragment_jobs) {
 
     private fun filterSearch(newText: String?) {
         try {
+            if (newText?.isNotEmpty() == true) {
+                viewModel.search(newText)
+            } else {
+                viewModel.fetchAllData()
+            }
         } catch (e: Exception) {
             println(e.message.toString())
         }

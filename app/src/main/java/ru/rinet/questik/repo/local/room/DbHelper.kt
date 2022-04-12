@@ -72,6 +72,8 @@ class DbHelper @Inject constructor(
     override suspend fun insertAllMaterials(items: List<MaterialEntity>)   = appDatabase.materialDao().insertAllMaterials(items)
     override fun clearMaterials()  = appDatabase.materialDao().clearMaterials()
     override fun getMaterialsCount(): Int = appDatabase.materialDao().getMaterialsCount()
+    override fun getMaterialByCategoryId(id: String): List<MaterialEntity>  = appDatabase.materialDao().getMaterialByCategoryId(id)
+
     /** **************************************************************************
      * Metrics
      ****************************************************************************/

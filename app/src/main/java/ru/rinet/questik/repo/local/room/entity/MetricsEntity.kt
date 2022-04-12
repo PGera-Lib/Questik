@@ -11,4 +11,9 @@ data class MetricsEntity(
     @ColumnInfo(name = "id")
     var id: Int = 0,
     var name: String = ""
-)
+) {
+    override fun toString(): String {
+        return name
+    }
+}
+

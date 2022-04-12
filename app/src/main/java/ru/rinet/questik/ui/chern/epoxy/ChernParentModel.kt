@@ -10,7 +10,6 @@ import ru.rinet.questik.utils.helper.ViewBindingEpoxyModelWithHolder
 
 @EpoxyModelClass(layout = R.layout.fragment_jobs_item_parent)
 abstract class ChernParentModel : ViewBindingEpoxyModelWithHolder<FragmentJobsItemParentBinding>() {
-
     @EpoxyAttribute
     lateinit var listener: () -> Unit
     @EpoxyAttribute
@@ -21,10 +20,17 @@ abstract class ChernParentModel : ViewBindingEpoxyModelWithHolder<FragmentJobsIt
     override fun FragmentJobsItemParentBinding.bind() {
 
         jobsCatalogName.text = this@ChernParentModel.title
-        changeRes(parentIconArrow)
+
+        if (expand) {
+            parentIconArrow.setImageResource(R.drawable.questik_expand_up)
+        }else {
+            parentIconArrow.setImageResource(R.drawable.questik_expand_down)
+        }
+
+       // changeRes(parentIconArrow)
         parentIconArrow.setOnClickListener {
-        //    changeRes(parentIconArrow)
-            println("on create icon change $expand")
+            changeRes(parentIconArrow)
+            println(" 1 on create icon change $expand")
             listener()
         }
         //jobs_catalog_name { listener() }
@@ -33,9 +39,9 @@ abstract class ChernParentModel : ViewBindingEpoxyModelWithHolder<FragmentJobsIt
         fun changeRes(imageView: ImageView){
         if (expand) {
             imageView.setImageResource(R.drawable.questik_expand_up)
-            println("on change res method - $expand")
+            println("2 on change res method - $expand")
         }else {
-            println("on change res method - $expand")
+            println("3 on change res method - $expand")
             imageView.setImageResource(R.drawable.questik_expand_down)
         }
     }

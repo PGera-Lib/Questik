@@ -14,6 +14,9 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher_foreground"
         android:supportsRtl="true"
+        android:vmSafeMode="true"
+        android:allowClearUserData="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/QuestikTheme" >
         <activity
             android:name=".MainActivity"

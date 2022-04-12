@@ -15,6 +15,7 @@ import ru.rinet.questik.ui.catalog.jobs.epoxy.JobsContainer
 import ru.rinet.questik.ui.catalog.jobs.epoxy.JobsPerCategory
 import ru.rinet.questik.ui.catalog.jobs.epoxy.OnCategoryExpanded
 import ru.rinet.questik.ui.catalog.jobs.epoxy.OnJobsItemClickes
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,6 +45,90 @@ class JobsFragmentViewModel @Inject constructor(
         }
     }
 
+    fun search(serched: String){
+
+        /*      val oldContainer = _liveData.value
+              if (oldContainer != null) {
+                  oldContainer.onCategoryExpanded
+                  val newCategories = oldContainer.categories.map {matPerCat->
+                      val newMaterials = mutableListOf<MaterialEntity>()
+                          initMaterialListByCategory(matPerCat.category.id).apply {
+                              this.forEach {
+                                  val filteredMat = it.name?.toLowerCase(Locale.getDefault())
+                                  if (filteredMat?.contains(serched) == true){
+                                      newMaterials.add(it)
+                                  }
+                              }
+                      }
+               *//*       if (matPerCat.category.name == category.id) {
+                    matPerCat.copy(category = matPerCat.category.copy(isExpand = !category.isExpand))
+                } else {
+                    matPerCat
+                }*//*
+                matPerCat.copy(material = newMaterials)
+            }
+            _liveData.value = oldContainer.copy(categories = newCategories)
+        }*/
+
+
+        /**
+         *
+         */
+        val jobsPerCategory: MutableList<JobsPerCategory> = mutableListOf()
+        CoroutineScope(Dispatchers.IO).launch {
+            jobsPerCategory.apply {
+                val categories = initCategoriesList()
+                categories.forEach {
+                    var jobList = mutableListOf<JobsEntity>()
+                    initJobsListByCategory(it.id).forEach { job->
+                        val filteredMat = job.name?.toLowerCase(Locale.getDefault())
+                        if (filteredMat?.contains(serched) == true){
+                            jobList.add(job)
+
+                        }
+                        //println(jobList.size)
+                        /*  val newMat = MaterialEntity(mat.id,mat.plu, mat.name, mat.price, mat.metrics_id, mat.category_id)
+                          matList.add(newMat)*/
+                    }
+                    if (jobList.size!=0) {
+                        this.add(JobsPerCategory(it, jobList, onJobClicked))
+                    }
+                }
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                _liveData.value =
+                    JobsContainer(jobsPerCategory, onCategoryExpanded)
+            }
+        }
+
+
+    }
+
+
+
+    fun fetchAllData(){
+        val jobsPerCategory: MutableList<JobsPerCategory> = mutableListOf()
+        CoroutineScope(Dispatchers.IO).launch {
+            jobsPerCategory.apply {
+                val categories = initCategoriesList()
+                categories.forEach {
+                    var jobsList = mutableListOf<JobsEntity>()
+                    initJobsListByCategory(it.id).forEach { job->
+                        val newjob = JobsEntity(job.id, job.name, job.price, job.metrics_id, job.category_id, job.price_inzh, job.price_nalog_zp, job.price_zp)
+                        jobsList.add(newjob)
+                    }
+                    if (jobsList.size!=0) {
+                        this.add(JobsPerCategory(it, jobsList, onJobClicked))
+                    }
+                }
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                _liveData.value =
+                    JobsContainer(jobsPerCategory, onCategoryExpanded)
+            }
+        }
+    }
+
     init {
         val jobsPerCategory: MutableList<JobsPerCategory> = mutableListOf()
         CoroutineScope(Dispatchers.IO).launch {
@@ -55,7 +140,9 @@ class JobsFragmentViewModel @Inject constructor(
                         val newjob = JobsEntity(job.id, job.name, job.price, job.metrics_id, job.category_id, job.price_inzh, job.price_nalog_zp, job.price_zp)
                         jobsList.add(newjob)
                     }
-                    this.add(JobsPerCategory(it, jobsList, onJobClicked))
+                    if (jobsList.size!=0) {
+                        this.add(JobsPerCategory(it, jobsList, onJobClicked))
+                    }
                 }
             }
             CoroutineScope(Dispatchers.Main).launch {
@@ -64,21 +151,6 @@ class JobsFragmentViewModel @Inject constructor(
             }
         }
 
-/*        _liveData.value = JobsContainer(
-            listOf(
-                JobsPerCategory(
-repository
-                    CategoryEntity(name = "Action RPG Games"),
-                    listOf(
-                        Game("Dark Souls"),
-                        Game("Diablo"),
-                        Game("Bloodborne"),
-                        Game("Sekiro")
-                    )
-                ),
-            onGenreExpanded
-        )
-        )*/
     }
 
 

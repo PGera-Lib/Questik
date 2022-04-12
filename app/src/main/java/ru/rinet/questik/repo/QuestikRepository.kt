@@ -51,7 +51,7 @@ class QuestikRepository @Inject constructor(
     suspend  fun insertAllMaterials(items:List<MaterialEntity>) = dbHelper.insertAllMaterials(items)
     fun clearMaterials() = dbHelper.clearMaterials()
     fun getMaterialsCount(): Int = dbHelper.getMaterialsCount()
-
+    fun getMaterialByCategoryId(id: String) : List<MaterialEntity> = dbHelper.getMaterialByCategoryId(id)
 
     /**
      * Metrics

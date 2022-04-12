@@ -38,6 +38,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    project.android.buildTypes.all { buildType ->
+        buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+                [
+                        // Validation is disabled in production to remove the runtime overhead
+                        validateEpoxyModelUsage     : String.valueOf(buildType.name == 'debug'),
+                        requireHashCodeInEpoxyModels: "false",
+                        requireAbstractEpoxyModels  : "true",
+                        implicitlyAddAutoModels     : "true"
+                ]
+    }
     buildFeatures {
         viewBinding true
         dataBinding true

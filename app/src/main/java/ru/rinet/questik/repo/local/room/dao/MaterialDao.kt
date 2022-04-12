@@ -35,4 +35,7 @@ interface MaterialDao {
 
     @Query("SELECT * FROM materials")
     fun getMaterials(): List<MaterialEntity>
+
+    @Query("SELECT * FROM materials WHERE category_id == :id")
+    fun getMaterialByCategoryId(id: String): List<MaterialEntity>
 }

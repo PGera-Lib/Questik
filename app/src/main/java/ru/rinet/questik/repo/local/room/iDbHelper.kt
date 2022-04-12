@@ -45,6 +45,8 @@ interface IDbHelper {
     suspend  fun insertAllMaterials(items:List<MaterialEntity>)
     fun clearMaterials()
     fun getMaterialsCount():Int
+    fun getMaterialByCategoryId(id: String): List<MaterialEntity>
+
 
     /**
      * Metrics

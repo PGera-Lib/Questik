@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <item
+            android:id="@+id/chern_search"
+            android:icon="@drawable/questik_icon_search"
+            android:title="Поиск"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+            app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/app_bar_switch"
+        android:title="только выбранное"
+        android:checkable="true"
+        app:actionLayout="@layout/switch_item" />
+
+</menu>

@@ -39,7 +39,7 @@ class SingleChatFragment(private val contact: CommonModel) :
     override fun onResume() {
         super.onResume()
         initViewFields()
-        println("------------------------------------onResume--------------------------------------------")
+        println( "------------------------------------onResume--------------------------------------------")
         initRecyclerView()
         initInfoToolBar()
 
@@ -77,7 +77,6 @@ class SingleChatFragment(private val contact: CommonModel) :
             }
         }
         mRefMessages.limitToLast(mCountMessages).addChildEventListener(mMessagesListener)
-//        mListListeners.add(mMessagesListener)
 
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
