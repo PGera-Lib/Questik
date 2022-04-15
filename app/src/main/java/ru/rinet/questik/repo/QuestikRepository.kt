@@ -75,4 +75,24 @@ class QuestikRepository @Inject constructor(
     fun getUserById(id: Int): List<UserEntity> = dbHelper.getUserById(id)
     fun getUser(): List<UserEntity> = dbHelper.getUser()
     fun getUsersCount(): Int = dbHelper.geUsersCount()
+
+    /**
+     * @Chernovik
+     */
+
+    fun getChernovikCount(): Int = dbHelper.getChernovikCount()
+    fun insertAllChernovik(items:List<ChernovikEntity>) = dbHelper.insertAllChernovik(items)
+    fun clearChernovik()= dbHelper.clearChernovik()
+    fun insertChernovik(chernovik: ChernovikEntity)= dbHelper.insertChernovik(chernovik)
+    fun updateChernovik(chernovik: ChernovikEntity)= dbHelper.updateChernovik(chernovik)
+    fun deleteChernovik(chernovik: ChernovikEntity)= dbHelper.deleteChernovik(chernovik)
+    fun getChernovikById(id: Int): List<ChernovikEntity> = dbHelper.getChernovikById(id)
+    fun getChernovik(): List<ChernovikEntity> = dbHelper.getChernovik()
+    fun getChernovikByCategoryId(id: String): List<ChernovikEntity> = dbHelper.getChernovikByCategoryId(id)
+    fun searchChernovikItem(search: String?, cat: String): List<ChernovikEntity> = dbHelper.searchChernovikItem(search, cat)
+    fun filteredChernovikList(
+        search: String?,
+        check: Boolean, cat: String
+    ): List<ChernovikEntity>  = dbHelper.filteredChernovikList(search, check, cat)
+    fun getChernovikByItogShow(check: Boolean, cat: String): List<ChernovikEntity>  = dbHelper.getChernovikByItogShow(check, cat)
 }

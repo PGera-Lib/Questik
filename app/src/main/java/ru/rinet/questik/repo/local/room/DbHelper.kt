@@ -106,5 +106,22 @@ class DbHelper @Inject constructor(
     override fun getUserById(id: Int): List<UserEntity> = appDatabase.userDao().getUserById(id)
     override fun getUser(): List<UserEntity> = appDatabase.userDao().getUser()
     override fun geUsersCount(): Int = appDatabase.userDao().getUsersCount()
+    override fun getChernovikCount(): Int = appDatabase.chernovikDao().getChernovikCount()
 
+    override fun insertAllChernovik(items: List<ChernovikEntity>) = appDatabase.chernovikDao().insertAllChernovik(items)
+    override fun clearChernovik() = appDatabase.chernovikDao().clearChernovik()
+    override fun insertChernovik(chernovik: ChernovikEntity) = appDatabase.chernovikDao().insertChernovik(chernovik)
+    override fun updateChernovik(chernovik: ChernovikEntity) = appDatabase.chernovikDao().updateChernovik(chernovik)
+    override fun deleteChernovik(chernovik: ChernovikEntity) = appDatabase.chernovikDao().deleteChernovik(chernovik)
+    override fun getChernovikById(id: Int): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovikById(id)
+    override fun getChernovik(): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovik()
+    override fun getChernovikByCategoryId(id: String): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovikByCategoryId(id)
+    override fun searchChernovikItem(search: String?, cat: String): List<ChernovikEntity> = appDatabase.chernovikDao().searchChernovikItem(search, cat)
+    override fun filteredChernovikList(
+        search: String?,
+        check: Boolean,
+        cat: String
+    ): List<ChernovikEntity>  = appDatabase.chernovikDao().filteredChernovikList(search, check, cat)
+
+    override fun getChernovikByItogShow(check: Boolean, cat: String): List<ChernovikEntity>  = appDatabase.chernovikDao().getChernovikByItogShow(check, cat)
 }

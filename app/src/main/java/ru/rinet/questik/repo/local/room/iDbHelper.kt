@@ -71,4 +71,22 @@ interface IDbHelper {
     fun getUserById(id: Int): List<UserEntity>
     fun getUser(): List<UserEntity>
     fun geUsersCount():Int
+
+    /**
+     * @Chernovik
+     */
+
+    fun getChernovikCount(): Int
+    fun insertAllChernovik(items:List<ChernovikEntity>)
+    fun clearChernovik()
+    fun insertChernovik(chernovik: ChernovikEntity)
+    fun updateChernovik(chernovik: ChernovikEntity)
+    fun deleteChernovik(chernovik: ChernovikEntity)
+    fun getChernovikById(id: Int): List<ChernovikEntity>
+    fun getChernovik(): List<ChernovikEntity>
+    fun getChernovikByCategoryId(id: String): List<ChernovikEntity>
+    fun searchChernovikItem(search: String?, cat: String): List<ChernovikEntity>
+    fun filteredChernovikList(search: String?, check: Boolean, cat: String): List<ChernovikEntity>
+    fun getChernovikByItogShow(check: Boolean, cat: String): List<ChernovikEntity>
+
 }

@@ -25,8 +25,8 @@ data class CommonModel(
     var price_zp: String = "",
     var isChecked: Boolean = false,
     var isShow: Boolean = false,
-    var isMaterial:Boolean = false
-
+    var isMaterial:Boolean = false,
+    var pageSize: Int = 15
 ) {
 
 

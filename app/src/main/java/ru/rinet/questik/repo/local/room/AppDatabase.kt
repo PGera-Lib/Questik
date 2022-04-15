@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import ru.rinet.questik.repo.local.room.dao.*
 import ru.rinet.questik.repo.local.room.entity.*
 
-@Database(entities = [CategoryEntity::class, JobsEntity::class, MaterialEntity::class, MetricsEntity::class, UserEntity::class,RemoteKeys::class], version = 1)
+@Database(entities = [CategoryEntity::class, JobsEntity::class, MaterialEntity::class, MetricsEntity::class, UserEntity::class,RemoteKeys::class, ChernovikEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun jobsDao(): JobsDao
@@ -15,6 +15,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun metricsDao(): MetricsDao
     abstract fun userDao(): UserDao
     abstract fun remoteKeysDao(): RemoteKeysDao
+    abstract fun chernovikDao(): ChernovikDao
+
 
     companion object{
         @Volatile private var instance:AppDatabase? = null

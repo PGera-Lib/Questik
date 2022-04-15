@@ -1,14 +1,14 @@
 package ru.rinet.questik.ui.chern.epoxy
 
-import ru.rinet.questik.models.CommonModel
 import ru.rinet.questik.repo.local.room.entity.CategoryEntity
+import ru.rinet.questik.repo.local.room.entity.ChernovikEntity
 import ru.rinet.questik.repo.local.room.entity.MetricsEntity
 
 
 typealias OnChernCategoryExpanded = (category: CategoryEntity) -> Unit
-typealias OnChernItemClickes = (item: CommonModel) -> Unit
+typealias OnChernItemTouched = (item: ChernovikEntity, touchUp: Boolean) -> Unit
 typealias OnChernItemChangeCount = (count: String) -> Unit
-typealias OnChernItemChanged = (item: CommonModel) -> Unit
+typealias OnChernItemChanged = (item: ChernovikEntity) -> Unit
 
 data class ChernContainer(
     val categories: List<ChernPerCategory>,
@@ -16,8 +16,8 @@ data class ChernContainer(
 )
 data class ChernPerCategory(
     val category: CategoryEntity,
-    val items: List<CommonModel>,
-    val onItemClicked: OnChernItemClickes,
+    val items: List<ChernovikEntity>,
+    val onItemTouched: OnChernItemTouched,
     val OnItemChangeCount: OnChernItemChangeCount,
     val onItemUpdated: OnChernItemChanged,
     val categoryEntityList: List<CategoryEntity>,

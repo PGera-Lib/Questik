@@ -15,11 +15,14 @@ abstract class ChernParentModel : ViewBindingEpoxyModelWithHolder<FragmentJobsIt
     @EpoxyAttribute
     lateinit var title: String
     @EpoxyAttribute
+    lateinit var category_size: String
+
+    @EpoxyAttribute
     var expand: Boolean = false
 
     override fun FragmentJobsItemParentBinding.bind() {
-
         jobsCatalogName.text = this@ChernParentModel.title
+        jobsCatalogCount.text = this@ChernParentModel.category_size
 
         if (expand) {
             parentIconArrow.setImageResource(R.drawable.questik_expand_up)
