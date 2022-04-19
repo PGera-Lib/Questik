@@ -59,4 +59,8 @@ data class ChernovikEntity(
         result = 31 * result + isMaterial.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "ChernovikEntity(id=$id, name='$name')"
+    }
 }

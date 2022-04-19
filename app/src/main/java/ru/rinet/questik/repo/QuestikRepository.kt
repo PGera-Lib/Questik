@@ -86,7 +86,7 @@ class QuestikRepository @Inject constructor(
     fun insertChernovik(chernovik: ChernovikEntity)= dbHelper.insertChernovik(chernovik)
     fun updateChernovik(chernovik: ChernovikEntity)= dbHelper.updateChernovik(chernovik)
     fun deleteChernovik(chernovik: ChernovikEntity)= dbHelper.deleteChernovik(chernovik)
-    fun getChernovikById(id: Int): List<ChernovikEntity> = dbHelper.getChernovikById(id)
+    fun getChernovikById(id: Int): ChernovikEntity = dbHelper.getChernovikById(id)
     fun getChernovik(): List<ChernovikEntity> = dbHelper.getChernovik()
     fun getChernovikByCategoryId(id: String): List<ChernovikEntity> = dbHelper.getChernovikByCategoryId(id)
     fun searchChernovikItem(search: String?, cat: String): List<ChernovikEntity> = dbHelper.searchChernovikItem(search, cat)
@@ -95,4 +95,7 @@ class QuestikRepository @Inject constructor(
         check: Boolean, cat: String
     ): List<ChernovikEntity>  = dbHelper.filteredChernovikList(search, check, cat)
     fun getChernovikByItogShow(check: Boolean, cat: String): List<ChernovikEntity>  = dbHelper.getChernovikByItogShow(check, cat)
+    fun getChernovikByIdDiapazon(start: Int, end: Int): List<ChernovikEntity> = dbHelper.getChernovikByIdDiapazon(start, end)
+    fun getChernovikCountByCategoryId(id: String): Int = dbHelper.getChernovikCountByCategoryId(id)
+    fun getChernovikByCategoryAndIdDiapazon(categoryId:String, start: Int, end: Int): List<ChernovikEntity> = dbHelper.getChernovikByCategoryAndIdDiapazon(categoryId, start, end)
 }

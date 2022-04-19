@@ -113,7 +113,7 @@ class DbHelper @Inject constructor(
     override fun insertChernovik(chernovik: ChernovikEntity) = appDatabase.chernovikDao().insertChernovik(chernovik)
     override fun updateChernovik(chernovik: ChernovikEntity) = appDatabase.chernovikDao().updateChernovik(chernovik)
     override fun deleteChernovik(chernovik: ChernovikEntity) = appDatabase.chernovikDao().deleteChernovik(chernovik)
-    override fun getChernovikById(id: Int): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovikById(id)
+    override fun getChernovikById(id: Int): ChernovikEntity = appDatabase.chernovikDao().getChernovikById(id)
     override fun getChernovik(): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovik()
     override fun getChernovikByCategoryId(id: String): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovikByCategoryId(id)
     override fun searchChernovikItem(search: String?, cat: String): List<ChernovikEntity> = appDatabase.chernovikDao().searchChernovikItem(search, cat)
@@ -124,4 +124,7 @@ class DbHelper @Inject constructor(
     ): List<ChernovikEntity>  = appDatabase.chernovikDao().filteredChernovikList(search, check, cat)
 
     override fun getChernovikByItogShow(check: Boolean, cat: String): List<ChernovikEntity>  = appDatabase.chernovikDao().getChernovikByItogShow(check, cat)
+    override fun getChernovikByIdDiapazon(start: Int, end: Int): List<ChernovikEntity>  = appDatabase.chernovikDao().getChernovikByIdDiapazon(start, end)
+    override fun getChernovikCountByCategoryId(id: String): Int = appDatabase.chernovikDao().getChernovikCountByCategoryId(id)
+    override fun getChernovikByCategoryAndIdDiapazon(categoryId:String, start: Int, end: Int): List<ChernovikEntity> = appDatabase.chernovikDao().getChernovikByCategoryAndIdDiapazon(categoryId, start, end)
 }

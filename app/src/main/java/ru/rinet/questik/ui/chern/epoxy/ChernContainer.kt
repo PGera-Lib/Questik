@@ -16,7 +16,10 @@ data class ChernContainer(
 )
 data class ChernPerCategory(
     val category: CategoryEntity,
-    val items: List<ChernovikEntity>,
+    val itemsSize: Int,
+    val minList: Int,
+    val maxList: Int,
+    val items: MutableList<ChernovikEntity>,
     val onItemTouched: OnChernItemTouched,
     val OnItemChangeCount: OnChernItemChangeCount,
     val onItemUpdated: OnChernItemChanged,

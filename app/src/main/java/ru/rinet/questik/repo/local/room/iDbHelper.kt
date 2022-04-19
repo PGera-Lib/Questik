@@ -82,11 +82,13 @@ interface IDbHelper {
     fun insertChernovik(chernovik: ChernovikEntity)
     fun updateChernovik(chernovik: ChernovikEntity)
     fun deleteChernovik(chernovik: ChernovikEntity)
-    fun getChernovikById(id: Int): List<ChernovikEntity>
+    fun getChernovikById(id: Int): ChernovikEntity
     fun getChernovik(): List<ChernovikEntity>
     fun getChernovikByCategoryId(id: String): List<ChernovikEntity>
     fun searchChernovikItem(search: String?, cat: String): List<ChernovikEntity>
     fun filteredChernovikList(search: String?, check: Boolean, cat: String): List<ChernovikEntity>
     fun getChernovikByItogShow(check: Boolean, cat: String): List<ChernovikEntity>
-
+    fun getChernovikByIdDiapazon(start: Int, end: Int): List<ChernovikEntity>
+    fun getChernovikCountByCategoryId(id: String): Int
+    fun getChernovikByCategoryAndIdDiapazon(categoryId:String, start: Int, end: Int): List<ChernovikEntity>
 }

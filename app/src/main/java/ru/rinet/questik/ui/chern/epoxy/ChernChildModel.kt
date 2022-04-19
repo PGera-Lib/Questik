@@ -53,7 +53,7 @@ abstract class ChernChildModel : ViewBindingEpoxyModelWithHolder<FragmentChernCh
                   //  return@setOnTouchListener true
                 MotionEvent.ACTION_UP -> {
                     println("motion up")
-                    onChernItemTouchListener(chernovik, true)
+                   // onChernItemTouchListener(chernovik, true)
                 }
             }
             return@setOnTouchListener true

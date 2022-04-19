@@ -9,7 +9,7 @@ class ChernController() : TypedEpoxyController<ChernContainer>() {
             chernParent {
                 id("cat${it.category.id}")
                 title(it.category.name)
-                category_size(it.items.size.toString())
+                category_size(it.itemsSize.toString())
                 listener {
                     data.onCategoryExpanded(it.category)
                 }
@@ -26,7 +26,7 @@ class ChernController() : TypedEpoxyController<ChernContainer>() {
                         onChernChangeCountListener { count ->
                             it.OnItemChangeCount(count)
                         }
-                        onChernChangeListener {model ->
+                        onChernChangeListener { model ->
                             it.onItemUpdated(model)
                         }
                         onChernItemTouchListener { model, b ->
