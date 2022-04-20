@@ -7,13 +7,14 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.rinet.questik.repo.QuestikRepository
 import ru.rinet.questik.repo.local.room.entity.CategoryEntity
 import ru.rinet.questik.repo.local.room.entity.ChernovikEntity
-import ru.rinet.questik.repo.local.room.entity.MetricsEntity
 import ru.rinet.questik.ui.chern.epoxy.*
 import javax.inject.Inject
+import kotlin.system.measureTimeMillis
 
 @HiltViewModel
 class ChernViewModel @Inject constructor(
@@ -23,182 +24,150 @@ class ChernViewModel @Inject constructor(
         get() = _liveData
     private val _liveData = MutableLiveData<ChernContainer>()
 
+
+    var isLoading = MutableLiveData<Boolean>()
+
+
     //  private val fullLiveData = MutableLiveData<ChernContainer>()
     private var serchedItem: String = ""
     var showItogData: Boolean = false
-    private var minList = 0
-    private var maxList = 0
-
     init {
 
         CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = true
+            }
             if (repository.getChernovikCount() == 0) {
                 initChernovikDatabase()
             }
-                val chernPerCategoryList: MutableList<ChernPerCategory> = mutableListOf()
-                chernPerCategoryList.apply {
-                    initCategoryList().forEach {
-                        val itemListCount = repository.getChernovikCountByCategoryId(it.id.toString())
-                       // val itemsList = repository.getChernovikByCategoryAndIdDiapazon(it.id.toString(), )
-                        val itemsList = repository.getChernovikByCategoryId(it.id.toString())
-                        //val listSize = itemsList.size
-                        var minList = 0
-                        if (itemListCount != 0) {
-                            minList = 0
-                        }
-                        var maxList = 0
-                        if (itemListCount != 0 && itemListCount <= 15) {
-                            maxList = itemListCount
-                        } else if (itemListCount == 0) {
-                            maxList = 0
+            val chernCategoryList: MutableList<CategoryItems> = mutableListOf()
+            chernCategoryList.apply {
+                initCategoryList().forEach {
+                    var minItemId = 0
+                    var maxItemId = 0
+                    val emptyList = mutableListOf<ChernovikItems>()
+                    val itemListCount = repository.getChernovikCountByCategoryId(it.id.toString())
+                    val itemsList = repository.getChernovikByCategoryId(it.id.toString())
+                    if (itemsList.size != 0) {
+                        minItemId = itemsList.get(0).id
+                        if (itemListCount > 100) {
+                            maxItemId = itemsList.get(99).id
                         } else {
-                            maxList = 15
+                            maxItemId = itemsList.get(itemListCount - 1).id
                         }
+                    }
 
-                        //                itemsList.get(15).id ?:itemsList.get(listSize-1).id
-                        /*     if (maxList>=listSize){
-                                 val maxList = listSize
-                             }*/
-                        if (itemListCount!=0){
-                            this.add(
-                                ChernPerCategory(
-                                    category = it,
-                                    itemsSize = repository.getChernovikCountByCategoryId(it.id.toString()),
-                                    minList,
-                                    maxList,
-                                    items = repository.getChernovikByCategoryId(it.id.toString()).subList(minList, maxList) as MutableList<ChernovikEntity>,
-                                    onItemTouched,
-                                    onItemCountChange,
-                                    onItemUpdated(),
-                                    initCategoryList(),
-                                    initMetricsList()
-                                )
+                    if (itemListCount != 0) {
+                        this.add(
+                            CategoryItems(
+                                category = it,
+                                itemsSize = repository.getChernovikCountByCategoryId(it.id.toString()),
+                                minList = minItemId,
+                                maxList = maxItemId,
+                                items = emptyList
                             )
-                        }
-
+                        )
                     }
                 }
-                CoroutineScope(Dispatchers.Main).launch {
-                    // fullLiveData.value = ChernContainer(chernPerCategoryList, onChernCategoryExpanded)
-                    _liveData.value =
-                        ChernContainer(chernPerCategoryList, onChernCategoryExpanded)
-                }
+            }
+
+            CoroutineScope(Dispatchers.Main).launch {
+
+                // fullLiveData.value = ChernContainer(chernPerCategoryList, onChernCategoryExpanded)
+                _liveData.value =
+                    ChernContainer(chernCategoryList, onChernCategoryExpanded)
+
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = false
+            }
         }
+
     }
 
     private fun updateData(model: ChernovikEntity) {
         CoroutineScope(Dispatchers.IO).launch {
-            if (!model.equals(repository.getChernovikById(model.id))) {
-                repository.updateChernovik(model)
-                Log.i(
-                    "TAG CHERN CHILD VIEW MODEL",
-                    "разница ${model.name} -_________________________ОБНОВЛЕН_________________________"
-                )
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = true
             }
-
-            updateLiveData(model)
+            if (!model.equals(repository.getChernovikById(model.id))) {
+                val elapsedTime = measureTimeMillis {
+                    repository.updateChernovik(model)
+                    updateLiveDataModel(model)
+                }
+                println("------------------------------------------------UPDATE LIVEDATA ITEM in UI THREAD  выполнен за  $elapsedTime ms")
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = false
+            }
         }
+
     }
 
-    /*         var chernPerCategory: MutableList<ChernPerCategory> = mutableListOf()
-             val oldContainer = fullLiveData.value
-             if (oldContainer != null) {
-                 oldContainer.categories.map { chernPerCat ->
-                     var udatedItems: MutableList<ChernovikEntity> = mutableListOf()
-                     chernPerCat.items.forEach {
-                         if (it.name == model.name && it.id == model.id) {
-                             Log.i(
-                                 "TAG CHERN CHILD VIEW MODEL",
-                                 "разница ${model.name} - count ${it.itemCount}  changed to ${model.itemCount}  cheked is  ${it.isChecked}  changed to ${model.isChecked} Detail view is  ${it.isShow}  changed to ${model.isShow} "
-                             )
-                             udatedItems.add(model)
-                         } else {
-                             udatedItems.add(it)
-                         }
-                     }
-
-                     if (udatedItems.isNotEmpty()) {
-                         val newChernCat = chernPerCat.copy(items = udatedItems)
-                         chernPerCategory.add(newChernCat)
-                     }
-                 }
-
-                 CoroutineScope(Dispatchers.Main).launch {
-                     fullLiveData.value = oldContainer.copy(categories = chernPerCategory)
-                     _liveData.value = oldContainer.copy(categories = chernPerCategory)
-                 }
-             }
-             if (serchedItem.isNotEmpty()) {
-                 search(serchedItem)
-             }
-             if (showItogData) {
-                 showItog()
-             }*/
-
-    private fun updateLiveData(model: ChernovikEntity) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val oldContainer = _liveData.value
-            if (oldContainer != null) {
-                val newContainer = oldContainer.categories.map { chp ->
-                    if (model.categoryId == chp.category.id.toString()) {
-                        chp.items.map {
-                            if (it.id == model.id) {
-                                it.copy(
-                                    name = model.name,
-                                    categoryId = model.categoryId,
-                                    jobId = model.jobId,
-                                    materialId = model.materialId,
-                                    metricsId = model.metricsId,
-                                    itemCount = model.itemCount,
-                                    itemPrice = model.itemPrice,
-                                    plu = model.plu,
-                                    isChecked = model.isChecked,
-                                    isShow = model.isShow,
-                                    isMaterial = model.isMaterial
-                                )
-                            }
-                        }
-
-                        Log.i(
-                            "TAG CHERN CHILD VIEW MODEL",
-                            "разница  - 8, ITEMS LIST SIZE IS : ${chp.items.size} "
-                        )
-                    }
-                    //  it.copy(items = items)
-
-
-
-/*                    val listSize = chp.items.size
-                    var minList: Int = 0
-                    if (listSize != 0 && chp.minList != 0) {
-                        chp.items.forEachIndexed { index, chernovikEntity ->
-                            if (chernovikEntity.id == model.id) {
-                                minList = index
-                            }
-                        }
-                    }
-
-                    var maxList = 0
-                    if (listSize != 0 && listSize <= 14) {
-                        maxList = chp.items.size
-                    } else if (listSize == 0) {
-                        maxList = 0
-                    } else {
-                        maxList = minList + 14
-                    }*/
-                    val newList:MutableList<ChernovikEntity> = mutableListOf<ChernovikEntity>()
-                    newList.apply {
-                        chp.items.forEach {chernovikEntity ->
-                            this.add(chernovikEntity)
+    private fun updateLiveDataScale(model: ChernovikEntity) {
+        val oldContainer = _liveData.value
+        if (oldContainer != null) {
+            val newContainer = oldContainer.categories.map { chp ->
+                if (chp.category.id.toString() == model.categoryId) {
+                    val items =
+                        repository.getChernovikByIdDiapazon(chp.minList, chp.maxList)
+                    val chernovikItems = mutableListOf<ChernovikItems>()
+                    chernovikItems.apply {
+                        items.forEach { entity ->
+                            val item = ChernovikItems(
+                                item = entity,
+                                onItemTouched = onItemTouched,
+                                OnItemChangeCount = onItemCountChange,
+                                onItemUpdated = onItemUpdated(),
+                                categoryEntityList = repository.getCategories(),
+                                metricsEntityList = repository.getMetrics()
+                            )
+                            add(item)
                         }
                     }
                     chp.copy(
-                        items = newList
+                        items = chernovikItems
                     )
-                     //   newList.addAll(repository.getChernovikByIdDiapazon(newList.get(newList.size-1).id, chp.maxList))
-                        // val item : ChernovikEntity = repository.getChernovikById(i)
-                    }
+                } else {
+                    chp
+                }
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                _liveData.value =
+                    oldContainer.copy(categories = newContainer)
 
+            }
+
+        }
+    }
+
+
+    private fun updateLiveDataModel(model: ChernovikEntity) {
+        val oldContainer = _liveData.value
+        if (oldContainer != null) {
+            val newContainer = oldContainer.categories.map { chp ->
+                if (model.categoryId == chp.category.id.toString() && chp.itemsSize != 0) {
+                    Log.i(
+                        "TAG CHERN CHILD VIEW MODEL",
+                        "разница  - 8, ITEMS LIST SIZE IS : ${chp.items.size} "
+                    )
+                    chp.copy(items = chp.items.map {
+                        if (it.item.id == model.id) {
+                            it.copy(item = model)
+                        } else {
+                            it
+                        }
+                    } as MutableList<ChernovikItems>)
+                } else {
+                    chp
+                }
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+
+                _liveData.value =
+                    oldContainer.copy(categories = newContainer as MutableList<CategoryItems>)
+
+            }
 
 
 /*
@@ -269,118 +238,111 @@ class ChernViewModel @Inject constructor(
                 }
 */
 
-                CoroutineScope(Dispatchers.Main).launch {
-                    _liveData.value = oldContainer.copy(categories = newContainer)
-                }
 
-                /*        val newContainer = oldContainer.categories.map {
-                            var items = mutableListOf<ChernovikEntity>()
-                            if (it.category.id.toString() == model.categoryId) {
-                                if (showItogData && serchedItem != "") {
-                                    items = repository.filteredChernovikList(
-                                        serchedItem,
+            /*        val newContainer = oldContainer.categories.map {
+                        var items = mutableListOf<ChernovikEntity>()
+                        if (it.category.id.toString() == model.categoryId) {
+                            if (showItogData && serchedItem != "") {
+                                items = repository.filteredChernovikList(
+                                    serchedItem,
+                                    check = true,
+                                    it.category.id.toString()
+                                ).toMutableList()
+                            } else {
+                                if (showItogData) {
+
+                                    items = repository.getChernovikByItogShow(
                                         check = true,
                                         it.category.id.toString()
                                     ).toMutableList()
                                 } else {
-                                    if (showItogData) {
-
-                                        items = repository.getChernovikByItogShow(
-                                            check = true,
-                                            it.category.id.toString()
-                                        ).toMutableList()
-                                    } else {
-                                        items =
-                                            repository.getChernovikByCategoryId(it.category.id.toString())
-                                                .toMutableList()
-                                    }
-                                    if (serchedItem != "") {
-                                        items = repository.searchChernovikItem(
-                                            serchedItem,
-                                            it.category.id.toString()
-                                        ).toMutableList()
-                                    } else {
-                                        items =
-                                            repository.getChernovikByCategoryId(it.category.id.toString())
-                                                .toMutableList()
-                                    }
+                                    items =
+                                        repository.getChernovikByCategoryId(it.category.id.toString())
+                                            .toMutableList()
                                 }
-
-                                    it.copy(items = items)
-                            } else {
-                                it
+                                if (serchedItem != "") {
+                                    items = repository.searchChernovikItem(
+                                        serchedItem,
+                                        it.category.id.toString()
+                                    ).toMutableList()
+                                } else {
+                                    items =
+                                        repository.getChernovikByCategoryId(it.category.id.toString())
+                                            .toMutableList()
+                                }
                             }
 
-                        }*/
+                                it.copy(items = items)
+                        } else {
+                            it
+                        }
 
+                    }*/
+
+        }
+    }
+
+    private val onItemTouched: OnChernItemTouched = { model ->
+        CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = true
+            }
+            val elapsedTime = measureTimeMillis {
+                updateOnTouch(model)
+            }
+            println("------------------------------------------------onItemTouched in UI THREAD  выполнен за  $elapsedTime ms")
+            if (model.equals(repository.getChernovikById(model.id))) {
+                val elapsedTime = measureTimeMillis {
+                    updateLiveDataScale(model)
+                }
+                println("------------------------------------------------UPDATE LIVEDATA ITEMS SIZE in UI THREAD  выполнен за  $elapsedTime ms")
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = false
             }
         }
     }
 
-    private val onItemTouched: OnChernItemTouched = { model, touchUp ->
-        //  Log.i("ChernFragmentViewMOdel", "${model.name} - is touchedUp - $touchUp ")
-        //  updateData(model)
-        CoroutineScope(Dispatchers.IO).launch {
-            val oldContainer = _liveData.value
-            if (oldContainer != null) {
-                val newContainer = mutableListOf<ChernPerCategory>()
-                oldContainer.categories.forEach { chp ->
-                    val dataList = repository.getChernovikByCategoryId(chp.category.id.toString())
-                    var newMin: Int = 0
-                    var newMax: Int = 0
+    private fun updateOnTouch(model: ChernovikEntity) {
+        val oldContainer = _liveData.value
+        if (oldContainer != null) {
+            var newMin: Int = 0
+            var newMax: Int = 0
+            val newContainer = oldContainer.categories.map { chp ->
+                if (model.categoryId == chp.category.id.toString()&&model.id +15 >= chp.minList + chp.items.size) {
 
-                    val startId: Int = dataList.firstOrNull()!!.id
-                    if (model.categoryId == chp.category.id.toString()) {
-
-                        dataList.forEachIndexed { index, chernovikEntity ->
-
-                            if (model.id == chernovikEntity.id) {
-                                Log.i(
-                                    "TAG CHERN CHILD VIEW MODEL",
-                                    " on touch model 1 id ${model.id} "
-                                )
-                                if (index - 7 > 0) {
-                                    //  newMin = dataList.get(index - 7).id
-                                   // newMin = model.id - 7
-                                    newMin = dataList.get(0).id
-                                } else {
-                                    newMin = dataList.get(0).id
-                                }
-
-                                if (index + 15 < dataList.size-1) {
-                                    newMax = model.id+14
-                                } else {
-                                    newMax = dataList.get(dataList.size-1).id
-                                }
-
-                                Log.i(
-                                    "TAG CHERN CHILD VIEW MODEL",
-                                    " on touch cashMin 2  ${newMin} and cashMax${newMax} "
-                                )
-                            }
-                        }
+                    if (chp.items.size + 100 < chp.itemsSize) {
                         Log.i(
                             "ChernFragmentViewMOdel",
-                            "${model.name} - is touchedUp - $touchUp and MIN is - $newMin, and MAX is - $newMax "
+                            "---------------------------------------------oooops 1 ----------------------------------------- "
                         )
-                        for (i in newMin..newMax){
-                           val item = repository.getChernovikById(i)
-                            if (!chp.items.contains(item)){
-                                chp.items.add(item)
-                            }
-                        }
-                        val updatedChp = chp.copy(minList = 0, maxList = chp.items.size, items = chp.items)
-                        newContainer.add(updatedChp)
-                    } else if (dataList.size != 0) {
+                        newMax = chp.maxList + 100
+                    } else {
+                        Log.i(
+                            "ChernFragmentViewMOdel",
+                            "---------------------------------------------oooops 2 ----------------------------------------- "
+                        )
+                        newMax = repository.getChernovikById(chp.minList + chp.itemsSize).id
 
+                        Log.i(
+                            "ChernFragmentViewMOdel",
+                            " AFTER ${model.name} - is touched and MIN is - $newMin, and MAX is - $newMax and LIST SIZE is ${chp.items.size} "
+                        )
 
-                        newContainer.add(chp)
+                    }
+                    chp.copy(minList = chp.minList, maxList = newMax)
+                } else {
+                    chp
+                }
+            }
+
+            GlobalScope.launch(Dispatchers.Main) {
+                val elapsedTime = measureTimeMillis {
+                    if (!newContainer.equals(oldContainer.categories)){
+                        _liveData.value = oldContainer.copy(categories = newContainer)
                     }
                 }
-                CoroutineScope(Dispatchers.Main).launch {
-                    _liveData.value = oldContainer.copy(categories = newContainer)
-                }
-              //  updateLiveData(model)
+                println("------------------------------------------------onItemTouched in MAIN THREAD  выполнен за  $elapsedTime ms     and EQUALS is ${newContainer.equals(oldContainer.categories)} ")
             }
         }
     }
@@ -421,56 +383,56 @@ class ChernViewModel @Inject constructor(
     }*/
 
     private val onChernCategoryExpanded: OnChernCategoryExpanded = { category ->
+
         CoroutineScope(Dispatchers.IO).launch {
+
+            CoroutineScope(Dispatchers.Main).launch {
+                isLoading.value = true
+            }
+
             val oldContainer = _liveData.value
             if (oldContainer != null) {
                 oldContainer.onCategoryExpanded
-                val newCategories: MutableList<ChernPerCategory> = oldContainer.categories.map {
-                    if (it.category.id == category.id) {/*
-                        var items = mutableListOf<ChernovikEntity>()
-                        if (showItogData && serchedItem != "") {
-                            items = repository.filteredChernovikList(
-                                serchedItem,
-                                check = true,
-                                category.id.toString()
-                            ).toMutableList()
-                        } else {
-                            if (showItogData) {
-                                items = repository.getChernovikByItogShow(
-                                    check = true,
-                                    category.id.toString()
-                                ).toMutableList()
-                            } else {
-                                items = repository.getChernovikByCategoryId(category.id.toString())
-                                    .toMutableList()
+                val newCategories: MutableList<CategoryItems> =
+                    oldContainer.categories.map { it ->
+                        if (it.category.id == category.id) {
+                            val items =
+                                repository.getChernovikByIdDiapazon(it.minList, it.maxList)
+                            val chernovikItems = mutableListOf<ChernovikItems>()
+                            chernovikItems.apply {
+                                items.forEach { entity ->
+                                    val item = ChernovikItems(
+                                        item = entity,
+                                        onItemTouched = onItemTouched,
+                                        OnItemChangeCount = onItemCountChange,
+                                        onItemUpdated = onItemUpdated(),
+                                        categoryEntityList = repository.getCategories(),
+                                        metricsEntityList = repository.getMetrics()
+                                    )
+                                    add(item)
+                                }
                             }
-                            if (serchedItem != "") {
-                                items = repository.searchChernovikItem(
-                                    serchedItem,
-                                    category.id.toString()
-                                ).toMutableList()
-                            } else {
-                                items = repository.getChernovikByCategoryId(category.id.toString())
-                                    .toMutableList()
-                            }
-                        }*/
-                        it.copy(
-                            category = it.category.copy(
-                                isExpand = !category
-                                    .isExpand
+                            it.copy(
+                                category = it.category.copy(
+                                    isExpand = !category.isExpand
+                                ),
+                                items = chernovikItems
                             )
-                        )
-      /*                  ,
-                        items = repository.getChernovikByIdDiapazon(it.minList, it.maxList)*/
-                    } else {
-                        it
-                    }
-                } as MutableList<ChernPerCategory>
+                        } else {
+                            it
+                        }
+                    } as MutableList<CategoryItems>
                 CoroutineScope(Dispatchers.Main).launch {
+
                     _liveData.value = oldContainer.copy(categories = newCategories)
+
                 }
                 //updateLiveData()
+                CoroutineScope(Dispatchers.Main).launch {
+                    isLoading.value = false
+                }
             }
+
         }
 
     }
@@ -478,7 +440,8 @@ class ChernViewModel @Inject constructor(
 
     fun search(serched: String) {
         serchedItem = serched
-        CoroutineScope(Dispatchers.IO).launch {
+
+/*        CoroutineScope(Dispatchers.IO).launch {
             val oldContainer = _liveData.value
             if (oldContainer != null) {
 
@@ -506,21 +469,12 @@ class ChernViewModel @Inject constructor(
                     _liveData.value = oldContainer.copy(categories = chernPerCategory)
                 }
             }
-        }
+        }*/
     }
 
-/*    fun fetchAllData() {
-        CoroutineScope(Dispatchers.Main).launch {
-            _liveData.value = fullLiveData.value
-        }
-    }*/
 
     fun initCategoryList(): List<CategoryEntity> {
         return repository.getCategories()
-    }
-
-    fun initMetricsList(): List<MetricsEntity> {
-        return repository.getMetrics()
     }
 
 
@@ -564,62 +518,6 @@ class ChernViewModel @Inject constructor(
         }
     }
 
-/*    fun initItemsByCategoryId(id: Int): MutableList<ChernovikEntity> {
-        val commonModelList = mutableListOf<ChernovikEntity>()
-        repository.getJobsByCategoryId(id.toString()).forEach {
-            commonModelList.add(
-                ChernovikEntity(
-                    //rowId = UUID.randomUUID().toString(),
-                    id = it.id.toString(),
-                    name = it.name.toString(),
-                    price = it.price.toString(),
-                    metrics_id = it.metrics_id.toString(),
-                    category_id = it.category_id.toString(),
-                    price_inzh = it.price_inzh.toString(),
-                    price_nalog_zp = it.price_nalog_zp.toString(),
-                    price_zp = it.price_zp.toString(),
-                    isMaterial = false
-                )
-            )
-        }
-        commonModelList.apply {
-            val materials = repository.getMaterialByCategoryId(id.toString())
-            val start: Int = 0
-            val end: Int = 20
-            if (materials.size <= end) {
-                materials.subList(start, materials.size).map {
-                    this.add(
-                        ChernovikEntity(
-                            rowId = UUID.randomUUID().toString(),
-                            id = it.id.toString(),
-                            plu = it.plu.toString(),
-                            name = it.name.toString(),
-                            price = it.price.toString(),
-                            metrics_id = it.metrics_id.toString(),
-                            category_id = it.category_id.toString(),
-                            isMaterial = true
-                        )
-                    )
-                }
-            } else {
-                materials.subList(start, end).map {
-                    this.add(
-                        CommonModel(
-                            rowId = UUID.randomUUID().toString(),
-                            id = it.id.toString(),
-                            plu = it.plu.toString(),
-                            name = it.name.toString(),
-                            price = it.price.toString(),
-                            metrics_id = it.metrics_id.toString(),
-                            category_id = it.category_id.toString(),
-                            isMaterial = true
-                        )
-                    )
-                }
-            }
-        }
-        return commonModelList
-    }*/
 }
 
 

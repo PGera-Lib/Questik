@@ -36,4 +36,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"/>
+    <include
+        android:id="@+id/progress_bar_layout"
+        layout="@layout/load_state_item"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

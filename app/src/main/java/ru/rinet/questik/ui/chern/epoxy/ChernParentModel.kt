@@ -11,11 +11,14 @@ import ru.rinet.questik.utils.helper.ViewBindingEpoxyModelWithHolder
 @EpoxyModelClass(layout = R.layout.fragment_jobs_item_parent)
 abstract class ChernParentModel : ViewBindingEpoxyModelWithHolder<FragmentJobsItemParentBinding>() {
     @EpoxyAttribute
+    var position: Int? = null
+    @EpoxyAttribute
     lateinit var listener: () -> Unit
     @EpoxyAttribute
     lateinit var title: String
     @EpoxyAttribute
     lateinit var category_size: String
+
 
     @EpoxyAttribute
     var expand: Boolean = false

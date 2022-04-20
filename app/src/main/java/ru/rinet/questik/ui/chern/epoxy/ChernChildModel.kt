@@ -22,6 +22,9 @@ import ru.rinet.questik.utils.helper.ViewBindingHolder
 
 @EpoxyModelClass(layout = R.layout.fragment_chern_child_item)
 abstract class ChernChildModel : ViewBindingEpoxyModelWithHolder<FragmentChernChildItemBinding>() {
+
+    @EpoxyAttribute
+    var position: Int? = null
     @EpoxyAttribute
     lateinit var chernovik: ChernovikEntity
 
@@ -32,7 +35,7 @@ abstract class ChernChildModel : ViewBindingEpoxyModelWithHolder<FragmentChernCh
     lateinit var metricsList: MutableList<MetricsEntity>
 
     @EpoxyAttribute
-    lateinit var onChernItemTouchListener: (model: ChernovikEntity, touchUp: Boolean) -> Unit
+    lateinit var onChernItemTouchListener: (model: ChernovikEntity) -> Unit
 
     @EpoxyAttribute
     lateinit var onChernChangeListener: (model: ChernovikEntity) -> Unit
@@ -48,7 +51,7 @@ abstract class ChernChildModel : ViewBindingEpoxyModelWithHolder<FragmentChernCh
             when (motionEvent.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     println("motion down")
-                    onChernItemTouchListener(chernovik, false)
+                    onChernItemTouchListener(chernovik)
                 }
                   //  return@setOnTouchListener true
                 MotionEvent.ACTION_UP -> {
@@ -222,12 +225,13 @@ abstract class ChernChildModel : ViewBindingEpoxyModelWithHolder<FragmentChernCh
          * Колличестиво
          */
         //колличество работ/материала
+        if (detailLayout.itemCatalogCount.hasFocus() && itemCount.toString()!="") {
         detailLayout.itemCatalogCount.doAfterTextChanged { text ->
             Log.i(
                 "TAG CHERN CHILD MODEL ",
                 "CHANGE TEXT LISTENER 1"
             )
-            if (detailLayout.itemCatalogCount.hasFocus() && itemCount.toString()!=text.toString()) {
+
                 Log.i(
                     "TAG CHERN CHILD MODEL ",
                     "CHANGE TEXT LISTENER 2"
