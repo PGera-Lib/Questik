@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mikepenz:fastadapter:5.5.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/75d22da1dd1db591dd9d44803ce4322a/transformed/jetified-fastadapter-5.5.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/75d22da1dd1db591dd9d44803ce4322a/transformed/jetified-fastadapter-5.5.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/75d22da1dd1db591dd9d44803ce4322a/transformed/jetified-fastadapter-5.5.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/31202d59560c35109df8158f27bb5d3e/transformed/jetified-fastadapter-5.5.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/31202d59560c35109df8158f27bb5d3e/transformed/jetified-fastadapter-5.5.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/31202d59560c35109df8158f27bb5d3e/transformed/jetified-fastadapter-5.5.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/fastadapter/5.5.1/c4555e776fde6d94803b64fd27761c516fef523b/fastadapter-5.5.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/fastadapter/5.5.1/dbcf4def7828e32f3656a1fe803ea0eae6962d17/fastadapter-5.5.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

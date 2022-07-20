@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mikepenz:materialdrawer-iconics:8.4.4@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e8cc3f434f8ddb9ad4c4b33b4a3bd6c2/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d74c5281fdd2fae1e92e26f9425b6032/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f8c108dc5ac936d8d0d02e356f335e65/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c7e70f17666a09e11e5c16517f4ec88b/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/eff774f3a14351f61c7a2b76cdd22302/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/201b376b0dc4f443d230cfe8fa087a65/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bc6719256f3eab525a741b2b0fd71906/transformed/jetified-materialdrawer-iconics-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bc6719256f3eab525a741b2b0fd71906/transformed/jetified-materialdrawer-iconics-8.4.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bc6719256f3eab525a741b2b0fd71906/transformed/jetified-materialdrawer-iconics-8.4.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/201b376b0dc4f443d230cfe8fa087a65/transformed/jetified-materialdrawer-iconics-8.4.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/201b376b0dc4f443d230cfe8fa087a65/transformed/jetified-materialdrawer-iconics-8.4.4/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/materialdrawer-iconics/8.4.4/7bfda1dc4ec391ee3a6c80e7b690c8bf3a10d70a/materialdrawer-iconics-8.4.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/materialdrawer-iconics/8.4.4/ca828587c32c631776d609d92be025e5c996c43b/materialdrawer-iconics-8.4.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

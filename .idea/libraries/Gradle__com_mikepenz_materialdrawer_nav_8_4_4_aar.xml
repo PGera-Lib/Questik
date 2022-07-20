@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mikepenz:materialdrawer-nav:8.4.4@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cc9fcbb709e59f60f6ba3dc1eaca9978/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f4040faacf66506a9965b97a4769f527/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9c87535d8aa30d779ed821de6989b9eb/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/13f4a3844e7a46097fd63fd984113da4/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ad91c357fb223dfd77f87d9672586113/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/658f85724cee59c11a65b49a1877e214/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9f61afd2123146191ed4dce54a4340c4/transformed/jetified-materialdrawer-nav-8.4.4/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9f61afd2123146191ed4dce54a4340c4/transformed/jetified-materialdrawer-nav-8.4.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9f61afd2123146191ed4dce54a4340c4/transformed/jetified-materialdrawer-nav-8.4.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/658f85724cee59c11a65b49a1877e214/transformed/jetified-materialdrawer-nav-8.4.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/658f85724cee59c11a65b49a1877e214/transformed/jetified-materialdrawer-nav-8.4.4/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/materialdrawer-nav/8.4.4/ae1da3fc97b8b50eadaf9bfae0e8cca5573300bc/materialdrawer-nav-8.4.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikepenz/materialdrawer-nav/8.4.4/c59ab129fa5d25c6d48cb76d06abe1e06da7437f/materialdrawer-nav-8.4.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
