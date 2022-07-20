@@ -1,2 +1,3 @@
 # Questik
-to do 
+
+Jobs an materials calculate
