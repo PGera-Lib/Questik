@@ -1,3 +1,3 @@
 # Questik
 
-Jobs an materials calculate
+Jobs and materials calculate
