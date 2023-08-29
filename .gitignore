@@ -1,2 +1,7 @@
-/.idea/
-*.iml6
+/.idea
+.idea
+/.gradle
+.gradle
+*.iml
+/android/build/
+/common/build/
