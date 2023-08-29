@@ -1,0 +1,33 @@
+CREATE TABLE materialEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    category_id INTEGER NOT NULL,
+    metrics_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    price TEXT NOT NULL,
+    plu TEXT
+);
+
+getMaterials:
+SELECT *
+FROM materialEntity
+ORDER BY name ASC;
+
+insertMaterialEntity:
+INSERT OR REPLACE
+INTO materialEntity(
+    id,
+    category_id,
+    metrics_id,
+    name,
+    price,
+    plu
+) VALUES (?, ?, ?, ?, ?, ?);
+
+deleteMaterial:
+DELETE FROM materialEntity
+WHERE id = :id;
+
+getMaterialById:
+SELECT *
+FROM materialEntity
+WHERE id = :id;

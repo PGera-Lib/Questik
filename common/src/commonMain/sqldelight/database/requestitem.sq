@@ -1,0 +1,41 @@
+CREATE TABLE requestItemEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    categoryId INTEGER NOT NULL,
+    requestId INTEGER NOT NULL,
+    jobId INTEGER,
+    materialId INTEGER,
+    metricsId INTEGER,
+    itemCount TEXT,
+    itemPrice TEXT,
+    plu TEXT
+);
+
+getRequestItemsEntity:
+SELECT *
+FROM requestItemEntity
+ORDER BY requestId ASC;
+
+insertRequestItemEntity:
+INSERT OR REPLACE
+INTO requestItemEntity(
+    id,
+    name,
+    categoryId,
+    requestId,
+    jobId,
+    materialId,
+    metricsId,
+    itemCount,
+    itemPrice,
+    plu
+) VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?);
+
+deleteRequestItem:
+DELETE FROM requestItemEntity
+WHERE id = :id;
+
+getRequestItemById:
+SELECT *
+FROM requestItemEntity
+WHERE id = :id;

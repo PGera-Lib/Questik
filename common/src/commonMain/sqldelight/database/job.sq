@@ -1,0 +1,31 @@
+CREATE TABLE jobEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    category_id INTEGER NOT NULL,
+    metrics_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    price TEXT NOT NULL
+);
+
+getJobs:
+SELECT *
+FROM jobEntity
+ORDER BY name ASC;
+
+insertJobEntity:
+INSERT OR REPLACE
+INTO jobEntity(
+    id,
+    category_id,
+    metrics_id,
+    name,
+    price
+) VALUES (?, ?, ?, ?, ?);
+
+deleteJob:
+DELETE FROM jobEntity
+WHERE id = :id;
+
+getJobById:
+SELECT *
+FROM jobEntity
+WHERE id = :id;

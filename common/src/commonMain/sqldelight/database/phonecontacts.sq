@@ -1,0 +1,29 @@
+CREATE TABLE phoneContactsEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    contactId INTEGER NOT NULL,
+    phone TEXT NOT NULL,
+    descritpion TEXT
+);
+
+getPhoneContactsEntity:
+SELECT *
+FROM phoneContactsEntity
+ORDER BY contactId ASC;
+
+insertPhoneContactsEntity:
+INSERT OR REPLACE
+INTO phoneContactsEntity(
+    id,
+   contactId,
+   phone,
+   descritpion
+) VALUES (?, ?, ?, ?);
+
+deletePhoneContact:
+DELETE FROM phoneContactsEntity
+WHERE id = :id;
+
+getPhoneContactById:
+SELECT *
+FROM phoneContactsEntity
+WHERE id = :id;

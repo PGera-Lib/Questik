@@ -1,0 +1,34 @@
+CREATE TABLE userEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    username TEXT NOT NULL,
+    photoUrl TEXT,
+    status TEXT,
+    dataBirth TEXT
+);
+
+
+getUsersEntity:
+SELECT *
+FROM userEntity
+ORDER BY name ASC;
+
+insertUserEntity:
+INSERT OR REPLACE
+INTO userEntity(
+    id,
+    name,
+    username,
+    photoUrl,
+    status,
+    dataBirth
+) VALUES (?, ?, ?, ?,?, ?);
+
+deleteUser:
+DELETE FROM userEntity
+WHERE id = :id;
+
+getUserById:
+SELECT *
+FROM userEntity
+WHERE id = :id;

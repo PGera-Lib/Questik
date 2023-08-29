@@ -1,0 +1,25 @@
+CREATE TABLE metricEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+getMetric:
+SELECT *
+FROM metricEntity
+ORDER BY name ASC;
+
+insertMetricEntity:
+INSERT OR REPLACE
+INTO metricEntity(
+    id,
+  name
+) VALUES (?, ?);
+
+deleteMetric:
+DELETE FROM metricEntity
+WHERE id = :id;
+
+getMetricById:
+SELECT *
+FROM metricEntity
+WHERE id = :id;

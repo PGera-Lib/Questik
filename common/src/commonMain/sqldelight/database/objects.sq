@@ -1,0 +1,27 @@
+CREATE TABLE objectEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    adress TEXT NOT NULL,
+    name TEXT NOT NULL
+);
+
+getObject:
+SELECT *
+FROM objectEntity
+ORDER BY name ASC;
+
+insertObjectEntity:
+INSERT OR REPLACE
+INTO objectEntity(
+    id,
+    adress,
+    name
+) VALUES (?, ?, ?);
+
+deleteObject:
+DELETE FROM objectEntity
+WHERE id = :id;
+
+getObjectById:
+SELECT *
+FROM objectEntity
+WHERE id = :id;

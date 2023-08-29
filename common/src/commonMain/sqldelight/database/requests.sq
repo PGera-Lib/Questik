@@ -1,0 +1,38 @@
+CREATE TABLE requestEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    corpId INTEGER,
+    objectId INTEGER,
+    dataCreate TEXT NOT NULL,
+    dataStart TEXT,
+    dataEnd TEXT,
+    description TEXT
+);
+
+
+getRequestEntity:
+SELECT *
+FROM requestEntity
+ORDER BY name ASC;
+
+insertRequestEntity:
+INSERT OR REPLACE
+INTO requestEntity(
+    id,
+    name,
+    corpId,
+    objectId,
+    dataCreate,
+    dataStart,
+    dataEnd,
+    description
+) VALUES (?, ?, ?, ?,?, ?, ?, ?);
+
+deleteRequest:
+DELETE FROM requestEntity
+WHERE id = :id;
+
+getRequestById:
+SELECT *
+FROM requestEntity
+WHERE id = :id;

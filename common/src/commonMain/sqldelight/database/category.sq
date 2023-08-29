@@ -1,0 +1,26 @@
+CREATE TABLE categoryEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+
+getCategory:
+SELECT *
+FROM categoryEntity
+ORDER BY name ASC;
+
+insertCategoryEntity:
+INSERT OR REPLACE
+INTO categoryEntity(
+    id,
+    name
+) VALUES (?, ?);
+
+deleteCategory:
+DELETE FROM categoryEntity
+WHERE id = :id;
+
+getCategoryById:
+SELECT *
+FROM categoryEntity
+WHERE id = :id;

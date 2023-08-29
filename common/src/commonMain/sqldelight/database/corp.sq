@@ -1,0 +1,30 @@
+CREATE TABLE corpEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    loginroot TEXT NOT NULL,
+    name TEXT NOT NULL,
+    inn TEXT,
+    adress TEXT
+);
+getCorps:
+SELECT *
+FROM corpEntity
+ORDER BY name ASC;
+
+insertCorpEntity:
+INSERT OR REPLACE
+INTO corpEntity(
+    id,
+    loginroot,
+    name,
+    inn,
+    adress
+) VALUES (?, ?, ?, ?, ?);
+
+deleteCorp:
+DELETE FROM corpEntity
+WHERE id = :id;
+
+getCorpById:
+SELECT *
+FROM corpEntity
+WHERE id = :id;

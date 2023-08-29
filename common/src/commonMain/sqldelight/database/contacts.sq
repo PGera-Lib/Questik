@@ -1,0 +1,32 @@
+CREATE TABLE contactEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    company_id INTEGER,
+    object_id INTEGER,
+    user_id INTEGER,
+    mail TEXT,
+    description TEXT
+);
+getContact:
+SELECT *
+FROM contactEntity
+ORDER BY id ASC;
+
+insertContactEntity:
+INSERT OR REPLACE
+INTO contactEntity(
+    id,
+    company_id,
+    object_id,
+    user_id,
+    mail,
+    description
+) VALUES (?, ?, ?, ?, ?, ?);
+
+deleteContact:
+DELETE FROM contactEntity
+WHERE id = :id;
+
+getContactById:
+SELECT *
+FROM contactEntity
+WHERE id = :id;

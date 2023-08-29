@@ -1,0 +1,32 @@
+CREATE TABLE messageEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    messagefrom TEXT NOT NULL,
+    text TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    type TEXT NOT NULL
+    );
+
+
+getMessages:
+SELECT *
+FROM messageEntity
+ORDER BY timestamp ASC;
+
+insertMessagesEntity:
+INSERT OR REPLACE
+INTO messageEntity(
+    id,
+    messagefrom,
+    text,
+    timestamp,
+    type
+) VALUES (?, ?, ?, ?, ?);
+
+deleteMessage:
+DELETE FROM messageEntity
+WHERE id = :id;
+
+getMessagesById:
+SELECT *
+FROM messageEntity
+WHERE id = :id;
