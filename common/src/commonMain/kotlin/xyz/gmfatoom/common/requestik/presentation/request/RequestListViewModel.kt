@@ -38,26 +38,26 @@ class RequestListViewModel(
 
     private var _state = MutableStateFlow(RequestListState())
     val state: StateFlow<RequestListState>
-
-
     private var lastVisibleDate: LocalDate? = null
 
 
     init {
         state = _state
-            _state.value.lastVisibleDay?.let {
-                lastVisibleDate=it
-            }
-        if (lastVisibleDate==null){
+        _state.value.lastVisibleDay?.let {
+            lastVisibleDate = it
+        }
+        if (lastVisibleDate == null) {
             lastVisibleDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
         }
 
-    lastVisibleDate?.let {date ->
-        println("init update state - lastvisdate is $lastVisibleDate")
-        _state.update {
-            it.copy(dataList = getDataList(date).toMutableList())
+        lastVisibleDate?.let { date ->
+            println("init update state - lastvisdate is $lastVisibleDate")
+            viewModelScope.launch {
+                _state.emit(_state.value.copy(dataList = getDataList(date).toMutableList()))
+            }
+
+
         }
-    }
 
         /*
         state =  combine(
@@ -81,70 +81,54 @@ class RequestListViewModel(
         when (event) {
 
             is RequestListEvent.onRequestSelectDataChanged -> {
-                _state.update {
-                    it.copy(sellectedDay = event.selectedDay)
+                viewModelScope.launch {
+                    _state.emit(_state.value.copy(sellectedDay = event.selectedDay))
                 }
             }
 
             is RequestListEvent.onUpdateDateList -> {
                 lastVisibleDate = event.value
-                viewModelScope.launch {
-                    val oldList = state.value.dataList
-                    val newList = mutableListOf<LocalDate>()
-                   newList.apply {
-                      getDataList(event.value).forEach {
-                           if (!oldList.contains(it)) oldList.add(it)
-                       }
-                   this.addAll(oldList)}
-                    _state.update {
-                        it.copy(
-                            dataList = newList,
-                            lastVisibleDay = event.value
-                        )
+                lastVisibleDate?.let {
+                    viewModelScope.launch {
+                        viewModelScope.launch {
+                            _state.emit(
+                                _state.value
+                                    .copy(
+                                        lastVisibleDay = lastVisibleDate,
+                                        dataList = getDataList(it).toMutableList()
+                                    )
+                            )
+                        }
                     }
-                    delay(300L)
-                    println("onUpdateDataList run, newData list first item ${state.value.dataList.first()} and last item ${_state.value.dataList.last()} ")
                 }
+
 
             }
 
             is RequestListEvent.onDataListUpdateFirstItem -> {
-                val newDay = 10
-                println("on update first new day - $newDay")
-                viewModelScope.launch {
-                    val newDay = _state.value.dataList.first().minus(1, DateTimeUnit.DAY)
-                    val newList = state.value.dataList
-                    if (!newList.contains(newDay)) {
-                        newList.removeFirst()
-                        delay(300L)
-                        newList.add(newDay)
-                        delay(300L)
-
-                        _state.update {
-                            it.copy(dataList = newList, lastVisibleDay = newDay)
+                val dataList = _state.value.dataList
+                dataList?.let {
+                    val newFirstDay = dataList.first().minus(1, DateTimeUnit.DAY)
+                    if (!it.contains(newFirstDay)) {
+                        it.add(0, newFirstDay)
+                        viewModelScope.launch {
+                            _state.emit(_state.value.copy(dataList = it))
                         }
-
-                        delay(300L)
-                        println("Added new Date - ${newDay}")
                     }
-                    delay(300L)
                 }
             }
 
             is RequestListEvent.onDataListUpdateLastItem -> {
-                val newList = state.value.dataList
-
-                val newDay = state.value.dataList.last().plus(1, DateTimeUnit.DAY)
-                lastVisibleDate = newDay
-                if (!newList.contains(newDay)) {
-                    newList.removeFirst()
-                    newList.add(newDay)
-                    _state.update {
-                        it.copy(dataList = newList, lastVisibleDay = newDay)
+                val dataList = _state.value.dataList
+                dataList?.let {
+                    val newLastDay = dataList.last().plus(1, DateTimeUnit.DAY)
+                    if (!it.contains(newLastDay)) {
+                        it.add(newLastDay)
+                        viewModelScope.launch {
+                            _state.emit(_state.value.copy(dataList = it))
+                        }
                     }
-                    println("Added new Date - ${newDay}")
                 }
-                println("onDataUpdateLast")
             }
 
 

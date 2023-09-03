@@ -60,7 +60,7 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.1")
                 implementation("androidx.core:core-ktx:1.10.1")
                 implementation("com.squareup.sqldelight:android-driver:1.5.5")
-                implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
+                implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
             }
         }
         val iosX64Main by getting
@@ -84,6 +84,7 @@ kotlin {
                 api(compose.preview)
                 implementation("com.squareup.sqldelight:sqlite-driver:1.5.5")
                 implementation("org.jetbrains.compose.material3:material3-desktop:1.4.1")
+                implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
             }
         }
 

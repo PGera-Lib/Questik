@@ -5,3 +5,14 @@
 *.iml
 /android/build/
 /common/build/
+/local.properties
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/android/build
+/common/build
+/desktop/build
+/desktop/.gradle

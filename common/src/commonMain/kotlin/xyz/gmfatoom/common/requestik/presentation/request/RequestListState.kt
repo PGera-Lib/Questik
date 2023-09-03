@@ -1,5 +1,6 @@
 package xyz.gmfatoom.common.requestik.presentation.request
 
+import androidx.compose.foundation.lazy.LazyListState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -8,12 +9,13 @@ import xyz.gmfatoom.common.requestik.domain.model.RequestModel
 import xyz.gmfatoom.common.requestik.domain.model.UsersModel
 
 data class RequestListState(
-    val sellectedDay: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    val sellectedDay: LocalDate = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date,
     val requests: List<RequestModel> = emptyList(),
     val selectedRequest: RequestModel? = null,
     val lastVisibleDay: LocalDate? = null,
-    val dataList: MutableList<LocalDate> = mutableListOf(),
-
+    val dataList: MutableList<LocalDate>? = null,
+    val dataListState: LazyListState? = null,
     val isSelectContactListSheetOpen: Boolean = false,
     val isSelectCompanySheetOpen: Boolean = false,
     val isSelectObjectSheetOpen: Boolean = false,

@@ -17,11 +17,10 @@ fun RequestListScreen(
 
     onEvent: (RequestListEvent) -> Unit
 ) {
-    val lazyListState= rememberLazyListState()
 
-        FilterHeader(
+
+    FilterHeader(
             state = state,
-            lazyListState = lazyListState,
             onEvent = onEvent
         )
 
