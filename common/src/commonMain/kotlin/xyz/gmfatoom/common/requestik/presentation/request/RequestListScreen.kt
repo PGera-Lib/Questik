@@ -13,17 +13,14 @@ import xyz.gmfatoom.common.requestik.presentation.request.components.FilterHeade
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestListScreen(
-    state: RequestListState,
-
+    viewModel: RequestListViewModel,
     onEvent: (RequestListEvent) -> Unit
 ) {
 
-
     FilterHeader(
-            state = state,
+            viewModel = viewModel,
             onEvent = onEvent
         )
-
             }
 
 

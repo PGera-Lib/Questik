@@ -49,7 +49,7 @@ object DateTimeUtil {
 
     fun getDataList(day: LocalDate):List<LocalDate> {
         val list = mutableListOf<LocalDate>()
-        val buffer: Int = 60
+        val buffer: Int = 80
         val firstDay = day.minus(buffer/2, DateTimeUnit.DAY)
         repeat(buffer) { i ->
             list.add(firstDay.plus(i, DateTimeUnit.DAY))

@@ -7,17 +7,15 @@ import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -30,98 +28,77 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import xyz.gmfatoom.common.requestik.presentation.request.RequestListEvent
-import xyz.gmfatoom.common.requestik.presentation.request.RequestListState
+import xyz.gmfatoom.common.requestik.presentation.request.RequestListViewModel
 import xyz.gmfatoom.common.utils.getLocalDayOfWeak
 
 @Composable
 fun FilterHeader(
     modifier: Modifier = Modifier,
-    state: RequestListState,
+    viewModel: RequestListViewModel,
     onEvent: (RequestListEvent) -> Unit,
 ) {
+    val lazyListState = rememberLazyListState()
     val composableScope = rememberCoroutineScope()
-    //val lazyListState  = rememberLazyListState()
-    println(
-        " onHeader 1 last visible day is ${state.lastVisibleDay}  " +
-                "list count is ${state.dataList?.size} last Date is ${state.dataList?.last()}"
-    )
-
-    /*
-      currentSelectedData.let {
-            print(it.toString())
-            dataList.let{list->
-                composableScope.launch{
-                    if(lazyListState.firstVisibleItemIndex>list.indexOf(it)){
-                        println("if fvi>itemindex" +
-                                "first visible index - ${lazyListState.firstVisibleItemIndex} " +
-                                "and selected item index - ${list.indexOf(it)}")
-                        lazyListState.scrollToItem(list.indexOf(it))
-                    } else if (lazyListState.firstVisibleItemIndex<list.indexOf(it)-7) {
-                        println(
-                            "if fvi<itemindex+14" +
-                                    "first visible index - ${lazyListState.firstVisibleItemIndex} " +
-                                    "and selected item index - ${list.indexOf(it)}"
-                        )
-                        lazyListState.scrollToItem(list.indexOf(it))
-                    }
-            }
-        }
-    }
-*/
-    if (!state.dataList.isNullOrEmpty()) {
-        state.dataListState?.let { lazyListState ->
-            LazyRow(
-                modifier = Modifier.draggable(
-                    orientation = Orientation.Horizontal,
-                    state = rememberDraggableState { delta ->
-                        composableScope.launch {
-                            lazyListState.scrollBy(-delta)
+    viewModel.state.collectAsState().value.let {
+        println(
+            " onHeader 1 first visible day is ${it.firstVisibleDay}  " +
+                    "list count is ${it.dataList?.size} last Date is ${it.dataList?.last()}"
+        )
+        if (!it.dataList.isNullOrEmpty()) {
+                LazyRow(
+                    modifier = Modifier.draggable(
+                        orientation = Orientation.Horizontal,
+                        state = rememberDraggableState { delta ->
+                            composableScope.launch {
+                                lazyListState.scrollBy(-delta)
+                            }
+                        },
+                    ), state = lazyListState
+                ) {
+                    itemsIndexed(items = it.dataList, key = { _, item: LocalDate ->
+                        item.toString()
+                    }) { index: Int, day: LocalDate ->
+                        if (it.sellectedDay.toString() == day.toString()) {
+                            CurrentItemDayCard(day = day, onFilterCardClick = {
+                                onEvent(RequestListEvent.onRequestSelectDataChanged(day))
+                            })
+                        } else {
+                            ItemDayCard(day = day, onFilterCardClick = {
+                                onEvent(RequestListEvent.onRequestSelectDataChanged(day))
+                            })
                         }
-                    },
-                ), state = lazyListState
-            ) {
-                itemsIndexed(items = state.dataList, key = { _, item: LocalDate ->
-                    item.toString()
-                }) { index: Int, day: LocalDate ->
-                    if (state.sellectedDay.toString() == day.toString()) {
-                        CurrentItemDayCard(day = day, onFilterCardClick = {
-                            onEvent(RequestListEvent.onRequestSelectDataChanged(day))
-                        })
-                    } else {
-                        ItemDayCard(day = day, onFilterCardClick = {
-                            onEvent(RequestListEvent.onRequestSelectDataChanged(day))
-                        })
                     }
                 }
-            }
-
-
-            /*            if (state.dataList.size < lazyListState.firstVisibleItemIndex + 5) {
-                        println("1 firstVis is ${lazyListState.firstVisibleItemIndex} fvis is ${lazyListState.firstVisibleItemScrollOffset}")
-                        onEvent(RequestListEvent.onUpdateDateList(state.dataList[lazyListState.firstVisibleItemScrollOffset]))
-                    } else if (lazyListState.firstVisibleItemIndex < 3) {
-                        println("2 firstVis is ${lazyListState.firstVisibleItemIndex} fvis is ${lazyListState.firstVisibleItemScrollOffset}")
-                        onEvent(RequestListEvent.onUpdateDateList(state.dataList[lazyListState.firstVisibleItemScrollOffset]))
-                    }*/
-
-            Pagination(listState = lazyListState, buffer = 10, onEvent = {
-                if (state.lastVisibleDay == null) {
-                    onEvent(
-                        RequestListEvent.onUpdateDateList(state.dataList.last())
-                    )
-                } else {
-                    onEvent(
-                        RequestListEvent.onUpdateDateList(state.lastVisibleDay)
-                    )
+                LaunchedEffect(Unit) {
+                    lazyListState.scrollToItem(index = it.dataList.indexOf(it.firstVisibleDay))
+                    println("Filter Header update LAST, scroll to first visible day - ${it.firstVisibleDay} ")
                 }
-                println("first it  - it ${state.dataList.first()}  last - ${state.dataList.last()}")
 
-            })
-        }
+                Pagination(state = it, lazyListState = lazyListState, onEvent = onEvent)
+
+ /*               val loadMoreLast by remember {
+                    derivedStateOf {
+                        lazyListState.firstVisibleItemIndex > 15
+                    }
+                }
+                LaunchedEffect(loadMoreLast) {
+                    onEvent(RequestListEvent.onUpdateDateList(it.dataList.last()))
+                    println("Filter Header update LAST, first it  - it ${it.dataList.first()}  last - ${it.dataList.last()}")
+                }
+                val loadMoreFirst by remember {
+                    derivedStateOf {
+                        lazyListState.firstVisibleItemIndex < 15
+                    }
+                }
+                LaunchedEffect(loadMoreFirst) {
+                    onEvent(RequestListEvent.onUpdateDateList(it.dataList.first()))
+                    println("Filter Header update FIRST, first it  - it ${it.dataList.first()}  last - ${it.dataList.last()}")
+                }*/
+
+            }
     }
 }
 

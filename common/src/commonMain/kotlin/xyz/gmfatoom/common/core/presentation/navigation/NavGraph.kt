@@ -63,9 +63,9 @@ fun Navigation(navigator: Navigator, appModule: AppModule, appMainState: AppMain
                     RequestListViewModel(appModule.requestikDataSource)
                 }
                 val onEvent = requestViewModel::onEvent
-                val state by requestViewModel.state.collectAsState()
+/*                val state by requestViewModel.state.collectAsState()*/
                         RequestListScreen(
-                            state = state,
+                            viewModel = requestViewModel,
                             onEvent = onEvent
                         )
             }
