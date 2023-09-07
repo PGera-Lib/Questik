@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 import xyz.gmfatoom.common.requestik.presentation.request.RequestListEvent
 import xyz.gmfatoom.common.requestik.presentation.request.RequestListState
 
@@ -45,7 +44,6 @@ fun Pagination(
                     .distinctUntilChanged()
                     .collect {
                         if (it) {
-                            println("loadmorefirst")
                             onEvent(RequestListEvent.onUpdateDateList(datalist[(layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0) + 1]))
                             delay(300)
                         }
@@ -56,7 +54,6 @@ fun Pagination(
                 snapshotFlow { loadMoreLast }
                     .collect {
                         if (it) {
-                            println("loadmorelast")
                             onEvent(RequestListEvent.onUpdateDateList(datalist[(layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1]))
                             delay(300)
                         }
