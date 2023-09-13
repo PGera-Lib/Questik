@@ -1,6 +1,5 @@
 package xyz.gmfatoom.common.preview
 
-
 import androidx.compose.runtime.Composable
 
 import androidx.compose.runtime.collectAsState
@@ -22,7 +21,7 @@ fun RequestScreenPreview (){
     val onEvent = requestViewModel::onEvent
     val state by requestViewModel.state.collectAsState()
     RequestListScreen(
-        state = state,
+        viewModel = requestViewModel,
         onEvent = onEvent
     )
 }

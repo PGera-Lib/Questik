@@ -70,6 +70,23 @@ fun LocalDate.getLocalDayOfWeak():String{
         else -> ""
     }
 }
+fun LocalDate.getLocalMonth():String{
+    return when(this.monthNumber) {
+        1 -> "Январь"
+        2 -> "Февраль"
+        3 -> "Март"
+        4 -> "Апрель"
+        5 -> "Май"
+        6 -> "Июнь"
+        7 -> "Июль"
+        8 -> "Август"
+        9 -> "Сентябрь"
+        10 -> "Октябрь"
+        11 -> "Ноябрь"
+        12 -> "Декабрь"
+        else -> ""
+    }
+}
 
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")

@@ -48,8 +48,8 @@ kotlin {
                 // #Precompose
                 api(compose.foundation)
                 api(compose.animation)
-                api("moe.tlaster:precompose-viewmodel:1.4.3") // For ViewModel intergration
-                api("moe.tlaster:precompose:1.4.3")
+                api("moe.tlaster:precompose-viewmodel:1.5.1") // For ViewModel intergration
+                api("moe.tlaster:precompose:1.5.1")
 // api("moe.tlaster:precompose-molecule:$precompose_version") // For Molecule intergration
 
             }
@@ -60,7 +60,7 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.1")
                 implementation("androidx.core:core-ktx:1.10.1")
                 implementation("com.squareup.sqldelight:android-driver:1.5.5")
-              //  implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
+                implementation("androidx.compose.ui:ui-tooling-preview:1.5.1")
             }
         }
         val iosX64Main by getting

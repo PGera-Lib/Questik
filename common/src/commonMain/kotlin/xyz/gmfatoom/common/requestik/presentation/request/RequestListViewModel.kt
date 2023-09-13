@@ -77,14 +77,10 @@ class RequestListViewModel(
                                         dataList = getDataList(it)
                                     )
                             )
-                            println("state updated in view model")
                     }
                 }
-
-
             }
             else -> Unit
-
         }
     }
 
