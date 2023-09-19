@@ -9,7 +9,7 @@ version = "1.0-SNAPSHOT"
 
 
 kotlin {
-    android()
+    androidTarget()
     sourceSets {
         val androidMain by getting {
             dependencies {

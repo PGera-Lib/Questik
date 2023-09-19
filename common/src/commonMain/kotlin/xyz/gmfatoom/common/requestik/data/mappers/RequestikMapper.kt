@@ -9,20 +9,21 @@ import xyz.gmfatoom.common.requestik.domain.model.RequestModel
 import xyz.gmfatoom.common.requestik.domain.model.UsersModel
 
 
-suspend fun RequestEntity.toRequestMoodel(corpModel: CorpModel?,
-                                          objectsModel: ObjectsModel?,
-                                          contactList: List<ContactsModel>?,
-                                          userCreator: UsersModel?,
-                                          userCurrent: UsersModel?,
-                                          requestItems: List<RequestItemModel>?
-                                          ): RequestModel {
+suspend fun RequestEntity.toRequestMoodel(
+    corpModel: CorpModel?,
+    objectsModel: ObjectsModel?,
+    contactList: List<ContactsModel>?,
+    userCreator: UsersModel?,
+    userCurrent: UsersModel?,
+    requestItems: List<RequestItemModel>?
+): RequestModel {
     return RequestModel(
         id = id,
         name = name,
         corp = corpModel,
         object_request = objectsModel,
         data_create = dataCreate,
-        data_start = dataStart ,
+        data_start = dataStart,
         data_end = dataEnd,
         request_description = description,
         contactsList = contactList,
@@ -30,8 +31,10 @@ suspend fun RequestEntity.toRequestMoodel(corpModel: CorpModel?,
         user_current = userCurrent,
         requestItems = requestItems,
 
-    )
+        )
 }
+
+
 
 
 /*
@@ -42,8 +45,8 @@ import xyz.gmfatoom.common.request.domain.model.CategoryModel
 class RequestikMapper {
     */
 /**
-     * Category Mapper
-     *//*
+ * Category Mapper
+ *//*
 
 
 
@@ -61,8 +64,7 @@ class RequestikMapper {
     fun categoryDtoToCategoryModel(item: CategoryDto) = CategoryModel(
         id = item.id.toLong(), name = item.name
     )
-*/
-/*
+*//*
     fun categoriesDtoListToCategoriesModelList(list: List<CategoryDto>) = list.map {
         categoryDtoToCategoryModel(it)
     }
@@ -82,8 +84,8 @@ class RequestikMapper {
 
     */
 /**
-     * Contacts Mapper
-     *//*
+ * Contacts Mapper
+ *//*
 
     fun contactsEntityToContactsModel(item: ContactsEntity) = ContactsModel(
         contact_id = item.contact_id,
@@ -115,8 +117,7 @@ class RequestikMapper {
         contact_description = item.contact_description
     )
 
-*/
-/*
+*//*
     fun contactsDtoListToContactsEntityList(list: List<ContactsDto>) = list.map {
         contactsDtoToContactsEntity(it)
     }
@@ -134,8 +135,8 @@ class RequestikMapper {
 
     */
 /**
-     * Corp Mapper
-     *//*
+ * Corp Mapper
+ *//*
 
 
     fun corpEntityToCorpModel(item: CorpEntity, contacts: List<ContactsModel>?) = CorpModel(
@@ -171,8 +172,7 @@ class RequestikMapper {
         company_mail = item.company_mail,
         isPhis = item.isPhis
     )
-*/
-/*
+*//*
     fun corpDtoListToCorpEntityList(items: List<CorpDto>) = items.map { corpDtoToCorpEntity(it) }
     fun corpModelListToCorpEntityList(items: List<CorpModel>) =
         items.map { corpModelToCorpEntity(it) }
@@ -184,8 +184,8 @@ class RequestikMapper {
 
     */
 /**
-     * Job Mapper
-     *//*
+ * Job Mapper
+ *//*
 
 
     fun jobEntityToJobModel(item: JobEntity) = JobModel(
@@ -220,8 +220,7 @@ class RequestikMapper {
         priceNalogZp = item.priceNalogZp,
         priceZp = item.priceZp
     )
-*/
-/*
+*//*
     fun jobDtoListToJobEntityList(items: List<JobDto>) = items.map { jobDtoToJobEntity(it) }
     fun jobModelListToJobEntityList(items: List<JobModel>) = items.map { jobModelToJobEntity(it) }
     fun jobEntityListToJobModelList(list: List<JobEntity>) = list.map {
@@ -231,8 +230,8 @@ class RequestikMapper {
 
     */
 /**
-     * Material Mapper
-     *//*
+ * Material Mapper
+ *//*
 
 
     fun materialEntityToMaterialModel(item: MaterialEntity) = MaterialModel(
@@ -262,8 +261,7 @@ class RequestikMapper {
         plu = item.plu
     )
 
-*/
-/*    fun materialDtoListToMaterialEntityList(items: List<MaterialDto>) =
+*//*    fun materialDtoListToMaterialEntityList(items: List<MaterialDto>) =
         items.map { materialDtoToMaterialEntity(it) }
 
     fun materialModelListToMaterialEntityList(items: List<MaterialModel>) =
@@ -276,8 +274,8 @@ class RequestikMapper {
 
     */
 /**
-     * Messages Mapper
-     *//*
+ * Messages Mapper
+ *//*
 
 
 
@@ -305,8 +303,7 @@ class RequestikMapper {
         type = item.type
     )
 
-*/
-/*
+*//*
     fun messagesDtoListToMessagesEntityList(items: List<MessagesDto>) =
         items.map { messagesDtoToMessagesEntity(it) }
 
@@ -321,8 +318,8 @@ class RequestikMapper {
 
     */
 /**
-     * Metric Mapper
-     *//*
+ * Metric Mapper
+ *//*
 
 
     fun metricEntityToMetricModel(item: MetricEntity) = MetricModel(
@@ -336,8 +333,7 @@ class RequestikMapper {
     fun metricDtoToMetricEntity(item: MetricDto) = MetricEntity(
         id = item.id.toLong(), name = item.name
     )
-*/
-/*
+*//*
 
     fun metricsDtoListToMetricsEntityList(list: List<MetricDto>) = list.map {
         metricDtoToMetricEntity(it)
@@ -355,8 +351,8 @@ class RequestikMapper {
 
     */
 /**
-     * Objects Mapper
-     *//*
+ * Objects Mapper
+ *//*
 
 
 
@@ -385,8 +381,7 @@ class RequestikMapper {
         objects_adm_contacts = item.objects_adm_contacts
     )
 
-*/
-/*    fun objectsDtoListToObjectsEntityList(items: List<ObjectsDto>) =
+*//*    fun objectsDtoListToObjectsEntityList(items: List<ObjectsDto>) =
         items.map { objectsDtoToObjectsEntity(it) }
 
     fun objectsModelListToObjectsEntityList(items: List<ObjectsModel>) =
@@ -399,8 +394,8 @@ class RequestikMapper {
 
     */
 /**
-     * PhoneContacts Mapper
-     *//*
+ * PhoneContacts Mapper
+ *//*
 
 
 
@@ -415,8 +410,7 @@ class RequestikMapper {
     fun phoneContactsDtoToPhoneContactsEntity(item: PhoneContactsDto) = PhoneContactsEntity(
         id = item.id.toLong(), fullname = item.fullname
     )
-*/
-/*
+*//*
 
     fun phoneContactsDtoListToPhoneContactsEntityList(items: List<PhoneContactsDto>) =
         items.map { phoneContactsDtoToPhoneContactsEntity(it) }
@@ -433,8 +427,8 @@ class RequestikMapper {
 
     */
 /**
-     * RequestItem Mapper
-     *//*
+ * RequestItem Mapper
+ *//*
 
 
     fun requestItemEntityToRequestItemModel(item: RequestItemEntity) = RequestItemModel(
@@ -481,8 +475,7 @@ class RequestikMapper {
         isChecked = item.isChecked,
         isMaterial = item.isMaterial
     )
-*/
-/*
+*//*
     fun requestItemDtoListToRequestItemEntityList(items: List<RequestItemDto>) =
         items.map { requestItemDtoToRequestItemEntity(it) }
 
@@ -496,8 +489,8 @@ class RequestikMapper {
 
     */
 /**
-     * Requests Mapper
-     *//*
+ * Requests Mapper
+ *//*
 
 
 
@@ -543,8 +536,7 @@ class RequestikMapper {
         request_description = item.request_description
     )
 
-*/
-/*    fun requestsDtoListToRequestsEntityList(list: List<RequestsDto>) = list.map {
+*//*    fun requestsDtoListToRequestsEntityList(list: List<RequestsDto>) = list.map {
         requestsDtoToRequestsEntity(it)
     }
 
@@ -559,8 +551,8 @@ class RequestikMapper {
 
     */
 /**
-     * Users Mapper
-     *//*
+ * Users Mapper
+ *//*
 
 
 
@@ -598,8 +590,7 @@ class RequestikMapper {
         dataBirth = item.dataBirth
     )
 
-*/
-/*    fun usersDtoListToUsersEntityList(list: List<UsersDto>) = list.map {
+*//*    fun usersDtoListToUsersEntityList(list: List<UsersDto>) = list.map {
         usersDtoToUsersEntity(it)
     }
 

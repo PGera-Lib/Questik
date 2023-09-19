@@ -11,12 +11,16 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 
 
 object DateTimeUtil {
 
     fun nowTime(): LocalDateTime =
         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
+    fun nowLocalDate():LocalDate =
+        Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     fun toEpochMillis(dateTime: LocalDateTime): Long =
         dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
@@ -72,18 +76,18 @@ fun LocalDate.getLocalDayOfWeak():String{
 }
 fun LocalDate.getLocalMonth():String{
     return when(this.monthNumber) {
-        1 -> "Январь"
-        2 -> "Февраль"
-        3 -> "Март"
-        4 -> "Апрель"
+        1 -> "Янв."
+        2 -> "Фев."
+        3 -> "Мар."
+        4 -> "Апр."
         5 -> "Май"
-        6 -> "Июнь"
-        7 -> "Июль"
-        8 -> "Август"
-        9 -> "Сентябрь"
-        10 -> "Октябрь"
-        11 -> "Ноябрь"
-        12 -> "Декабрь"
+        6 -> "Июн."
+        7 -> "Июл."
+        8 -> "Авг."
+        9 -> "Сен."
+        10 -> "Окт."
+        11 -> "Ноя."
+        12 -> "Дек."
         else -> ""
     }
 }

@@ -12,9 +12,6 @@ import xyz.gmfatoom.common.requestik.domain.model.UsersModel
 sealed interface RequestListEvent {
 
     data class onRequestSelectDataChanged(val selectedDay: LocalDate):RequestListEvent
-
-    object onDataListUpdateFirstItem:RequestListEvent
-    object onDataListUpdateLastItem:RequestListEvent
     data class onUpdateDateList(val value: LocalDate):RequestListEvent
 
     object OnAddNewRequestClick: RequestListEvent

@@ -6,19 +6,19 @@ plugins {
 }
 
 kotlin {
-    android {
-        compilations.all {
+    androidTarget {
+/*        compilations.all {
             kotlinOptions {
                 jvmTarget = "11"
             }
-        }
+        }*/
     }
 
-    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
+/*    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
         binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
             export("dev.icerock.moko:mvvm-core:0.16.1")
         }
-    }
+    }*/
     jvm("desktop") {
         jvmToolchain(11)
     }
@@ -39,6 +39,7 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+
                 implementation(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
@@ -60,7 +61,8 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.1")
                 implementation("androidx.core:core-ktx:1.10.1")
                 implementation("com.squareup.sqldelight:android-driver:1.5.5")
-                implementation("androidx.compose.ui:ui-tooling-preview:1.5.1")
+                implementation("org.jetbrains.compose.ui:ui-tooling-preview:1.5.1")
+
             }
         }
         val iosX64Main by getting
@@ -81,14 +83,11 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.common)
-                api(compose.preview)
                 implementation("com.squareup.sqldelight:sqlite-driver:1.5.5")
                 implementation("org.jetbrains.compose.material3:material3-desktop:1.4.1")
-                /*              implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")*/
+                implementation("org.jetbrains.compose.ui:ui-tooling-preview:1.5.1")
             }
         }
-
-
     }
 }
 
@@ -113,6 +112,7 @@ sqldelight {
     }
 }
 
+/*
 dependencies {
     implementation("androidx.core:core:1.10.1")
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.1")
@@ -120,4 +120,4 @@ dependencies {
     commonMainApi("dev.icerock.moko:mvvm-compose:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow-compose:0.16.1")
-}
+}*/

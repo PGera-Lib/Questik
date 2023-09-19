@@ -33,6 +33,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import xyz.gmfatoom.common.requestik.presentation.request.RequestListEvent
+import xyz.gmfatoom.common.requestik.presentation.request.RequestListState
 import xyz.gmfatoom.common.requestik.presentation.request.RequestListViewModel
 import xyz.gmfatoom.common.utils.getLocalDayOfWeak
 import xyz.gmfatoom.common.utils.getLocalMonth
@@ -40,112 +41,98 @@ import xyz.gmfatoom.common.utils.getLocalMonth
 @Composable
 fun FilterHeader(
     modifier: Modifier = Modifier,
-    viewModel: RequestListViewModel,
+    requestListState: RequestListState,
     onEvent: (RequestListEvent) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
     val composableScope = rememberCoroutineScope()
-    viewModel.state.collectAsState().value.let {
+    requestListState.let {
         println(
             " onHeader 1 first visible day is ${it.firstVisibleDay}  " +
                     "list count is ${it.dataList?.size} selected Date is ${it.sellectedDay}"
         )
         if (!it.dataList.isNullOrEmpty()) {
-                LazyRow(
-                    modifier = Modifier.draggable(
-                        orientation = Orientation.Horizontal,
-                        state = rememberDraggableState { delta ->
-                            composableScope.launch {
-                                lazyListState.scrollBy(-delta)
-                            }
-                        },
-                    ), state = lazyListState
-                ) {
-                    itemsIndexed(items = it.dataList, key = { _, item: LocalDate ->
-                        item.toString()
-                    }) { index: Int, day: LocalDate ->
-                        if (it.sellectedDay.toString() == day.toString()) {
-                            CurrentItemDayCard(day = day, onFilterCardClick = {
-                                onEvent(RequestListEvent.onRequestSelectDataChanged(day))
-                            })
-                        } else {
-                            ItemDayCard(day = day, onFilterCardClick = {
-                                onEvent(RequestListEvent.onRequestSelectDataChanged(day))
-                            })
+            LazyRow(
+                modifier = Modifier.draggable(
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        composableScope.launch {
+                            lazyListState.scrollBy(-delta)
                         }
+                    },
+                ), state = lazyListState
+            ) {
+                itemsIndexed(items = it.dataList, key = { _, item: LocalDate ->
+                    item.toString()
+                }) { index: Int, day: LocalDate ->
+                    if (it.sellectedDay.toString() == day.toString()) {
+                        CurrentItemDayCard(day = day, onFilterCardClick = {
+                            onEvent(RequestListEvent.onRequestSelectDataChanged(day))
+                        })
+                    } else {
+                        ItemDayCard(day = day, onFilterCardClick = {
+                            onEvent(RequestListEvent.onRequestSelectDataChanged(day))
+                        })
                     }
                 }
-                LaunchedEffect(Unit) {
-                    onEvent(RequestListEvent.onUpdateDateList(it.sellectedDay))
-                  //delay(500L)
-                    lazyListState.scrollToItem(index = it.dataList.indexOf(it.firstVisibleDay))
-                }
-                Pagination(state = it, lazyListState = lazyListState, onEvent = onEvent)
             }
+            LaunchedEffect(Unit) {
+                onEvent(RequestListEvent.onUpdateDateList(it.sellectedDay))
+                //delay(500L)
+                lazyListState.scrollToItem(index = it.dataList.indexOf(it.firstVisibleDay))
+            }
+            Pagination(state = it, lazyListState = lazyListState, onEvent = onEvent)
+        }
     }
 }
 
 
 @Composable
 fun ItemDayCard(day: LocalDate, onFilterCardClick: () -> Unit) {
-    Card(modifier = Modifier.padding(4.dp).clip(
-        RoundedCornerShape(
-            topStart = 0.dp, topEnd = 0.dp, bottomStart = 0.dp, bottomEnd = 0.dp
-        )
-    ).background(Color.Transparent).padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 0.dp)
-        .alpha(1f).clickable { onFilterCardClick() }) {
+    Card(modifier = Modifier
+        .padding(4.dp)
+        .clickable { onFilterCardClick() }) {
         Row(
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
             ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-                modifier = Modifier.width(71.dp).height(100.dp).clip(
-                    RoundedCornerShape(
-                        topStart = 5.dp, topEnd = 5.dp, bottomStart = 5.dp, bottomEnd = 5.dp
-                    )
-                ).background(
-               MaterialTheme.colorScheme.surfaceVariant
-                )
-
-                    .padding(start = 6.dp, top = 8.dp, end = 6.dp, bottom = 18.dp)
-
-                    .alpha(1f)
-
-
+                verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(
+                        topStart = 5.dp, topEnd = 5.dp, bottomStart = 5.dp, bottomEnd = 5.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(start = 4.dp, top = 4.dp, end = 4.dp, bottom = 4.dp)
             ) {
-
-
                 Text(
                     text = day.getLocalDayOfWeak(),
                     textAlign = TextAlign.Center,
                     fontSize = 20.sp,
                     textDecoration = TextDecoration.None,
                     letterSpacing = 0.sp,
-
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.width(59.dp).alpha(1f),
+                    modifier = Modifier
+                        .width(59.dp)
+                        .alpha(1f),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.SemiBold,
                     fontStyle = FontStyle.Normal,
                 )
-
                 Text(
-                    text = "${day.dayOfMonth.toString() } ${day.getLocalMonth()}",
+                    text = "${day.dayOfMonth.toString()} ${day.getLocalMonth()}",
                     textAlign = TextAlign.Center,
                     fontSize = 10.sp,
                     textDecoration = TextDecoration.None,
                     letterSpacing = 0.sp,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.width(59.dp).alpha(1f),
+                    modifier = Modifier
+                        .width(59.dp)
+                        .alpha(1f),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Medium,
                     fontStyle = FontStyle.Normal,
                 )
-
-
                 Text(
                     text = day.year.toString(),
                     textAlign = TextAlign.Center,
@@ -167,71 +154,52 @@ fun ItemDayCard(day: LocalDate, onFilterCardClick: () -> Unit) {
 
 @Composable
 fun CurrentItemDayCard(day: LocalDate, onFilterCardClick: () -> Unit) {
-    Card(modifier = Modifier.padding(4.dp).clip(
-        RoundedCornerShape(
-            topStart = 0.dp, topEnd = 0.dp, bottomStart = 0.dp, bottomEnd = 0.dp
-        )
-    ).background(Color.Transparent).padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 0.dp)
-        .alpha(1f).clickable { onFilterCardClick() }) {
-
-
+    Card(modifier = Modifier
+        .padding(4.dp)
+        .clickable { onFilterCardClick() }) {
         Row(
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-
-            ) {
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+                verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
                 modifier = Modifier
-
-                    .width(71.dp).height(100.dp).clip(
-                        RoundedCornerShape(
-                            topStart = 5.dp, topEnd = 5.dp, bottomStart = 5.dp, bottomEnd = 5.dp
-                        )
-                    ).background(
-                 MaterialTheme.colorScheme.tertiaryContainer
-                    ).padding(start = 6.dp, top = 8.dp, end = 6.dp, bottom = 18.dp).alpha(1f)
+                    .clip(RoundedCornerShape(
+                        topStart = 5.dp, topEnd = 5.dp, bottomStart = 5.dp, bottomEnd = 5.dp
+                    )
+                    )
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+                    .padding(start = 4.dp, top = 4.dp, end = 4.dp, bottom = 4.dp)
             ) {
-
-
                 Text(
                     text = day.getLocalDayOfWeak(),
                     textAlign = TextAlign.Center,
                     fontSize = 20.sp,
                     textDecoration = TextDecoration.None,
                     letterSpacing = 0.sp,
-
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-
                         .width(59.dp)
-
-                        //.height(12.dp)
-
                         .alpha(1f),
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontWeight = FontWeight.SemiBold,
                     fontStyle = FontStyle.Normal,
                 )
-
                 Text(
-                    text = "${day.dayOfMonth.toString() } ${day.getLocalMonth()}",
+                    text = "${day.dayOfMonth.toString()} ${day.getLocalMonth()}",
                     textAlign = TextAlign.Center,
                     fontSize = 10.sp,
                     textDecoration = TextDecoration.None,
                     letterSpacing = 0.sp,
-
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.width(59.dp)
-                        //.height(12.dp)
+                    modifier = Modifier
+                        .width(59.dp)
                         .alpha(1f),
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontWeight = FontWeight.Medium,
                     fontStyle = FontStyle.Normal,
                 )
-
-
                 Text(
                     text = day.year.toString(),
                     textAlign = TextAlign.Center,
@@ -240,11 +208,7 @@ fun CurrentItemDayCard(day: LocalDate, onFilterCardClick: () -> Unit) {
                     letterSpacing = 0.sp,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-
                         .width(59.dp)
-
-                        //.height(12.dp)
-
                         .alpha(1f),
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontWeight = FontWeight.Medium,

@@ -2,8 +2,7 @@ package xyz.gmfatoom.common.preview
 
 import androidx.compose.runtime.Composable
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import moe.tlaster.precompose.viewmodel.viewModel
@@ -19,7 +18,6 @@ fun RequestScreenPreview (){
         RequestListViewModel(appModule.requestikDataSource)
     }
     val onEvent = requestViewModel::onEvent
-    val state by requestViewModel.state.collectAsState()
     RequestListScreen(
         viewModel = requestViewModel,
         onEvent = onEvent
