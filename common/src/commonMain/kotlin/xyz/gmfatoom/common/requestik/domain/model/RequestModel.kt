@@ -12,6 +12,7 @@ data class RequestModel(
     val data_start: String?,
     val data_end: String?,
     val request_description: String?,
+    val status: String?,
     val requestItems: List<RequestItemModel>?
 )
 

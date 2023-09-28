@@ -7,7 +7,7 @@ import xyz.gmfatoom.common.di.AppModule
 
 
 fun main() = application {
-    PreComposeWindow(onCloseRequest = ::exitApplication) {
+    PreComposeWindow(onCloseRequest = ::exitApplication, title = "ReQuestik") {
     App(darkTheme = true, dynamicColor = false, appModule = AppModule())
     }
 }

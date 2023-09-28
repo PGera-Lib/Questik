@@ -7,21 +7,24 @@ plugins {
 
 kotlin {
     androidTarget {
-/*        compilations.all {
+
+        compilations.all {
             kotlinOptions {
                 jvmTarget = "11"
             }
-        }*/
+        }
+
     }
 
-/*    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
+    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java).all {
         binaries.withType(org.jetbrains.kotlin.gradle.plugin.mpp.Framework::class.java).all {
             export("dev.icerock.moko:mvvm-core:0.16.1")
         }
-    }*/
+    }
     jvm("desktop") {
         jvmToolchain(11)
     }
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -39,7 +42,6 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-
                 implementation(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
@@ -49,8 +51,8 @@ kotlin {
                 // #Precompose
                 api(compose.foundation)
                 api(compose.animation)
-                api("moe.tlaster:precompose-viewmodel:1.5.1") // For ViewModel intergration
-                api("moe.tlaster:precompose:1.5.1")
+                api("moe.tlaster:precompose-viewmodel:1.5.2") // For ViewModel intergration
+                api("moe.tlaster:precompose:1.5.2")
 // api("moe.tlaster:precompose-molecule:$precompose_version") // For Molecule intergration
 
             }
@@ -112,7 +114,6 @@ sqldelight {
     }
 }
 
-/*
 dependencies {
     implementation("androidx.core:core:1.10.1")
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.1")
@@ -120,4 +121,4 @@ dependencies {
     commonMainApi("dev.icerock.moko:mvvm-compose:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow:0.16.1")
     commonMainApi("dev.icerock.moko:mvvm-flow-compose:0.16.1")
-}*/
+}

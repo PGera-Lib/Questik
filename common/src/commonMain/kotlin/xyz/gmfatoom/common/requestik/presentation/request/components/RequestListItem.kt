@@ -19,8 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import kotlinx.datetime.toLocalDateTime
 import xyz.gmfatoom.common.requestik.domain.model.RequestModel
 import xyz.gmfatoom.common.requestik.presentation.request.RequestListEvent
+import xyz.gmfatoom.common.utils.getRequestTime
 
 
 @Composable
@@ -44,13 +46,15 @@ onEvent(RequestListEvent.EditRequest(request))
          /*           .padding(start = 10.dp)*/
             ) {
                 Text(
-                    text = "${request.data_start}",
+                    text = request.data_start?.getRequestTime() ?: "00:00",
                     color = Color(0xff564c4c),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier
                         .padding(all = 8.dp)
-                        .wrapContentHeight(align = Alignment.CenterVertically))
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                )
+
                 Column(
                     verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
                     modifier = Modifier

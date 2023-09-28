@@ -29,7 +29,8 @@ suspend fun RequestEntity.toRequestMoodel(
         contactsList = contactList,
         user_creator = userCreator,
         user_current = userCurrent,
-        requestItems = requestItems,
+        status = "",
+        requestItems = requestItems
 
         )
 }

@@ -22,13 +22,13 @@ import xyz.gmfatoom.common.requestik.presentation.request.RequestListViewModel
 @Composable
 fun RequestList(
     modifier: Modifier = Modifier,
-    requestListState: RequestListState,
+    requests: List<RequestModel>,
     onEvent: (RequestListEvent) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
 
     val composableScope = rememberCoroutineScope()
-        requestListState.requests.let {
+        requests.let {
             LazyColumn (
                 modifier = Modifier.draggable(
                     orientation = Orientation.Vertical,

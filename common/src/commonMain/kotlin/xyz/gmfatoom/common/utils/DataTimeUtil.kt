@@ -3,10 +3,11 @@ package xyz.gmfatoom.common.utils
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.daysUntil
+
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
@@ -21,6 +22,8 @@ object DateTimeUtil {
 
     fun nowLocalDate():LocalDate =
         Clock.System.todayIn(TimeZone.currentSystemDefault())
+
+
 
     fun toEpochMillis(dateTime: LocalDateTime): Long =
         dateTime.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
@@ -47,7 +50,7 @@ object DateTimeUtil {
 
     }
 
-
+  //  "2010-06-01T22:19:44".toLocalDateTime()
 
 
 
@@ -74,7 +77,33 @@ fun LocalDate.getLocalDayOfWeak():String{
         else -> ""
     }
 }
+
+fun String.getRequestTime():String {
+    val minute = when(this.toLocalDateTime().minute) {
+        0 -> "00"
+        1 -> "01"
+        2 -> "02"
+        3 -> "03"
+        4 -> "04"
+        5 -> "05"
+        6 -> "06"
+        7 -> "07"
+        8 -> "08"
+        9 -> "09"
+
+        else -> Unit
+    }
+    return("${this.toLocalDateTime().hour}:${if (this.toLocalDateTime().minute>9)this.toLocalDateTime().minute else minute}")
+}
+
+
 fun LocalDate.getLocalMonth():String{
+
+/**
+ val date = Clock.System.now().toEpochMilliseconds()
+ val instant = Instant.fromEpochMilliseconds(date).toLocalDateTime(TimeZone.currentSystemDefault())
+ */
+
     return when(this.monthNumber) {
         1 -> "Янв."
         2 -> "Фев."

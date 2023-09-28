@@ -11,7 +11,7 @@ import xyz.gmfatoom.common.requestik.domain.model.UsersModel
 data class RequestListState(
     val sellectedDay: LocalDate = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault()).date,
-    val requests: List<RequestModel> = emptyList(),
+    val requests: Map<LocalDate, List<RequestModel>> = emptyMap(),
     val selectedRequest: RequestModel? = null,
     val firstVisibleDay: LocalDate? = null,
     val dataList: List<LocalDate>? = null,

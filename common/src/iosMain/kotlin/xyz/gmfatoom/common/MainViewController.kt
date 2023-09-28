@@ -5,7 +5,7 @@ import xyz.gmfatoom.common.di.AppModule
 import xyz.gmfatoom.common.requestik.presentation.main.App
 
 
-fun MainViewController() = PreComposeApplication("reQuestik") {
+fun MainViewController() = PreComposeApplication {
     val isDarkTheme = true
     /*    UIScreen.mainScreen.traitCollection.userInterfaceStyle ==
                 UIUserInterfaceStyle.UIUserInterfaceStyleDark*/

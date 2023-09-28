@@ -7,9 +7,12 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDate
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
@@ -42,11 +45,8 @@ class RequestListViewModel(
         firstVisibleDate?.let { date ->
             println("init update state - lastvisdate is $firstVisibleDate")
             viewModelScope.launch {
-                _state.emit(_state.value.copy(dataList = getDataList(date), firstVisibleDay = date))
-            }
-
-            viewModelScope.launch {
-                _state.emit(_state.value.copy(requests = getFakeRequestList()))
+               val datalist =  getDataList(date)
+                _state.emit(_state.value.copy(dataList = datalist, firstVisibleDay = date, requests = getFakeRequestList(dataList = datalist)))
             }
 
 
@@ -71,10 +71,11 @@ class RequestListViewModel(
 
     fun onEvent(event: RequestListEvent) {
         when (event) {
-
             is RequestListEvent.onRequestSelectDataChanged -> {
-                viewModelScope.launch {
-                    _state.emit(_state.value.copy(sellectedDay = event.selectedDay))
+                _state.value.dataList?.let {
+                    viewModelScope.launch {
+                        _state.emit(_state.value.copy(sellectedDay = event.selectedDay, requests = getFakeRequestList(it)))
+                    }
                 }
             }
 
@@ -99,152 +100,169 @@ class RequestListViewModel(
 
 }
 
-private fun getFakeRequestList(): List<RequestModel> = listOf(
-    RequestModel(
-        id = 1L,
-        name = "Тестовая задача 1",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+private fun getFakeRequestList(dataList: List<LocalDate>): Map<LocalDate, List<RequestModel>> {
+    val fakeRequests = listOf(
+        RequestModel(
+            id = 1L,
+            name = "Тестовая задача 1",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 13"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-28T10:01:00",
+            data_end = "",
+            request_description = "",
+            status = "ready",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 13"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-    RequestModel(
-        id = 2L,
-        name = "Тестовая задача 2",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+        RequestModel(
+            id = 2L,
+            name = "Тестовая задача 2",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 14"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-28T10:02:00",
+            data_end = "",
+            request_description = "",
+            status = "",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 14"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-    RequestModel(
-        id = 3L,
-        name = "Тестовая задача 1",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+        RequestModel(
+            id = 3L,
+            name = "Тестовая задача 1",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 13"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-29T10:40:00",
+            data_end = "",
+            request_description = "",
+            status = "",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 13"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-    RequestModel(
-        id = 4L,
-        name = "Тестовая задача 4",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+        RequestModel(
+            id = 4L,
+            name = "Тестовая задача 4",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 13"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-28T10:13:00",
+            data_end = "",
+            request_description = "",
+            status = "",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 13"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-    RequestModel(
-        id = 5L,
-        name = "Тестовая задача 5",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+        RequestModel(
+            id = 5L,
+            name = "Тестовая задача 5",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 13"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-30T10:59:00",
+            data_end = "",
+            request_description = "",
+            status = "",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 13"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-    RequestModel(
-        id = 6L,
-        name = "Тестовая задача 6",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+        RequestModel(
+            id = 6L,
+            name = "Тестовая задача 6",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 13"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-30T10:09:00",
+            data_end = "",
+            request_description = "",
+            status = "",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 13"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-    RequestModel(
-        id = 7L,
-        name = "Тестовая задача 7",
-        user_creator = UsersModel(),
-        user_current = UsersModel(),
-        contactsList = listOf(
-            ContactsModel(contact_name = "1"),
-            ContactsModel(contact_name = "2"),
-            ContactsModel(contact_name = "3")
+        RequestModel(
+            id = 7L,
+            name = "Тестовая задача 7",
+            user_creator = UsersModel(),
+            user_current = UsersModel(),
+            contactsList = listOf(
+                ContactsModel(contact_name = "1"),
+                ContactsModel(contact_name = "2"),
+                ContactsModel(contact_name = "3")
+            ),
+            corp = CorpModel(company_adress = "Высотная 13"),
+            object_request = ObjectsModel(),
+            data_start = "2023-09-29T10:00:00",
+            data_end = "",
+            request_description = "",
+            status = "ready",
+            requestItems = listOf(
+                RequestItemModel(name = "11"),
+                RequestItemModel(name = "22"),
+                RequestItemModel(name = "33")
+            )
         ),
-        corp = CorpModel(company_adress = "Высотная 13"),
-        object_request = ObjectsModel(),
-        data_start = "10:00",
-        data_end = "",
-        request_description = "",
-        requestItems = listOf(
-            RequestItemModel(name = "11"),
-            RequestItemModel(name = "22"),
-            RequestItemModel(name = "33")
-        )
-    ),
-)
+    )
+
+    return  mutableMapOf<LocalDate, List<RequestModel>>()
+        .apply { dataList.map {
+            this.put(it, fakeRequests.filter { model->
+                model.data_start?.toLocalDateTime()?.date == it
+            })
+        }
+        }
+}

@@ -25,10 +25,13 @@ fun RequestListScreen(
                  requestListState = it,
                  onEvent = onEvent
              )
-             RequestList(
-                 requestListState = it,
-                 onEvent = onEvent
-             )
+             it.requests[it.sellectedDay]?.let {
+                 RequestList(
+                     requests = it,
+                     onEvent = onEvent
+                 )
+             }
+
          }
      }
 
