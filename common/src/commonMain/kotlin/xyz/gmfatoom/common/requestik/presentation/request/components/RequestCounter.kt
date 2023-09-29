@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -27,7 +28,8 @@ fun RequestCounter(text: String,
         modifier = modifier
             .size(15.dp)
             .clip(CircleShape)
-            .background(background),
+            .background(background)
+            .shadow(10.dp),
         contentAlignment = Alignment.Center
     ) {
         val textMeasurer = rememberTextMeasurer()
